@@ -35,14 +35,14 @@
     "tailwindcss": "^3.1.8",
     "typescript": "4.5.4",
     "vite": "^3.1.4",
-    "vue": "^3.2.40",
     "vue-demi": "^0.13.11"
   },
   "peerDependencies": {
     "cypress": ">=3"
   },
   "dependencies": {
-    "highlight.js": "11.4.0"
+    "highlight.js": "11.4.0",
+    "vue": "^3.2.40"
   },
   "publishConfig": {
     "access": "public"
