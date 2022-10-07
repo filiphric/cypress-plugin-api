@@ -4,7 +4,7 @@
   "name": "cypress-plugin-api",
   "version": "0.0.0-development",
   "description": "UI for testing API in Cypress",
-  "main": "dist/index.js",
+  "main": "dist/support.js",
   "types": "dist/types.d.ts",
   "files": [
     "/dist/*"
@@ -52,7 +52,7 @@
     "url": "https://github.com/filiphric/cypress-plugin-api.git"
   },
   "bugs": {
-    "url": "https://github.com/filiphric/filiphric/cypress-plugin-api/issues"
+    "url": "https://github.com/filiphric/cypress-plugin-api/issues"
   },
-  "homepage": "https://github.com/filiphric/filiphric/cypress-plugin-api#readme"
+  "homepage": "https://github.com/filiphric/cypress-plugin-api#readme"
 }
