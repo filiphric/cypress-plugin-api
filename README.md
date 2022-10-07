@@ -31,6 +31,8 @@ You can now use `cy.api()` command. This command works exactly like `cy.request(
 - color coding of methods
 - copy response to clipboard (works for last test only)
 - snapshots
+
+
 ![Cypress plugin for testin API](./images/video.gif)
 
 ### Issues
