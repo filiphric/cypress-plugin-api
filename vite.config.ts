@@ -16,7 +16,7 @@ export default defineConfig({
       fileName: 'support'
     },
     rollupOptions: {
-      external: ['vue', 'pinia', 'vue-demi'],
+      external: ['vue', 'vue-demi'],
       output: {
         globals: {
           vue: 'Vue'
