@@ -50,5 +50,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/filiphric/cypress-plugin-api.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/filiphric/filiphric/cypress-plugin-api/issues"
+  },
+  "homepage": "https://github.com/filiphric/filiphric/cypress-plugin-api#readme"
 }
