@@ -1,0 +1,49 @@
+{
+  "author": "Filip Hric (https://filiphric.com/)",
+  "license": "ISC",
+  "name": "cypress-plugin-api",
+  "version": "1.0.0",
+  "description": "UI for testing API in Cypress",
+  "main": "dist/index.js",
+  "types": "dist/types.d.ts",
+  "files": [
+    "/dist/*"
+  ],
+  "scripts": {
+    "test": "cypress run",
+    "cy:open": "cypress open",
+    "start": "node ./server",
+    "e2e": "start-test 3003",
+    "dev": "start-test 3003 cy:open",
+    "build": "vite build",
+    "build:watch": "vite build --watch"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.18",
+    "autoprefixer": "^10.4.12",
+    "cypress": "10.8.0",
+    "debug": "4.3.1",
+    "express": "4.17.1",
+    "husky": "3.1.0",
+    "postcss": "^8.4.17",
+    "semantic-release": "19.0.5",
+    "start-server-and-test": "1.14.0",
+    "stop-only": "3.1.0",
+    "tailwindcss": "^3.1.8",
+    "typescript": "4.5.4"
+  },
+  "peerDependencies": {
+    "cypress": ">=3"
+  },
+  "dependencies": {
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@vitejs/plugin-vue": "^3.1.0",
+    "highlight.js": "11.4.0",
+    "vite": "^3.1.4",
+    "vue": "^3.2.40",
+    "vue-demi": "^0.13.11"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

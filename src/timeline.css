@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.command.command-name-GET span.command-method {
+  @apply bg-cy-blue rounded-sm px-1.5;
+  color: #fff !important;
+}
+.command.command-name-DELETE span.command-method {
+  @apply bg-cy-red rounded-sm px-1.5;
+  color: #fff !important;
+}
+.command.command-name-PATCH span.command-method {
+  @apply bg-cy-orange rounded-sm px-1.5;
+  color: #fff !important;
+}
+.command.command-name-HEAD span.command-method {
+  @apply bg-cy-yellow rounded-sm px-1.5;
+  color: #fff !important;
+}
+.command.command-name-PUT span.command-method {
+  @apply bg-cy-green rounded-sm px-1.5;
+  color: #fff !important;
+}
+.command.command-name-POST span.command-method {
+  @apply bg-cy-green rounded-sm px-1.5;
+  color: #fff !important;
+}
