@@ -14,11 +14,10 @@
 <script setup lang="ts">
   defineProps({
   raw: {
-    default: '',
-    type: String
+    type: [String, Object]
   }
 })
-  const copyLink = async (content: string | Record<string, any>) => {
+  const copyLink = async (content: any) => {
   const type = typeof content
   const clipBoardValue = type === 'object' ? JSON.stringify(content, null, 2) : content as string
   await parent.navigator.clipboard.writeText(clipBoardValue);

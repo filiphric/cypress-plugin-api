@@ -16,8 +16,7 @@ defineProps({
     type: String
   },
   raw: {
-    default: '',
-    type: String
+    type: [String, Object]
   }
 })
 const showClipboardButton = ref(false)
