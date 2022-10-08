@@ -7,6 +7,7 @@ import base from "./style.css";
 import timeline from "./timeline.css";
 import { createApp, reactive, ref } from 'vue'
 import App from "./components/App.vue";
+import { resolveOptions } from './utils/resolveOptions';
 
 type requestOptions = {
   method: string
@@ -71,9 +72,9 @@ Cypress.on('test:before:run', () => {
 
   app.mount(doc.body)
 
+  Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
-
-  Cypress.Commands.add('api', (options: Partial<Cypress.RequestOptions>): Cypress.Chainable<any> => {
+    let options: Cypress.RequestOptions = resolveOptions(...args)
 
     props.value.push({
       method: 'GET',

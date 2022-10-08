@@ -1,6 +1,6 @@
 const methods = ['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
-it(`works with different methods`, () => {
+it(`works with basic methods`, () => {
 
   methods.forEach(method => {
     cy.api({
