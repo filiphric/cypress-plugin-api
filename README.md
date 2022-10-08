@@ -12,7 +12,7 @@ npm i cypress-plugin-api
 
 // or
 
-yarn add cypress-plugin api
+yarn add cypress-plugin-api
 ```
 
 Import the plugin into your `cypress/support/e2e.js` file:
