@@ -42,13 +42,9 @@ Cypress.on('test:before:run', () => {
   head.appendChild(style);
   style.appendChild(doc.createTextNode(base));
 
-  // append timeline styles
-  const reporterEl = top?.document.querySelector('#unified-reporter')
-  if (!reporterEl) {
-    return
-  }
+  let reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
   const reporterStyleEl = document.createElement('style')
-  reporterEl.appendChild(reporterStyleEl)
+  reporterEl?.appendChild(reporterStyleEl)
   reporterStyleEl.appendChild(doc.createTextNode(timeline));
 
   // TODO it would be cool if we could ignore the viewportHeight and just use the full height of the runner window. it’s possible to transform certain styles, but it doesn’t work when user resizes window, and for some reason it keeps cutting of some of the content
