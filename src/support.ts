@@ -5,7 +5,7 @@ import { getContainer } from './utils/getContainer';
 import { transform } from "./utils/transform";
 import base from "./style.css";
 import timeline from "./timeline.css";
-import { createApp, reactive, ref } from 'vue'
+import { createApp, reactive } from 'vue'
 import App from "./components/App.vue";
 import { resolveOptions } from './utils/resolveOptions';
 
