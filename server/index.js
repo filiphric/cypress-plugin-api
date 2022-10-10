@@ -52,6 +52,11 @@ app.get('/400', (req, res) => {
   res.send()
 })
 
+app.get('/redirect', (req, res) => {
+  res.redirect(301, '/')
+  res.send()
+})
+
 app.get('/json', (req, res) => {
   const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
   res.send(answerJSON)
