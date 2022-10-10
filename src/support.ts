@@ -115,7 +115,7 @@ Cypress.on('test:before:run', () => {
     return cy.request({
       ...options,
       log: false
-    }).then(({ duration, body, status, headers, requestHeaders, statusText }) => {
+    }).then(({ duration, body, status, headers, requestHeaders, statusText, allRequestResponses, isOkStatusCode, redirectedToUrl, redirects }) => {
 
       const messageFormatted = `${status} (${statusText})`
       // make snapshot for request
@@ -180,7 +180,11 @@ Cypress.on('test:before:run', () => {
           status,
           statusText,
           headers,
-          requestHeaders
+          requestHeaders,
+          allRequestResponses,
+          isOkStatusCode,
+          redirectedToUrl,
+          redirects
         }
 
       })
