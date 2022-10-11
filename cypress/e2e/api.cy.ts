@@ -61,6 +61,7 @@ it('shows failed status code', () => {
   })
 
   cy.get('[data-cy=status]')
+    .should('have.length', 2)
     .eq(1)
     .should('be.visible')
     .and('contain', '400')
