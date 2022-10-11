@@ -7,7 +7,7 @@
 
     <div class="flex rounded-sm outline outline-slate-400 outline-1 p-2 mb-2">
       <p class="font-mono font-bold">URL: </p>
-      <p class="ml-3 inline-block font-mono">https://github.com/antfu/unpsssssssssssssssssssssssssssssssssss{{ url }}</p>
+      <p class="ml-3 inline-block font-mono">{{ url }}</p>
     </div>
 
     <div class="flex rounded-sm outline outline-slate-400 outline-1 p-2 mb-2">
