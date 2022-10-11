@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class="flex rounded-sm outline outline-slate-400 outline-1 p-2 mb-2">
-      <p class="font-mono font-bold">Method: </p>
+    <div class="flex bg-gray-200 rounded-sm p-2 mb-2">
+      <p class="font-semibold">Method: </p>
       <p class="px-2 ml-3 rounded-md inline-block text-white font-mono" :class="methodColor(method)">{{ method }}</p>
     </div>
 
-    <div class="flex rounded-sm outline outline-slate-400 outline-1 p-2 mb-2">
-      <p class="font-mono font-bold">URL: </p>
+    <div class="flex bg-gray-200 rounded-sm p-2 mb-2">
+      <p class="font-semibold">URL: </p>
       <p class="ml-3 inline-block font-mono">{{ url }}</p>
     </div>
 
-    <div class="flex rounded-sm outline outline-slate-400 outline-1 p-2 mb-2">
-      <p class="font-mono font-bold">Status: </p>
+    <div class="flex bg-gray-200 rounded-sm p-2 mb-2" v-if="status">
+      <p class="font-semibold">Status: </p>
       <p class="px-2 ml-3 rounded-md inline-block text-white font-mono" :class="statusColor(status)" data-cy="status">{{ status }}</p>
     </div>
   </div>
