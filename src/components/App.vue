@@ -6,7 +6,7 @@
       <RequestHeaders :body="item.requestHeadersFormatted" />
       <Request :body="item.requestBodyFormatted" />
       <Response :body='item.responseBodyFormatted' :raw="item.responseBody"/>
-      <hr class="border-gray-300 border-1 my-2" />
+      <hr class="border-slate-400 border-dashed border-2 my-4" />
     </div>
   </div>
 </template>
