@@ -1,6 +1,6 @@
 <template>
-  <div v-if="body" data-cy="query" class="mb-4">
-    <b>Query:</b>
+  <div class="bg-gray-200 rounded-sm p-2 mb-2" v-if="body" data-cy="query">
+    <p class="font-semibold mb-2">Query:</p>
     <pre class="hljs overflow-scroll" v-html="body"></pre>
   </div>
 </template>

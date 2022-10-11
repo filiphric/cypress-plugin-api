@@ -1,6 +1,6 @@
 <template>
-  <div v-if="body" data-cy="requestHeaders" class="mb-4">
-    <b>Headers:</b>
+  <div class="bg-gray-200 rounded-sm p-2 mb-2" v-if="body" data-cy="requestHeaders">
+    <p class="font-semibold mb-2">Headers:</p>
     <pre class="hljs overflow-scroll" v-html="body"></pre>
   </div>
 </template>
