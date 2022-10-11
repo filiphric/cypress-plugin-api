@@ -1,7 +1,7 @@
 <template>
   <div class="bg-transparent mb-10">
     <div v-for="item in props.value">
-      <section class="bg-gray-100 shadow-md rounded-sm m-4 p-4">
+      <section class="bg-gray-100 rounded-sm m-4 p-4">
         <Title :method="item.method" :url="item.url" :status="item.status" />
         <Query :body="item.queryFormatted" />
         <RequestHeaders :body="item.requestHeadersFormatted" />
