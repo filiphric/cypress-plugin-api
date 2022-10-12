@@ -6,5 +6,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
     },
     baseUrl: 'http://localhost:3003',
+    experimentalSessionAndOrigin: true
   },
 })
