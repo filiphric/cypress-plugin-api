@@ -23,7 +23,7 @@ type requestOptions = {
   responseBodyFormatted: string
 }
 
-Cypress.on('test:before:run', () => {
+beforeEach(() => {
 
   const { win, doc } = getContainer()
 
