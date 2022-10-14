@@ -37,3 +37,10 @@ You can now use `cy.api()` command. This command works exactly like `cy.request(
 
 ### Issues
 All the issues can be found on [issues page](https://github.com/filiphric/cypress-plugin-api/issues), feel free to open any new ones or contribute with your own code.
+
+### Want to learn more?
+Come to my upcoming "Testing API with Cypress" workshop. We’ll be using this plugin and learning different ways of testing API.
+
+[Register here](https://filiphric.com/cypress-api-testing-workshop)
+
+![Testing API with Cypress workshop](./images/apiWorkshop.png)
