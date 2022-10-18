@@ -3,21 +3,18 @@
     <div v-for="item in props.value">
       <section class="bg-gray-100 rounded-sm m-4 p-4 pb-2">
         <Title :method="item.method" :url="item.url" :status="item.status" />
-        <Query :body="item.queryFormatted" />
-        <RequestHeaders :body="item.requestHeadersFormatted" />
-        <Request :body="item.requestBodyFormatted" />
-        <Response :body='item.responseBodyFormatted' :raw="item.responseBody" />
+        <Datablock :data-formatted='item.queryFormatted' :data-raw="item.query" copy-selector="copyQuery" header="Query:" selector="query" />
+        <Datablock :data-formatted='item.requestHeadersFormatted' :data-raw="item.requestHeaders" copy-selector="copyRequestHeaders" header="Headers:" selector="requestHeaders" />
+        <Datablock :data-formatted='item.requestBodyFormatted' :data-raw="item.requestBody" copy-selector="copyRequest" header="Request:" selector="requestBody" />
+        <Datablock :data-formatted='item.responseBodyFormatted' :data-raw="item.responseBody" copy-selector="copyResponse" header="Response:" selector="responseBody" />
       </section>
       <!-- <hr class="border-gray-300 border-1 my-4 w-3/4 m-auto" /> -->
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import Response from "./Response.vue";
-import Request from "./Request.vue";
-import RequestHeaders from "./RequestHeaders.vue";
+import Datablock from "./Datablock.vue";
 import Title from "./Title.vue";
-import Query from "./Query.vue";
 
 defineProps({
   props: {
