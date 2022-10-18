@@ -17,7 +17,7 @@ type requestOptions = {
   queryFormatted: string
   requestHeaders: Record<string, any>
   requestHeadersFormatted: string
-  requestBody: Record<string, any>
+  requestBody: Cypress.RequestBody
   requestBodyFormatted: string
   responseBody: Record<string, any>
   responseBodyFormatted: string
@@ -92,6 +92,7 @@ beforeEach(() => {
     props.value[index].url = options.url || '/'
     props.value[index].query = options.qs || {}
     props.value[index].requestHeaders = options.headers || {}
+    props.value[index].requestBody = options.body
 
     // format request body
     props.value[index].requestBodyFormatted = transform(options.body)

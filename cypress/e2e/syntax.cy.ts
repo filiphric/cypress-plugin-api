@@ -18,7 +18,7 @@ it('takes three arguments', () => {
 
   cy.api('POST', '/', { hello: 'world' })
   cy.contains('POST')
-  cy.get('[data-cy=request]')
+  cy.get('[data-cy=requestBody]')
     .should('contain', '{')
     .should('contain', 'hello')
     .should('contain', ':')
