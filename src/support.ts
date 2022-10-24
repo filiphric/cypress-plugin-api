@@ -23,12 +23,26 @@ type requestOptions = {
   responseBodyFormatted: string
 }
 
-beforeEach(() => {
+before(() => {
+  window.props = {}
+})
+
+Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
+
+  // create an attribute that should be unique to the current test
+  const path = Cypress.currentTest.titlePath.join('.')
+
+  // @ts-ignore
+  const attempt = cy.state('runnable')._currentRetry
+
+  // if window does not already contain current test, create an empty array
+  window.props && window.props[path] ? null : window.props[path] = []
 
   const { win, doc } = getContainer()
 
+  // load props saved into window if any present in current test
   let props = reactive({
-    value: [] as requestOptions[]
+    value: window?.props[path].length && attempt === 0 ? window.props[path] : [] as requestOptions[]
   })
 
   const app = createApp(App, {
@@ -47,149 +61,126 @@ beforeEach(() => {
   reporterEl?.appendChild(reporterStyleEl)
   reporterStyleEl.appendChild(doc.createTextNode(timeline));
 
-  // TODO it would be cool if we could ignore the viewportHeight and just use the full height of the runner window. it’s possible to transform certain styles, but it doesn’t work when user resizes window, and for some reason it keeps cutting of some of the content
-  // // append runner styles
-  // const runnerEl = top?.document.querySelector('#unified-runner')
-  // if (!runnerEl) {
-  //   return
-  // }
-  // // runnerEl.removeAttribute("style")
-  // const transform: string = getComputedStyle(runnerEl).transform
-  // // @ts-ignore
-  // const runnerStyleEl = document.createElement('style')
-  // runnerStyleEl.innerHTML = `
-  //   #unified-runner {
-  //     height: 100% !important;
-  //     width: 100% !important;
-  //     overflow: scroll !important;
-  //   }
-  // `
-  // reporterEl.appendChild(runnerStyleEl)
-
   app.mount(doc.body)
 
-  Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
+  let options: Cypress.RequestOptions = resolveOptions(...args)
 
-    let options: Cypress.RequestOptions = resolveOptions(...args)
+  let index = props.value.length
 
-    props.value.push({
-      method: 'GET',
-      status: '',
-      url: '',
-      query: {},
-      queryFormatted: '',
-      requestHeaders: {},
-      requestHeadersFormatted: '',
-      requestBody: {},
-      requestBodyFormatted: '',
-      responseBody: {},
-      responseBodyFormatted: ''
+  props.value.push({
+    method: 'GET',
+    status: '',
+    url: '',
+    query: {},
+    queryFormatted: '',
+    requestHeaders: {},
+    requestHeadersFormatted: '',
+    requestBody: {},
+    requestBodyFormatted: '',
+    responseBody: {},
+    responseBodyFormatted: ''
+  })
+
+  props.value[index].method = options.method || 'GET'
+  props.value[index].url = options.url || '/'
+  props.value[index].query = options.qs || {}
+  props.value[index].requestHeaders = options.headers || {}
+  props.value[index].requestBody = options.body
+
+  // format request body
+  props.value[index].requestBodyFormatted = transform(options.body)
+  // format request headers
+  props.value[index].requestHeadersFormatted = transform(options.headers)
+  // format query
+  props.value[index].queryFormatted = transform(options.qs)
+
+  // log the request
+  let requestLog = Cypress.log({
+    name: options.method || 'GET',
+    autoEnd: false,
+    message: `${options.url}`,
+    consoleProps() {
+      return {
+        request: options
+      }
+    }
+  })
+
+  return cy.request({
+    ...options,
+    log: false
+  }).then(({ duration, body, status, headers, requestHeaders, statusText, allRequestResponses, isOkStatusCode, redirectedToUrl, redirects }) => {
+
+    const messageFormatted = `${status} (${statusText})`
+    // make snapshot for request
+    requestLog.snapshot('request').end()
+
+    props.value[index].status = messageFormatted || ''
+
+    // log the status
+    let statusLog = Cypress.log({
+      name: 'response',
+      autoEnd: false,
+      message: messageFormatted
     })
 
-    let index = props.value.length - 1
-
-    props.value[index].method = options.method || 'GET'
-    props.value[index].url = options.url || '/'
-    props.value[index].query = options.qs || {}
-    props.value[index].requestHeaders = options.headers || {}
-    props.value[index].requestBody = options.body
-
-    // format request body
-    props.value[index].requestBodyFormatted = transform(options.body)
-    // format request headers
-    props.value[index].requestHeadersFormatted = transform(options.headers)
-    // format query
-    props.value[index].queryFormatted = transform(options.qs)
-
-    // log the request
-    let requestLog = Cypress.log({
-      name: options.method || 'GET',
+    // log the response        
+    const type = typeof body
+    const bodyRaw = type === 'object' ? JSON.stringify(body, null, 2) : body
+    let responseLog = Cypress.log({
+      name: 'body',
       autoEnd: false,
-      message: `${options.url}`,
+      message: bodyRaw,
       consoleProps() {
         return {
-          request: options
+          type,
+          response: bodyRaw
         }
       }
     })
 
-    return cy.request({
-      ...options,
-      log: false
-    }).then(({ duration, body, status, headers, requestHeaders, statusText, allRequestResponses, isOkStatusCode, redirectedToUrl, redirects }) => {
+    const contentTypeHeader = headers['content-type'] as string
 
-      const messageFormatted = `${status} (${statusText})`
-      // make snapshot for request
-      requestLog.snapshot('request').end()
+    if (contentTypeHeader) {
+      const contentType = contentTypeHeader.split(';')[0]
+      const formats = {
+        'text/xml': 'xml',
+        'application/json': 'json',
+        'text/html': 'html',
+      } as const
+      const language = formats[contentType as keyof typeof formats]
+      // format response
+      props.value[index].responseBodyFormatted = transform(body, language)
+      props.value[index].responseBody = bodyRaw
 
-      props.value[index].status = messageFormatted || ''
+    }
 
-      // log the status
-      let statusLog = Cypress.log({
-        name: 'response',
-        autoEnd: false,
-        message: messageFormatted
-      })
+    // we need to make sure we do the snapshot at a right moment
+    cy.then(() => {
 
-      // log the response        
-      const type = typeof body
-      const bodyRaw = type === 'object' ? JSON.stringify(body, null, 2) : body
-      let responseLog = Cypress.log({
-        name: 'body',
-        autoEnd: false,
-        message: bodyRaw,
-        consoleProps() {
-          return {
-            type,
-            response: bodyRaw
-          }
-        }
-      })
+      // save all props to current window to be loadeded
+      window.props[path] = props.value
 
-      const contentTypeHeader = headers['content-type'] as string
+      statusLog.snapshot('response').end()
+      responseLog.snapshot('response').end()
 
-      if (contentTypeHeader) {
-        const contentType = contentTypeHeader.split(';')[0]
-        const formats = {
-          'text/xml': 'xml',
-          'application/json': 'json',
-          'text/html': 'html',
-        } as const
-        const language = formats[contentType as keyof typeof formats]
-        // format response
-        props.value[index].responseBodyFormatted = transform(body, language)
-        props.value[index].responseBody = bodyRaw
+      // scroll to the bottom
+      win.scrollTo(0, doc.body.scrollHeight)
 
+      return {
+        duration,
+        body,
+        status,
+        statusText,
+        headers,
+        requestHeaders,
+        allRequestResponses,
+        isOkStatusCode,
+        redirectedToUrl,
+        redirects
       }
 
-      // this is kinda dumb, but don’t know how to make sure we do the snapshot at a right moment
-      // if (body.length) {
-      //   cy.get('[data-cy=response]', { log: false, timeout: 50 })
-      // }
-
-      cy.then(() => {
-
-        statusLog.snapshot('response').end()
-        responseLog.snapshot('response').end()
-
-        // scroll to the bottom
-        win.scrollTo(0, doc.body.scrollHeight)
-
-        return {
-          duration,
-          body,
-          status,
-          statusText,
-          headers,
-          requestHeaders,
-          allRequestResponses,
-          isOkStatusCode,
-          redirectedToUrl,
-          redirects
-        }
-
-      })
-
     })
+
   })
 })

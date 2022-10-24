@@ -5,6 +5,7 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
     },
-    baseUrl: 'http://localhost:3003'
+    baseUrl: 'http://localhost:3003',
+    experimentalSessionAndOrigin: true
   },
 })

@@ -31,4 +31,7 @@ declare global {
       api<T = any>(options: Partial<RequestOptions>): Chainable<Response<T>>
     }
   }
+  interface Window {
+    props: Record<string, any>
+  }
 }
