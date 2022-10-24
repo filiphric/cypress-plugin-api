@@ -32,6 +32,9 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   // create an attribute that should be unique to the current test
   const path = Cypress.currentTest.titlePath.join('.')
 
+  // @ts-ignore
+  const attempt = cy.state('runnable')._currentRetry
+
   // if window does not already contain current test, create an empty array
   window.props && window.props[path] ? null : window.props[path] = []
 
@@ -39,7 +42,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
   // load props saved into window if any present in current test
   let props = reactive({
-    value: window?.props[path].length ? window.props[path] : [] as requestOptions[]
+    value: window?.props[path].length && attempt === 0 ? window.props[path] : [] as requestOptions[]
   })
 
   const app = createApp(App, {
