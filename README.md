@@ -1,6 +1,12 @@
-## Cypress plugin API
+<h2 align=center>Cypress plugin API</h2>
+<p align="center">
+<a href="https://github.com/sponsors/filiphric"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" /></a>
+<a href="https://dashboard.cypress.io/projects/v2x96h/runs"><img src="https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/count/v2x96h/main&style=flat&logo=cypress" /></a>
+</p>
 
+<p align="center">
 Cypress plugin for effective API testing. Imagine Postman, but in Cypress.
+</p>
 
 ![Cypress plugin for testing API](./images/methods.png)
 
@@ -44,3 +50,7 @@ Come to my upcoming "Testing API with Cypress" workshop. We’ll be using this p
 [Register here](https://filiphric.com/cypress-api-testing-workshop)
 
 ![Testing API with Cypress workshop](./images/apiWorkshop.png) -->
+<hr>
+<p align="center">
+...powered by coffee and love ❤️  <a href="https://filiphric.com">Filip Hric
+</p>
