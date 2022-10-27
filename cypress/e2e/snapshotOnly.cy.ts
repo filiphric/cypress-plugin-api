@@ -1,4 +1,4 @@
-it.only('snapshotOnly mode removes plugin UI', {
+it('snapshotOnly mode removes plugin UI', {
   baseUrl: null, env: {
     snapshotOnly: true
   }
