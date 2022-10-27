@@ -41,6 +41,36 @@ You can now use `cy.api()` command. This command works exactly like `cy.request(
 
 ![Cypress plugin for testing API](./images/video.gif)
 
+#### Snapshot only mode
+If you want to combine your API calls with your test, you can now use `snapshotOnly` mode, that will hide the UI view after command ends. You can access it within the timeline.
+
+`snapshotOnly` mode is set to `false` by default. To set up `snapshotOnly` mode, add following to your test configuration:
+
+```js
+it('my UI & API test', { env: { snapshotOnly: true } }, () => {
+
+  cy.visit('/') // open app
+  cy.api('/item') // call api
+  cy.get('#myElement') // still able to access element on page
+
+})
+```
+
+or you can add the configuration to your `cypress.config.{js,ts}` file:
+```js
+import { defineConfig } from 'cypress'
+
+export default defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+    },
+    env: {
+      snapshotOnly: true
+    }
+  },
+})
+```
+
 ### Issues
 All the issues can be found on [issues page](https://github.com/filiphric/cypress-plugin-api/issues), feel free to open any new ones or contribute with your own code.
 

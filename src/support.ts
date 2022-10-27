@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import './types'
-import { getContainer } from './utils/getContainer';
 import { transform } from "./utils/transform";
 import base from "./style.css";
 import timeline from "./timeline.css";
@@ -38,7 +37,8 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   // if window does not already contain current test, create an empty array
   window.props && window.props[path] ? null : window.props[path] = []
 
-  const { win, doc } = getContainer()
+  // @ts-ignore
+  const doc: Document = cy.state('document');
 
   // load props saved into window if any present in current test
   let props = reactive({
@@ -61,7 +61,14 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   reporterEl?.appendChild(reporterStyleEl)
   reporterStyleEl.appendChild(doc.createTextNode(timeline));
 
-  app.mount(doc.body)
+  // create an element where our plugin will mount
+  const root = doc.createElement('div');
+  root.setAttribute('id', 'api-plugin-root')
+  doc.body.appendChild(root);
+
+  // mount plugin
+  const plugin = doc.getElementById('api-plugin-root')
+  app.mount(plugin as Element)
 
   let options: Cypress.RequestOptions = resolveOptions(...args)
 
@@ -165,7 +172,10 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
       responseLog.snapshot('response').end()
 
       // scroll to the bottom
-      win.scrollTo(0, doc.body.scrollHeight)
+      doc.getElementById('api-view-bottom')?.scrollIntoView()
+
+      // if in snapshot mode, unmount plugin from view
+      if (Cypress.env('snapshotOnly')) { app.unmount() }
 
       return {
         duration,
