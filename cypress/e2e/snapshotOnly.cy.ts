@@ -1,4 +1,4 @@
-it('snapshotOnly mode removes plugin UI', {
+it.only('snapshotOnly mode removes plugin UI', {
   baseUrl: null, env: {
     snapshotOnly: true
   }
@@ -8,7 +8,16 @@ it('snapshotOnly mode removes plugin UI', {
   cy.contains('MY PAGE')
     .should('be.visible')
   cy.api('http://localhost:3003/')
+  cy.api('http://localhost:3003/')
   cy.get('[data-cy="responseBody"]')
     .should('not.exist')
+
+});
+
+it('snapshotOnly does not affect later plugin use', () => {
+
+  cy.api('/')
+  cy.get('[data-cy="responseBody"]')
+    .should('be.visible')
 
 });
