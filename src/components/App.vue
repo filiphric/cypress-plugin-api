@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-transparent mb-10">
+  <div id="api-view">
     <div v-for="item in props.value">
       <section class="bg-gray-100 rounded-sm m-4 p-4 pb-2">
         <Title :method="item.method" :url="item.url" :status="item.status" />
@@ -8,8 +8,8 @@
         <Datablock :data-formatted='item.requestBodyFormatted' :data-raw="item.requestBody" copy-selector="copyRequest" header="Request:" selector="requestBody" />
         <Datablock :data-formatted='item.responseBodyFormatted' :data-raw="item.responseBody" copy-selector="copyResponse" header="Response:" selector="responseBody" />
       </section>
-      <!-- <hr class="border-gray-300 border-1 my-4 w-3/4 m-auto" /> -->
     </div>
+    <div id="api-view-bottom"></div>
   </div>
 </template>
 <script setup lang="ts">

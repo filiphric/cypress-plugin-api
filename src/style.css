@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+#api-view {
+  @apply fixed top-0 left-0 right-0 bottom-0 bg-white h-screen overflow-scroll mb-10 ;
+  z-index: 9999999
+}
 
 pre {
   @apply p-3 text-white text-xs;
