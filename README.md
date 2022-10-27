@@ -42,7 +42,7 @@ You can now use `cy.api()` command. This command works exactly like `cy.request(
 ![Cypress plugin for testing API](./images/video.gif)
 
 #### Snapshot only mode
-If you want to combine your API calls with your test, you can now use `snapshotOnly` mode, that will hide the UI view after command ends. You can access it within the timeline.
+If you want to combine your API calls with your UI test, you can now use `snapshotOnly` mode, that will hide the plugin UI view after command ends. You can access it within the timeline.
 
 `snapshotOnly` mode is set to `false` by default. To set up `snapshotOnly` mode, add following to your test configuration:
 
