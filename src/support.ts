@@ -23,26 +23,32 @@ type requestOptions = {
 }
 
 before(() => {
+  // initialize global props object
   window.props = {}
 })
 
 Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
   // create an attribute that should be unique to the current test
-  const path = Cypress.currentTest.titlePath.join('.')
+  const currentTestTitle = Cypress.currentTest.titlePath.join('.')
 
-  // @ts-ignore
+  // get the number of retry, 0 if first attempt
+  // @ts-ignore 
   const attempt = cy.state('runnable')._currentRetry
+  const isRetry = attempt !== 0
 
-  // if window does not already contain current test, create an empty array
-  window.props && window.props[path] ? null : window.props[path] = []
+  // determine if there are props from the same test but previous cy.api() call
+  const propsExist = window.props[currentTestTitle]?.length ? true : false
+
+  // initialize an empty array for current test if this is a first call of cy.api() in current test
+  const currentProps = propsExist && !isRetry ? window.props[currentTestTitle] : [] as requestOptions[]
 
   // @ts-ignore
   const doc: Document = cy.state('document');
 
   // load props saved into window if any present in current test
   let props = reactive({
-    value: window?.props[path].length && attempt === 0 ? window.props[path] : [] as requestOptions[]
+    value: currentProps
   })
 
   const app = createApp(App, {
@@ -66,9 +72,11 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   root.setAttribute('id', 'api-plugin-root')
   doc.body.appendChild(root);
 
-  // mount plugin
-  const plugin = doc.getElementById('api-plugin-root')
-  app.mount(plugin as Element)
+  // mount plugin only on first call in the test or on retry
+  if (!propsExist || isRetry || Cypress.env('snapshotOnly')) {
+    const plugin = doc.getElementById('api-plugin-root')
+    app.mount(plugin as Element)
+  }
 
   let options: Cypress.RequestOptions = resolveOptions(...args)
 
@@ -166,7 +174,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     cy.then(() => {
 
       // save all props to current window to be loadeded
-      window.props[path] = props.value
+      window.props[currentTestTitle] = props.value
 
       statusLog.snapshot('response').end()
       responseLog.snapshot('response').end()
