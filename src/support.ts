@@ -55,25 +55,26 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     props
   })
 
-  // append styles
-  const head = doc.head || doc.getElementsByTagName('head')[0]
-
-  const style = doc.createElement('style');
-  head.appendChild(style);
-  style.appendChild(doc.createTextNode(base));
-
-  let reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
-  const reporterStyleEl = document.createElement('style')
-  reporterEl?.appendChild(reporterStyleEl)
-  reporterStyleEl.appendChild(doc.createTextNode(timeline));
-
-  // create an element where our plugin will mount
-  const root = doc.createElement('div');
-  root.setAttribute('id', 'api-plugin-root')
-  doc.body.appendChild(root);
-
   // mount plugin only on first call in the test or on retry
   if (!propsExist || isRetry || Cypress.env('snapshotOnly')) {
+
+    // append styles
+    const head = doc.head || doc.getElementsByTagName('head')[0]
+
+    const style = doc.createElement('style');
+    head.appendChild(style);
+    style.appendChild(doc.createTextNode(base));
+
+    let reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
+    const reporterStyleEl = document.createElement('style')
+    reporterEl?.appendChild(reporterStyleEl)
+    reporterStyleEl.appendChild(doc.createTextNode(timeline));
+
+    // create an element where our plugin will mount
+    const root = doc.createElement('div');
+    root.setAttribute('id', 'api-plugin-root')
+    doc.body.appendChild(root);
+
     const plugin = doc.getElementById('api-plugin-root')
     app.mount(plugin as Element)
   }
