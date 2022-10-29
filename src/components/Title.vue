@@ -2,7 +2,7 @@
   <div>
     <div class="flex bg-gray-200 rounded-sm p-2 mb-2">
       <p class="font-semibold">Method: </p>
-      <p class="px-2 ml-3 rounded-md inline-block text-white font-mono" :class="methodColor(method)">{{ method }}</p>
+      <p class="px-2 ml-3 rounded inline-block text-white font-mono" :class="methodColor(method)">{{ method }}</p>
     </div>
 
     <div class="flex bg-gray-200 rounded-sm p-2 mb-2">
@@ -12,7 +12,7 @@
 
     <div class="flex bg-gray-200 rounded-sm p-2 mb-2" v-if="status">
       <p class="font-semibold">Status: </p>
-      <p class="px-2 ml-3 rounded-md inline-block text-white font-mono" :class="statusColor(status)" data-cy="status">{{ status }}</p>
+      <p class="px-2 ml-3 rounded inline-block text-white font-mono" :class="statusColor(status)" data-cy="status">{{ status }}</p>
     </div>
   </div>
 </template>
