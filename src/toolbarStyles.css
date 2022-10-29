@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#api-toolbar {
+  @apply relative top-0 left-0 bg-gray-50 p-4 w-full;
+  z-index: 101
+}
+
+#api-toolbar > button {
+  @apply bg-cy-blue text-white px-2 py-1 rounded
+}
