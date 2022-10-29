@@ -117,7 +117,10 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     message: `${options.url}`,
     consoleProps() {
       return {
-        request: options
+        command: undefined,
+        ...options,
+        queries: options.qs,
+        qs: undefined
       }
     }
   })
@@ -135,9 +138,18 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
     // log the status
     let statusLog = Cypress.log({
-      name: 'response',
+      name: 'status',
       autoEnd: false,
-      message: messageFormatted
+      message: messageFormatted,
+      consoleProps() {
+        return {
+          command: undefined,
+          message: messageFormatted,
+          status,
+          'Status Text': statusText,
+          duration
+        }
+      }
     })
 
     // log the response        
@@ -149,10 +161,17 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
       message: bodyRaw,
       consoleProps() {
         return {
-          type,
-          response: bodyRaw
+          command: undefined,
+          'Response Type': type,
+          response: body
         }
       }
+    })
+
+    let infoLog = Cypress.log({
+      name: 'info',
+      message: '',
+      autoEnd: false
     })
 
     const contentTypeHeader = headers['content-type'] as string
@@ -177,8 +196,9 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
       // save all props to current window to be loadeded
       window.props[currentTestTitle] = props.value
 
-      statusLog.snapshot('response').end()
+      statusLog.snapshot('status').end()
       responseLog.snapshot('response').end()
+      infoLog.snapshot('yielded').end()
 
       // scroll to the bottom
       doc.getElementById('api-view-bottom')?.scrollIntoView()
