@@ -7,6 +7,8 @@ import timeline from "./timeline.css";
 import { createApp, reactive } from 'vue'
 import App from "./components/App.vue";
 import { resolveOptions } from './utils/resolveOptions';
+import toolbarStyles from "./toolbarStyles.css";
+import Toolbar from "./components/Toolbar.vue";
 
 type requestOptions = {
   method: string
@@ -25,6 +27,39 @@ type requestOptions = {
 before(() => {
   // initialize global props object
   window.props = {}
+
+  const props = window.props
+
+  // @ts-ignore
+  const doc: Document = cy.state('document');
+
+  const toolbarApp = createApp(Toolbar, {
+    props
+  })
+
+  // see if toolbar already exists
+  const toolbarExists = top?.document.querySelector('#api-toolbar')
+
+  // create toolbar if does not exist
+  if (!toolbarExists) {
+
+    // register styles for toolbar
+    let runnerFrame = top?.document.querySelector('#spec-runner-header')
+    const toolbarStyleEl = doc.createElement('style')
+    runnerFrame?.appendChild(toolbarStyleEl)
+    toolbarStyleEl.appendChild(doc.createTextNode(toolbarStyles));
+
+    // create toolbar root element
+    const apiToolbar = doc.createElement('div')
+    apiToolbar.setAttribute('id', 'api-toolbar')
+    runnerFrame?.appendChild(apiToolbar)
+
+    // mount toolbar component
+    const toolbarRoot = top?.document.querySelector('#api-toolbar')
+    toolbarApp.mount(toolbarRoot as Element)
+
+  }
+
 })
 
 Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
@@ -58,13 +93,14 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   // mount plugin only on first call in the test or on retry
   if (!propsExist || isRetry || Cypress.env('snapshotOnly')) {
 
-    // append styles
+    // append plugin styles
     const head = doc.head || doc.getElementsByTagName('head')[0]
 
     const style = doc.createElement('style');
     head.appendChild(style);
     style.appendChild(doc.createTextNode(base));
 
+    // append sidebar styles
     let reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
     const reporterStyleEl = document.createElement('style')
     reporterEl?.appendChild(reporterStyleEl)
@@ -75,8 +111,10 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     root.setAttribute('id', 'api-plugin-root')
     doc.body.appendChild(root);
 
+    // mount plugin
     const plugin = doc.getElementById('api-plugin-root')
     app.mount(plugin as Element)
+
   }
 
   let options: Cypress.RequestOptions = resolveOptions(...args)
