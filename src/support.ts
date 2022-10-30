@@ -7,20 +7,8 @@ import timeline from "./timeline.css";
 import { createApp, reactive } from 'vue'
 import App from "./components/App.vue";
 import { resolveOptions } from './utils/resolveOptions';
-
-type requestOptions = {
-  method: string
-  status: string
-  url: string
-  query: Record<string, any>
-  queryFormatted: string
-  requestHeaders: Record<string, any>
-  requestHeadersFormatted: string
-  requestBody: Cypress.RequestBody
-  requestBodyFormatted: string
-  responseBody: Record<string, any>
-  responseBodyFormatted: string
-}
+import { apiRequestOptions, requestProps } from './types';
+import { anonymize } from './utils/anonymize';
 
 before(() => {
   // initialize global props object
@@ -41,7 +29,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   const propsExist = window.props[currentTestTitle]?.length ? true : false
 
   // initialize an empty array for current test if this is a first call of cy.api() in current test
-  const currentProps = propsExist && !isRetry ? window.props[currentTestTitle] : [] as requestOptions[]
+  const currentProps = propsExist && !isRetry ? window.props[currentTestTitle] : [] as requestProps[]
 
   // @ts-ignore
   const doc: Document = cy.state('document');
@@ -79,7 +67,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     app.mount(plugin as Element)
   }
 
-  let options: Cypress.RequestOptions = resolveOptions(...args)
+  let options: apiRequestOptions = resolveOptions(...args)
 
   let index = props.value.length
 
@@ -87,6 +75,8 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     method: 'GET',
     status: '',
     url: '',
+    auth: {},
+    authFormatted: '',
     query: {},
     queryFormatted: '',
     requestHeaders: {},
@@ -100,8 +90,12 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   props.value[index].method = options.method || 'GET'
   props.value[index].url = options.url || '/'
   props.value[index].query = options.qs || {}
+  props.value[index].auth = options.auth || {}
   props.value[index].requestHeaders = options.headers || {}
   props.value[index].requestBody = options.body
+
+  // hide credentials if the options was set up
+  if (Cypress.env('hideCredentials')) props.value[index] = anonymize(props.value[index])
 
   // format request body
   props.value[index].requestBodyFormatted = transform(options.body)
@@ -109,6 +103,8 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   props.value[index].requestHeadersFormatted = transform(options.headers)
   // format query
   props.value[index].queryFormatted = transform(options.qs)
+  // format auth
+  props.value[index].authFormatted = transform(options.auth)
 
   // log the request
   let requestLog = Cypress.log({

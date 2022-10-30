@@ -1,19 +1,10 @@
 // test server
 
-const verbose = require('debug')('verbose')
-const info = require('debug')('info')
-const debug = require('util').debuglog('hello')
 const express = require('express')
 const app = express()
 const port = 3003
 
-if (global.messages) {
-  require('@bahmutov/all-logs/middleware/express')(app)
-}
-
 app.use(express.static('server-public'));
-
-const answer = 'Hello World!'
 
 app.get('/', (req, res) => {
   const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
