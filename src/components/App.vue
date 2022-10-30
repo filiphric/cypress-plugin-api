@@ -4,6 +4,12 @@
       <section class="bg-gray-100 rounded-sm m-4 p-4 pb-2">
         <Title :method="item.method" :url="item.url" :status="item.status" />
         <Datablock 
+          :data-formatted='item.authFormatted' 
+          :data-raw="item.auth" 
+          copy-selector="copyAuth"
+          header="Auth:"
+          selector="auth" />
+        <Datablock 
           :data-formatted='item.queryFormatted' 
           :data-raw="item.query" 
           copy-selector="copyQuery"

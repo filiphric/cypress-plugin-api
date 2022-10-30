@@ -71,6 +71,26 @@ export default defineConfig({
 })
 ```
 
+#### Hiding credentials
+You can hide your credentials by passing `hideCredentials` option to your env configuration. This will hide all the credentials from UI, but you can still access them via console. This option is set to `false` by default.
+
+```js
+it('my secret test', { env: { hideCredentials: true } }, () => {
+
+  cy.api({
+      url: '/',
+      headers: {
+        authorization: Cypress.env('myToken')
+      }
+    })
+
+})
+```
+
+The result will look like this:
+
+![Cypress plugin for testing API](./images/hideCredentials.png)
+
 ### Issues
 All the issues can be found on [issues page](https://github.com/filiphric/cypress-plugin-api/issues), feel free to open any new ones or contribute with your own code.
 

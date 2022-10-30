@@ -1,4 +1,3 @@
-export { }
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -34,4 +33,25 @@ declare global {
   interface Window {
     props: Record<string, any>
   }
+}
+
+export interface apiRequestOptions extends Cypress.RequestOptions {
+  headers: Record<string, any>
+  auth: Record<string, any>
+}
+
+export interface requestProps {
+  method: string
+  status: string
+  url: string
+  query: Record<string, any>
+  queryFormatted: string
+  auth: Record<string, any>
+  authFormatted: string
+  requestHeaders: Record<string, any>
+  requestHeadersFormatted: string
+  requestBody: Cypress.RequestBody
+  requestBodyFormatted: string
+  responseBody: Record<string, any>
+  responseBodyFormatted: string
 }
