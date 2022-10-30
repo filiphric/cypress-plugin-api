@@ -1,35 +1,35 @@
 <template>
   <div id="api-view">
-    <div v-for="item in props.value">
+    <div v-for="item in props">
       <section class="bg-gray-100 rounded-sm m-4 p-4 pb-2">
         <Title :method="item.method" :url="item.url" :status="item.status" />
         <Datablock 
-          :data-formatted='item.authFormatted' 
-          :data-raw="item.auth" 
+          :data-formatted='item.auth.formatted' 
+          :data-raw="item.auth.body" 
           copy-selector="copyAuth"
           header="Auth:"
           selector="auth" />
         <Datablock 
-          :data-formatted='item.queryFormatted' 
-          :data-raw="item.query" 
+          :data-formatted='item.query.formatted' 
+          :data-raw="item.query.body" 
           copy-selector="copyQuery"
           header="Query:"
           selector="query" />
         <Datablock
-          :data-formatted='item.requestHeadersFormatted'
-          :data-raw="item.requestHeaders"
+          :data-formatted='item.requestHeaders.formatted'
+          :data-raw="item.requestHeaders.body"
           copy-selector="copyRequestHeaders"
           header="Headers:"
           selector="requestHeaders" />
         <Datablock
-          :data-formatted='item.requestBodyFormatted'
-          :data-raw="item.requestBody"
+          :data-formatted='item.requestBody.formatted'
+          :data-raw="item.requestBody.body"
           copy-selector="copyRequest"
           header="Request:"
           selector="requestBody" />
         <Datablock
-          :data-formatted='item.responseBodyFormatted'
-          :data-raw="item.responseBody"
+          :data-formatted='item.responseBody.formatted'
+          :data-raw="item.responseBody.body"
           copy-selector="copyResponse"
           header="Response:"
           selector="responseBody" />
@@ -41,6 +41,9 @@
 <script setup lang="ts">
 import Datablock from "./Datablock.vue";
 import Title from "./Title.vue";
+// support should come with Vue 3.3
+// import type { requestProps } from '../types'
+// const props = defineProps<requestProps[]>()
 
 defineProps({
   props: {

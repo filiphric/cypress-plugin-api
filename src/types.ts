@@ -44,14 +44,24 @@ export interface requestProps {
   method: string
   status: string
   url: string
-  query: Record<string, any>
-  queryFormatted: string
-  auth: Record<string, any>
-  authFormatted: string
-  requestHeaders: Record<string, any>
-  requestHeadersFormatted: string
-  requestBody: Cypress.RequestBody
-  requestBodyFormatted: string
-  responseBody: Record<string, any>
-  responseBodyFormatted: string
+  query: {
+    body: Record<string, any>
+    formatted: string
+  }
+  auth: {
+    body: Record<string, any>
+    formatted: string
+  }
+  requestHeaders: {
+    body: Record<string, any>
+    formatted: string
+  }
+  requestBody: {
+    body: Cypress.RequestBody
+    formatted: string
+  }
+  responseBody: {
+    body: Record<string, any>
+    formatted: string
+  }
 }

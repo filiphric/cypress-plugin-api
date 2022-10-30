@@ -15,6 +15,21 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
 
   });
 
+  it('hides Authorization (Title case) in headers', () => {
+
+    cy.api({
+      url: '/',
+      headers: {
+        Authorization: 'Bearer 1234'
+      }
+    })
+
+    cy.get('[data-cy="requestHeaders"]')
+      .should('contain', '***********')
+      .should('not.contain', 'Bearer 1234')
+
+  });
+
   it('hides credentials in auth', () => {
 
     cy.api({

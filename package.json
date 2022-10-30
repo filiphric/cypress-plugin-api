@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "highlight.js": "11.4.0",
-    "vue": "^3.2.40"
+    "vue": "^3.2.41"
   },
   "publishConfig": {
     "access": "public"

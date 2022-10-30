@@ -29,15 +29,13 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   const propsExist = window.props[currentTestTitle]?.length ? true : false
 
   // initialize an empty array for current test if this is a first call of cy.api() in current test
-  const currentProps = propsExist && !isRetry ? window.props[currentTestTitle] : [] as requestProps[]
+  const currentProps: requestProps[] = propsExist && !isRetry ? window.props[currentTestTitle] : [] as requestProps[]
 
   // @ts-ignore
   const doc: Document = cy.state('document');
 
   // load props saved into window if any present in current test
-  let props = reactive({
-    value: currentProps
-  })
+  let props = reactive(currentProps)
 
   const app = createApp(App, {
     props
@@ -69,42 +67,54 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
   let options: apiRequestOptions = resolveOptions(...args)
 
-  let index = props.value.length
+  let index = props.length
 
-  props.value.push({
+  const propItem: requestProps = {
     method: 'GET',
     status: '',
     url: '',
-    auth: {},
-    authFormatted: '',
-    query: {},
-    queryFormatted: '',
-    requestHeaders: {},
-    requestHeadersFormatted: '',
-    requestBody: {},
-    requestBodyFormatted: '',
-    responseBody: {},
-    responseBodyFormatted: ''
-  })
+    auth: {
+      body: {},
+      formatted: ''
+    },
+    query: {
+      body: {},
+      formatted: ''
+    },
+    requestHeaders: {
+      body: {},
+      formatted: ''
+    },
+    requestBody: {
+      body: {},
+      formatted: ''
+    },
+    responseBody: {
+      body: {},
+      formatted: ''
+    },
+  }
 
-  props.value[index].method = options.method || 'GET'
-  props.value[index].url = options.url || '/'
-  props.value[index].query = options.qs || {}
-  props.value[index].auth = options.auth || {}
-  props.value[index].requestHeaders = options.headers || {}
-  props.value[index].requestBody = options.body
+  props.push(propItem)
+
+  props[index].method = options.method || 'GET'
+  props[index].url = options.url || '/'
+  props[index].query.body = options.qs || {}
+  props[index].auth.body = options.auth || {}
+  props[index].requestHeaders.body = options.headers || {}
+  props[index].requestBody.body = options.body
 
   // hide credentials if the options was set up
-  if (Cypress.env('hideCredentials')) props.value[index] = anonymize(props.value[index])
+  if (Cypress.env('hideCredentials')) props[index] = anonymize(props[index])
 
   // format request body
-  props.value[index].requestBodyFormatted = transform(options.body)
+  props[index].requestBody.formatted = transform(options.body)
   // format request headers
-  props.value[index].requestHeadersFormatted = transform(options.headers)
+  props[index].requestHeaders.formatted = transform(options.headers)
   // format query
-  props.value[index].queryFormatted = transform(options.qs)
+  props[index].query.formatted = transform(options.qs)
   // format auth
-  props.value[index].authFormatted = transform(options.auth)
+  props[index].auth.formatted = transform(options.auth)
 
   // log the request
   let requestLog = Cypress.log({
@@ -130,7 +140,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     // make snapshot for request
     requestLog.snapshot('request').end()
 
-    props.value[index].status = messageFormatted || ''
+    props[index].status = messageFormatted || ''
 
     // log the status
     let statusLog = Cypress.log({
@@ -181,8 +191,8 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
       } as const
       const language = formats[contentType as keyof typeof formats]
       // format response
-      props.value[index].responseBodyFormatted = transform(body, language)
-      props.value[index].responseBody = bodyRaw
+      props[index].responseBody.formatted = transform(body, language)
+      props[index].responseBody.body = bodyRaw
 
     }
 
@@ -190,7 +200,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     cy.then(() => {
 
       // save all props to current window to be loadeded
-      window.props[currentTestTitle] = props.value
+      window.props[currentTestTitle] = props
 
       statusLog.snapshot('status').end()
       responseLog.snapshot('response').end()
