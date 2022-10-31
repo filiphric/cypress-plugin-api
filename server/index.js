@@ -84,4 +84,13 @@ app.get('/empty', (req, res) => {
   res.send()
 })
 
+app.get('/auth', (req, res) => {
+  if (req.headers['authorization'] === "abcd" || req.headers['authorization'] === "Basic YWRtaW46c2VjcmV0") {
+    res.status(200)
+  } else {
+    res.status(403)
+  }
+  res.send()
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

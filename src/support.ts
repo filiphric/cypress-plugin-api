@@ -97,24 +97,24 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
   props.push(propItem)
 
-  props[index].method = options.method || 'GET'
-  props[index].url = options.url || '/'
-  props[index].query.body = options.qs || {}
-  props[index].auth.body = options.auth || {}
-  props[index].requestHeaders.body = options.headers || {}
-  props[index].requestBody.body = options.body
+  props[index].method = structuredClone(options.method) || 'GET'
+  props[index].url = structuredClone(options.url) || '/'
+  props[index].query.body = structuredClone(options.qs)
+  props[index].auth.body = structuredClone(options.auth)
+  props[index].requestHeaders.body = structuredClone(options.headers)
+  props[index].requestBody.body = structuredClone(options.body)
 
   // hide credentials if the options was set up
   if (Cypress.env('hideCredentials')) props[index] = anonymize(props[index])
 
   // format request body
-  props[index].requestBody.formatted = transform(options.body)
+  props[index].requestBody.formatted = transform(props[index].requestBody.body)
   // format request headers
-  props[index].requestHeaders.formatted = transform(options.headers)
+  props[index].requestHeaders.formatted = transform(props[index].requestHeaders.body)
   // format query
-  props[index].query.formatted = transform(options.qs)
+  props[index].query.formatted = transform(props[index].query.body)
   // format auth
-  props[index].auth.formatted = transform(options.auth)
+  props[index].auth.formatted = transform(props[index].auth.body)
 
   // log the request
   let requestLog = Cypress.log({
