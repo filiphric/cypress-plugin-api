@@ -3,37 +3,37 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
   it('hides authorization in headers', () => {
 
     cy.api({
-      url: '/',
+      url: '/auth',
       headers: {
-        authorization: 'Bearer 1234'
+        authorization: 'abcd'
       }
     })
 
     cy.get('[data-cy="requestHeaders"]')
-      .should('contain', '***********')
-      .should('not.contain', 'Bearer 1234')
+      .should('contain', '****')
+      .should('not.contain', 'abcd')
 
   });
 
   it('hides Authorization (Title case) in headers', () => {
 
     cy.api({
-      url: '/',
+      url: '/auth',
       headers: {
-        Authorization: 'Bearer 1234'
+        Authorization: 'abcd'
       }
     })
 
     cy.get('[data-cy="requestHeaders"]')
-      .should('contain', '***********')
-      .should('not.contain', 'Bearer 1234')
+      .should('contain', '****')
+      .should('not.contain', 'abcd')
 
   });
 
   it('hides credentials in auth', () => {
 
     cy.api({
-      url: '/',
+      url: '/auth',
       auth: {
         user: 'admin',
         pass: 'secret'
@@ -55,22 +55,22 @@ describe('Showing credentials', () => {
   it('hides authorization in headers', () => {
 
     cy.api({
-      url: '/',
+      url: '/auth',
       headers: {
-        authorization: 'Bearer 1234'
+        authorization: 'abcd'
       }
     })
 
     cy.get('[data-cy="requestHeaders"]')
-      .should('contain', 'Bearer 1234')
-      .should('not.contain', '***********')
+      .should('contain', 'abcd')
+      .should('not.contain', '****')
 
   });
 
   it('hides credentials in auth', () => {
 
     cy.api({
-      url: '/',
+      url: '/auth',
       auth: {
         user: 'admin',
         pass: 'secret'
