@@ -1,18 +1,8 @@
 <template>
   <div>
-    <div class="flex bg-gray-200 rounded-sm p-2 mb-2">
-      <p class="font-semibold">Method: </p>
-      <p class="px-2 ml-3 rounded inline-block text-white font-mono" :class="methodColor(method)">{{ method }}</p>
-    </div>
-
-    <div class="flex bg-gray-200 rounded-sm p-2 mb-2">
-      <p class="font-semibold">URL: </p>
-      <p class="ml-3 inline-block font-mono">{{ url }}</p>
-    </div>
-
-    <div class="flex bg-gray-200 rounded-sm p-2 mb-2" v-if="status">
-      <p class="font-semibold">Status: </p>
-      <p class="px-2 ml-3 rounded inline-block text-white font-mono" :class="statusColor(status)" data-cy="status">{{ status }}</p>
+    <div class="flex text-cy-gray rounded-sm bg-cy-blue-darkest py-1.5 border-slate-800 border mb-2" >
+      <p data-cy="method" class="mx-2 rounded-sm font-mono" :class="methodColor(method)">{{ method }}</p>
+      <input data-cy="url" class="px-1 inline-block font-mono bg-cy-blue-darkest w-full outline-0" :value='url' readonly/>
     </div>
   </div>
 </template>
@@ -26,33 +16,19 @@
     url: {
       default: '',
       type: String
-    },
-    status: {
-      default: '',
-      type: String
     }
   })
 
   const methodColor = (method: string) => {
     const methods = {
-      'DELETE': 'bg-cy-red',
-      'POST': 'bg-cy-green',
-      'PUT': 'bg-cy-green',
-      'GET': 'bg-cy-blue',
-      'PATCH': 'bg-cy-orange',
-      'HEAD': 'bg-cy-yellow'
+      'DELETE': 'text-cy-red',
+      'POST': 'text-cy-green',
+      'PUT': 'text-cy-green',
+      'GET': 'text-cy-blue',
+      'PATCH': 'text-cy-orange',
+      'HEAD': 'text-cy-yellow'
     }
     return methods[method as keyof typeof methods]
   }
 
-  const statusColor = (status: string) => {
-    const statusCategory = status.substring(0,1)
-    const statuses = {
-      '2': 'bg-cy-green',
-      '3': 'bg-cy-orange',
-      '4': 'bg-cy-red',
-      '5': 'bg-cy-red'
-    }
-    return statuses[statusCategory as keyof typeof statuses]
-  }
 </script>

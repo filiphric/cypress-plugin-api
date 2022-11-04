@@ -21,3 +21,13 @@ it('works with json', () => {
   })
 
 });
+
+it('works with text', () => {
+
+  cy.api({
+    url: '/text'
+  })
+
+  cy.contains('Hey there 👋').should('be.visible')
+
+});

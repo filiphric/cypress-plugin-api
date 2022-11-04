@@ -1,14 +1,16 @@
 /// <reference types="cypress" />
 
 import './types'
-import { transform } from "./utils/transform";
 import base from "./style.css";
 import timeline from "./timeline.css";
 import { createApp, reactive } from 'vue'
 import App from "./components/App.vue";
 import { resolveOptions } from './utils/resolveOptions';
-import { apiRequestOptions, requestProps } from './types';
+import { apiRequestOptions, apiResponseBody, requestProps } from './types';
 import { anonymize } from './utils/anonymize';
+import { transform } from "./utils/transform";
+import { calculateSize } from './utils/calculateSize';
+const setCookie = require('set-cookie-parser');
 
 before(() => {
   // initialize global props object
@@ -72,6 +74,8 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   const propItem: requestProps = {
     method: 'GET',
     status: '',
+    time: 0,
+    size: '',
     url: '',
     auth: {
       body: {},
@@ -93,12 +97,19 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
       body: {},
       formatted: ''
     },
+    responseHeaders: {
+      body: {},
+      formatted: '',
+    },
+    cookies: {
+      body: {}
+    }
   }
 
   props.push(propItem)
 
   props[index].method = structuredClone(options.method) || 'GET'
-  props[index].url = structuredClone(options.url) || '/'
+  props[index].url = Cypress.config('baseUrl') + structuredClone(options.url).replace(Cypress.config('baseUrl') as string, '') || Cypress.config('baseUrl') + '/'
   props[index].query.body = structuredClone(options.qs)
   props[index].auth.body = structuredClone(options.auth)
   props[index].requestHeaders.body = structuredClone(options.headers)
@@ -117,70 +128,28 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   props[index].auth.formatted = transform(props[index].auth.body)
 
   // log the request
-  let requestLog = Cypress.log({
+  let yielded: apiResponseBody
+  let log = Cypress.log({
     name: options.method || 'GET',
     autoEnd: false,
-    message: `${options.url}`,
-    consoleProps() {
-      return {
-        command: undefined,
-        ...options,
-        queries: options.qs,
-        qs: undefined
-      }
-    }
+    message: `${options.url}`
   })
 
   return cy.request({
     ...options,
     log: false
-  }).then(({ duration, body, status, headers, requestHeaders, statusText, allRequestResponses, isOkStatusCode, redirectedToUrl, redirects }) => {
+  }).then((res: apiResponseBody) => {
+
+    const { body, status, headers, statusText, duration } = res
 
     const messageFormatted = `${status} (${statusText})`
-    // make snapshot for request
-    requestLog.snapshot('request').end()
-
     props[index].status = messageFormatted || ''
-
-    // log the status
-    let statusLog = Cypress.log({
-      name: 'status',
-      autoEnd: false,
-      message: messageFormatted,
-      consoleProps() {
-        return {
-          command: undefined,
-          message: messageFormatted,
-          status,
-          'Status Text': statusText,
-          duration
-        }
-      }
-    })
-
-    // log the response        
+    props[index].time = duration
+    const contentTypeHeader = headers['content-type'] as string
+    const contentLengthHeader = headers['content-length'] as string
+    const contentCookieHeader = headers['set-cookie'] as string
     const type = typeof body
     const bodyRaw = type === 'object' ? JSON.stringify(body, null, 2) : body
-    let responseLog = Cypress.log({
-      name: 'body',
-      autoEnd: false,
-      message: bodyRaw,
-      consoleProps() {
-        return {
-          command: undefined,
-          'Response Type': type,
-          response: body
-        }
-      }
-    })
-
-    let infoLog = Cypress.log({
-      name: 'info',
-      message: '',
-      autoEnd: false
-    })
-
-    const contentTypeHeader = headers['content-type'] as string
 
     if (contentTypeHeader) {
       const contentType = contentTypeHeader.split(';')[0]
@@ -188,6 +157,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
         'text/xml': 'xml',
         'application/json': 'json',
         'text/html': 'html',
+        'text/plain': 'plaintext',
       } as const
       const language = formats[contentType as keyof typeof formats]
       // format response
@@ -196,15 +166,50 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
     }
 
+    // format cookies
+    const parsedCookie = setCookie.parse(contentCookieHeader, {
+      decodeValues: true
+    })
+
+    props[index].cookies.body = parsedCookie
+
+    // show "no content" message if there’s no response
+    if (!props[index].requestBody.formatted.length) {
+      props[index].requestBody.formatted = '(No content)'
+    }
+
+    // show "no content" message if there’s no response
+    if (!props[index].responseBody.formatted.length) {
+      props[index].responseBody.formatted = '(No content)'
+    }
+
+    // format response header
+    props[index].responseHeaders.body = headers
+    props[index].responseHeaders.formatted = transform(headers)
+
+    // count content size
+    const size = parseInt(contentLengthHeader)
+    props[index].size = calculateSize(size)
+    res.size = size
+
+    yielded = res
+
     // we need to make sure we do the snapshot at a right moment
     cy.then(() => {
 
-      // save all props to current window to be loadeded
+      // add response to console output
+      log.set({
+        consoleProps() {
+          return {
+            yielded
+          }
+        }
+      })
+
+      // save all props to current window to be loaded
       window.props[currentTestTitle] = props
 
-      statusLog.snapshot('status').end()
-      responseLog.snapshot('response').end()
-      infoLog.snapshot('yielded').end()
+      log.snapshot('snapshot').end()
 
       // scroll to the bottom
       doc.getElementById('api-view-bottom')?.scrollIntoView()
@@ -212,18 +217,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
       // if in snapshot mode, unmount plugin from view
       if (Cypress.env('snapshotOnly')) { app.unmount() }
 
-      return {
-        duration,
-        body,
-        status,
-        statusText,
-        headers,
-        requestHeaders,
-        allRequestResponses,
-        isOkStatusCode,
-        redirectedToUrl,
-        redirects
-      }
+      return res
 
     })
 

@@ -16,7 +16,8 @@ module.exports = {
         'cy-red': '#ff5770',
         'cy-blue': '#6470f3',
         'cy-yellow': '#EDBB4A',
-        'cy-orange': '#db7905'
+        'cy-orange': '#db7905',
+        'cy-purple': '#7f43c9'
       }
     },
   },

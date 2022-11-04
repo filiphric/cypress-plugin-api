@@ -80,12 +80,23 @@ app.get('/xml', (req, res) => {
   res.send(answerXML)
 })
 
+app.get('/text', (req, res) => {
+  const answerText = "Hey there 👋"
+  res.send(answerText)
+})
+
 app.get('/empty', (req, res) => {
   res.send()
 })
 
-app.get('/auth', (req, res) => {
+app.get('/cookies', (req, res) => {
+  res.cookie('hello', 'cookie')
+  res.send()
+})
+
+app.post('/auth', (req, res) => {
   if (req.headers['authorization'] === "abcd" || req.headers['authorization'] === "Basic YWRtaW46c2VjcmV0") {
+    res.cookie('token', 'Bearer 1234')
     res.status(200)
   } else {
     res.status(403)

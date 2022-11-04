@@ -5,19 +5,27 @@
 </p>
 
 <p align="center">
-Cypress plugin for effective API testing. Imagine Postman, but in Cypress.
+Cypress plugin for effective API testing. Imagine Postman, but in Cypress. Prints out information about the API call in the Cypress App UI.
 </p>
 
-![Cypress plugin for testing API](./images/methods.png)
+![Cypress plugin for testing API](./images/demo.gif)
+
+### Features
+- information about the API call, such as URL, headers, response and more are displayed on UI
+- all of the info can be viewed in a time-travel snapshots
+- simple table for viewing cookies
+- color coding of methods in UI view and in timeline
+- calculating size of the response
+- [combine API calls with UI](#snapshot-only-mode)
+- [hide sensitive headers and auth information](#hiding-credentials)
+- [TypeScript support](#typescript-support)
 
 ### Installation
 
 Install this package:
 ```bash
 npm i cypress-plugin-api
-
-// or
-
+# or
 yarn add cypress-plugin-api
 ```
 
@@ -30,16 +38,6 @@ require('cypress-plugin-api')
 
 ### Usage
 You can now use `cy.api()` command. This command works exactly like `cy.request()` but in addition to calling your API, it will print our information about the API call in your Cypress runner.
-
-### Features
-- view responses in UI frame as well as in the timeline
-- showing query objects, headers, request body and response
-- color coding of methods
-- copy response to clipboard (works for last test only)
-- snapshots
-
-
-![Cypress plugin for testing API](./images/video.gif)
 
 #### Snapshot only mode
 If you want to combine your API calls with your UI test, you can now use `snapshotOnly` mode, that will hide the plugin UI view after command ends. You can access it within the timeline.
@@ -90,6 +88,15 @@ it('my secret test', { env: { hideCredentials: true } }, () => {
 The result will look like this:
 
 ![Cypress plugin for testing API](./images/hideCredentials.png)
+
+#### TypeScript support
+In most cases, types work just by installing plugin, but you can add the types to your `tsconfig.json`
+```json
+{
+  "types": ["cypress-plugin-api"]
+}
+```
+This will add types for `cy.api()` command, it’s returned values as well as `env` properties.
 
 ### Issues
 All the issues can be found on [issues page](https://github.com/filiphric/cypress-plugin-api/issues), feel free to open any new ones or contribute with your own code.

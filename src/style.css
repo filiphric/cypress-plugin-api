@@ -3,12 +3,42 @@
 @tailwind utilities;
 
 #api-view {
-  @apply fixed top-0 left-0 right-0 bottom-0 bg-white h-screen overflow-scroll mb-10 ;
+  @apply fixed top-0 left-0 right-0 bottom-0 bg-cy-blue-darker h-screen overflow-scroll mb-10 ;
   z-index: 9999999
 }
 
+[data-cy=showAuth]:checked + label,
+[data-cy=showQuery]:checked + label,
+[data-cy=showRequestHeaders]:checked + label,
+[data-cy=showRequestBody]:checked + label,
+[data-cy=showResponseBody]:checked + label,
+[data-cy=showResponseHeaders]:checked + label,
+[data-cy=showCookies]:checked + label {
+  @apply text-cy-gray-light
+}
+
+[data-cy=showAuth]:checked ~ [data-cy=auth],
+[data-cy=showQuery]:checked ~ [data-cy=query],
+[data-cy=showRequestHeaders]:checked ~ [data-cy=requestHeaders],
+[data-cy=showRequestBody]:checked ~ [data-cy=requestBody],
+[data-cy=showResponseBody]:checked ~ [data-cy=responseBody],
+[data-cy=showResponseHeaders]:checked ~ [data-cy=responseHeaders],
+[data-cy=showCookies]:checked ~ [data-cy=cookies] {
+  @apply block
+}
+
+[data-cy=showAuth]:not(:checked) ~ [data-cy=auth],
+[data-cy=showQuery]:not(:checked) ~ [data-cy=query],
+[data-cy=showRequestHeaders]:not(:checked) ~ [data-cy=requestHeaders],
+[data-cy=showRequestBody]:not(:checked) ~ [data-cy=requestBody],
+[data-cy=showResponseBody]:not(:checked) ~ [data-cy=responseBody],
+[data-cy=showResponseHeaders]:not(:checked) ~ [data-cy=responseHeaders],
+[data-cy=showCookies]:not(:checked) ~ [data-cy=cookies] {
+  @apply hidden
+}
+
 pre {
-  @apply p-3 text-white text-xs;
+  @apply p-3 text-cy-gray-light text-xs;
 }
 
 pre code.hljs{
@@ -20,7 +50,7 @@ code.hljs{
   padding:3px 5px
 }
 .hljs{
-  @apply bg-cy-blue-darkest
+  @apply bg-cy-blue-darkest border-slate-800 p-4 border mt-2
 }
 .hljs ::selection,.hljs::selection{
   @apply bg-cy-blue-dark;
@@ -60,7 +90,7 @@ code.hljs{
   color:#795da3
 }
 .diff .hljs-meta,.hljs-keyword,.hljs-template-tag,.hljs-type{
-  @apply text-cy-red
+  @apply text-cy-purple
 }
 .hljs-emphasis{
   color:#a71d5d;
