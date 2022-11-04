@@ -3,6 +3,7 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
   it('hides authorization in headers', () => {
 
     cy.api({
+      method: 'POST',
       url: '/auth',
       headers: {
         authorization: 'abcd'
@@ -18,6 +19,7 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
   it('hides Authorization (Title case) in headers', () => {
 
     cy.api({
+      method: 'POST',
       url: '/auth',
       headers: {
         Authorization: 'abcd'
@@ -33,6 +35,7 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
   it('hides credentials in auth', () => {
 
     cy.api({
+      method: 'POST',
       url: '/auth',
       auth: {
         user: 'admin',
@@ -52,9 +55,10 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
 
 describe('Showing credentials', () => {
 
-  it('hides authorization in headers', () => {
+  it('shows authorization in headers', () => {
 
     cy.api({
+      method: 'POST',
       url: '/auth',
       headers: {
         authorization: 'abcd'
@@ -67,9 +71,10 @@ describe('Showing credentials', () => {
 
   });
 
-  it('hides credentials in auth', () => {
+  it('shows credentials in auth', () => {
 
     cy.api({
+      method: 'POST',
       url: '/auth',
       auth: {
         user: 'admin',

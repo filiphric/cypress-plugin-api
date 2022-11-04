@@ -6,6 +6,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
     },
     baseUrl: 'http://localhost:3003',
+    defaultCommandTimeout: 1000,
     experimentalSessionAndOrigin: true,
     video: process.env.CI ? true : false
   },
