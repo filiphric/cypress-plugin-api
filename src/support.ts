@@ -175,12 +175,12 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
     // show "no content" message if there’s no response
     if (!props[index].requestBody.formatted.length) {
-      props[index].requestBody.formatted = '(No content)'
+      props[index].requestBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
     }
 
     // show "no content" message if there’s no response
     if (!props[index].responseBody.formatted.length) {
-      props[index].responseBody.formatted = '(No content)'
+      props[index].responseBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
     }
 
     // format response header

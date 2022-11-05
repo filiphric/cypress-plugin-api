@@ -8,10 +8,11 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'plaint
   let content = language === 'json' ? JSON.stringify(body, null, 2) : body
   if (body) {
     let formatted = Prism.highlight(content, Prism.languages[language], language)
-    const html = formatted.split('\n')
+    const code = formatted.split('\n')
       .map((line, num) => `<span class="line-number text-slate-700">${(num + 1).toString().padStart(4, ' ')}</span>  ${line}`)
       .join('\n');
-    return html
+
+    return `<code class="language-${language}">${code}</code>`
   }
 
   return ''
