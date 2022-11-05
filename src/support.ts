@@ -99,7 +99,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     },
     responseHeaders: {
       body: {},
-      formatted: '',
+      formatted: ''
     },
     cookies: {
       body: {}

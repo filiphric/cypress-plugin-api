@@ -50,57 +50,56 @@ code.hljs{
   padding:3px 5px
 }
 .hljs{
-  @apply bg-cy-blue-darkest border-slate-800 p-4 border mt-2
+  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2
 }
 .hljs ::selection,.hljs::selection{
   @apply bg-cy-blue-dark;
 }
-.hljs-comment{
+
+.comment{
   @apply text-cy-gray
 }
-.hljs-tag{
+.tag{
   @apply text-cy-gray-light
 }
-.hljs-operator,.hljs-punctuation,.hljs-subst{
+.operator, .punctuation, .subst{
   @apply text-cy-gray
 }
-.hljs-operator{
+.operator{
   opacity:.7
 }
-.hljs-bullet,.hljs-deletion,.hljs-name,.hljs-selector-tag,.hljs-template-variable,.hljs-variable{
+.bullet, .deletion, .name, .selector-tag, .template-variable, .variable{
   @apply text-cy-red
 }
-.hljs-attr,.hljs-link,.hljs-literal,.hljs-number,.hljs-symbol,.hljs-variable.constant_{
+.attr, .link, .literal, .number, .symbol, .variable.constant_{
   @apply text-cy-gray-light
 }
-.hljs-number{
+.number{
   @apply text-cy-green
 }
-.hljs-class .hljs-title,.hljs-title,.hljs-title.class_{
+.class .title, .title, .title.class_{
   color:#795da3
 }
-.hljs-strong{
+.strong{
   font-weight:700;
   color:#795da3
 }
-.hljs-addition,.hljs-built_in,.hljs-code,.hljs-doctag,.hljs-keyword.hljs-atrule,.hljs-quote,.hljs-regexp,.hljs-string,.hljs-title.class_.inherited__{
+.addition, .built_in, .code, .doctag, .keyword.atrule, .quote, .regexp, .string, .title.class_.inherited__{
   @apply text-cy-blue
 }
-.hljs-attribute,.hljs-function .hljs-title,.hljs-section,.hljs-title.function_,.ruby .hljs-property{
+.attribute, .function .title, .section, .title.function_, .ruby .property{
   color:#795da3
 }
-.diff .hljs-meta,.hljs-keyword,.hljs-template-tag,.hljs-type{
+.diff .meta, .keyword, .template-tag, .type{
   @apply text-cy-purple
 }
-.hljs-emphasis{
+.emphasis{
   color:#a71d5d;
   font-style:italic
 }
-.hljs-meta,.hljs-meta .hljs-keyword,.hljs-meta .hljs-string{
+.meta, .meta .keyword, .meta .string{
   @apply text-cy-gray
 }
-.hljs-meta .hljs-keyword,.hljs-meta-keyword{
+.meta .keyword, .meta-keyword{
   font-weight:700
 }
-
-
