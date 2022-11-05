@@ -24,6 +24,7 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.5.0",
     "@types/node": "^18.11.8",
+    "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.12",
     "cypress": "^10.10.0",
@@ -43,6 +44,7 @@
   },
   "dependencies": {
     "highlight.js": "11.4.0",
+    "prismjs": "^1.29.0",
     "set-cookie-parser": "^2.5.1",
     "vue": "^3.2.41"
   },
