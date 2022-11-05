@@ -15,7 +15,7 @@
       </tbody>
     </table>
   </div>
-  <div class="bg-cy-blue-darkest border-slate-800 px-2 py-2 border mt-2 overflow-auto text-cy-gray text-xs font-mono" data-cy="cookies" v-else>(No cookies were set)</div>
+  <div class="bg-cy-blue-darkest border-slate-800 p-4 border mt-2 overflow-auto text-cy-gray text-xs font-mono" data-cy="cookies" v-else>(No cookies were set)</div>
 </template>
 <script setup lang="ts">
 const props = defineProps({

@@ -60,7 +60,7 @@ code.hljs{
   @apply text-cy-gray
 }
 .tag{
-  @apply text-cy-gray-light
+  @apply text-cy-blue
 }
 .operator, .punctuation, .subst{
   @apply text-cy-gray
@@ -77,8 +77,11 @@ code.hljs{
 .number{
   @apply text-cy-green
 }
-.class .title, .title, .title.class_{
-  color:#795da3
+.attr-name {
+  @apply text-cy-green
+}
+.attr-value {
+  @apply text-cy-gray-light
 }
 .strong{
   font-weight:700;
