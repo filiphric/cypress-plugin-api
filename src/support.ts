@@ -109,7 +109,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
   props.push(propItem)
 
   props[index].method = structuredClone(options.method) || 'GET'
-  props[index].url = Cypress.config('baseUrl') + structuredClone(options.url).replace(Cypress.config('baseUrl') as string, '') || Cypress.config('baseUrl') + '/'
+  props[index].url = (Cypress.config('baseUrl') + structuredClone(options.url).replace(Cypress.config('baseUrl') as string, '')).replace('null', '') || Cypress.config('baseUrl') + '/'
   props[index].query.body = structuredClone(options.qs)
   props[index].auth.body = structuredClone(options.auth)
   props[index].requestHeaders.body = structuredClone(options.headers)
