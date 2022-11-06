@@ -8,6 +8,8 @@ export default defineConfig({
     baseUrl: 'http://localhost:3003',
     defaultCommandTimeout: 1000,
     experimentalSessionAndOrigin: true,
-    video: process.env.CI ? true : false
+    video: process.env.CI ? true : false,
+    videoUploadOnPasses: false,
+    screenshotOnRunFailure: process.env.CI ? true : false,
   },
 })

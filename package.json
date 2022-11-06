@@ -12,6 +12,7 @@
   "scripts": {
     "test": "cypress run",
     "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "start": "node ./server",
     "build": "vite build",
     "build:watch": "vite build --watch",
