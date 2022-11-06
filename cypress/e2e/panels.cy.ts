@@ -16,7 +16,7 @@ it('contains response information - status, time and duration', () => {
   cy.api('/').then(({ duration, size }) => {
 
     cy.get('[data-cy=status]')
-      .should('have.text', '200 (OK)')
+      .should('have.text', '200\u00A0(OK)')
 
     cy.get('[data-cy=time]')
       .should('have.text', `${duration}\u00A0ms`)

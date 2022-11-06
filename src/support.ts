@@ -143,7 +143,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
 
     const { body, status, headers, statusText, duration } = res
 
-    const messageFormatted = `${status} (${statusText})`
+    const messageFormatted = `${status}\u00A0(${statusText})`
     props[index].status = messageFormatted || ''
     props[index].time = duration
     const contentTypeHeader = headers['content-type'] as string
