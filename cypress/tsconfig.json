@@ -13,7 +13,8 @@
     "typeRoots": [
       "./node_modules/@types",
       "./dist"
-    ]
+    ],
+    "baseUrl": "./"
   },
   "include": [
     "**/*.ts"
