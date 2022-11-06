@@ -9,6 +9,7 @@ import { resolveOptions } from './utils/resolveOptions';
 import { apiRequestOptions, apiResponseBody, requestProps } from './types';
 import { anonymize } from './utils/anonymize';
 import { transform } from "./utils/transform";
+import { convertSize } from './utils/convertSize';
 import { calculateSize } from './utils/calculateSize';
 const setCookie = require('set-cookie-parser');
 
@@ -187,9 +188,9 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     props[index].responseHeaders.body = headers
     props[index].responseHeaders.formatted = transform(headers)
 
-    // count content size
-    const size = parseInt(contentLengthHeader)
-    props[index].size = calculateSize(size)
+    // count content size from header if available, or calculate manually
+    const size = contentLengthHeader ? parseInt(contentLengthHeader) : calculateSize(props[index].responseBody.body)
+    props[index].size = convertSize(size)
     res.size = size
 
     yielded = res

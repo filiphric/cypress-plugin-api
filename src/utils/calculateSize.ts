@@ -1,5 +1,21 @@
-export function calculateSize(size: number) {
-  let i: number = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-  // @ts-ignore
-  return (size / Math.pow(1024, i)).toFixed(2) * 1 + '\u00A0' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+export const calculateSize = (value: any) => {
+
+  const stringified = value.toString()
+  // remove all carriage return symbols
+  const cleanString = stringified.replace(/\r\n/g, '\n')
+  // replace white spaces if value is a JSON
+  const finalString = isJsonString(cleanString) ? cleanString.replace(/\s/g, '') : cleanString
+  const byteCount = new Blob([finalString]).size
+
+  return byteCount
+
+}
+
+function isJsonString(str: string) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
 }
