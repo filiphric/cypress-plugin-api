@@ -9,7 +9,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'plaint
   if (body) {
     let formatted = Prism.highlight(content, Prism.languages[language], language)
     const code = formatted.split('\n')
-      .map((line, num) => `<span class="line-number text-slate-700">${(num + 1).toString().padStart(4, ' ')}</span>  ${line}`)
+      .map((line, num) => `<span class="line-number text-slate-700 select-none">${(num + 1).toString().padStart(4, ' ')}  </span>${line}`)
       .join('\n');
 
     return `<code class="language-${language}">${code}</code>`
