@@ -28,7 +28,7 @@
     "@types/prismjs": "^1.26.0",
     "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.12",
-    "cypress": "^10.10.0",
+    "cypress": "^10.11.0",
     "cypress-real-events": "^1.7.2",
     "cypress-recurse": "^1.23.0",
     "express": "4.17.1",
