@@ -28,6 +28,33 @@ declare global {
        *    })
        */
       api<T = any>(options: Partial<RequestOptions>): Chainable<apiResponseBody>
+      /**
+       * Make an HTTP GET request. Command works the same way as cy.request()
+       *
+       * @see https://on.cypress.io/request
+       * @example
+       *    cy.request('http://dev.local/seed')
+       */
+      request<T = any>(url: string, body?: RequestBody): Chainable<apiResponseBody>
+      /**
+       * Make an HTTP request with specific method. Command works the same way as cy.request()
+       *
+       * @see https://on.cypress.io/request
+       * @example
+       *    cy.request('POST', 'http://localhost:8888/users', {name: 'Jane'})
+       */
+      request<T = any>(method: HttpMethod, url: string, body?: RequestBody): Chainable<apiResponseBody>
+      /**
+       * Make an HTTP request with specific behavior. Command works the same way as cy.request()
+       *
+       * @see https://on.cypress.io/request
+       * @example
+       *    cy.request({
+       *      url: '/dashboard',
+       *      followRedirect: false // turn off following redirects
+       *    })
+       */
+      request<T = any>(options: Partial<RequestOptions>): Chainable<apiResponseBody>
     }
     interface Cypress {
       /**

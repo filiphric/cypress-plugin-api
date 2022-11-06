@@ -11,5 +11,6 @@ export default defineConfig({
     video: process.env.CI ? true : false,
     videoUploadOnPasses: false,
     screenshotOnRunFailure: process.env.CI ? true : false,
+    excludeSpecPattern: 'cypress/e2e/requestMode.cy.ts'
   },
 })

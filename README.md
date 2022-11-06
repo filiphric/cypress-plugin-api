@@ -11,13 +11,14 @@ Cypress plugin for effective API testing. Imagine Postman, but in Cypress. Print
 ![Cypress plugin for testing API](./images/demo.gif)
 
 ### Features
-- information about the API call, such as URL, headers, response and more are displayed on UI
+- cy.api() command, that will information about the API call, such as URL, headers, response and more to the UI frame
 - all of the info can be viewed in a time-travel snapshots
 - simple table for viewing cookies
 - color coding of methods in UI view and in timeline
 - calculating size of the response
 - [combine API calls with UI](#snapshot-only-mode)
 - [hide sensitive headers and auth information](#hiding-credentials)
+- [`requestMode` to add cy.api() features to cy.request() command](#requestmode---enable-ui-for-cyrequest-command)
 - [TypeScript support](#typescript-support)
 
 ### Installation
@@ -88,6 +89,23 @@ it('my secret test', { env: { hideCredentials: true } }, () => {
 The result will look like this:
 
 ![Cypress plugin for testing API](./images/hideCredentials.png)
+
+#### `requestMode` - enable UI for `cy.request()` command
+This setting adds all the functionality of `cy.api()` command to `cy.request()`. Can only be enabled globally, via `cypress.config.{js,ts}` file. It’s set to `false` by default.
+
+```js
+import { defineConfig } from 'cypress'
+
+export default defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+    },
+    env: {
+      requestMode: true
+    }
+  },
+})
+```
 
 #### TypeScript support
 In most cases, types work just by installing plugin, but you can add the types to your `tsconfig.json`
