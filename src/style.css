@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* UI view styles */
 #api-view {
   @apply fixed top-0 left-0 right-0 bottom-0 bg-cy-blue-darker h-screen overflow-scroll mb-10 ;
   z-index: 9999999
@@ -37,6 +38,7 @@
   @apply hidden
 }
 
+/* PrismJS styles */
 pre {
   @apply p-3 text-cy-gray-light text-xs;
 }
@@ -105,4 +107,14 @@ code.hljs{
 }
 .meta .keyword, .meta-keyword{
   font-weight:700
+}
+
+/* hiding scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
