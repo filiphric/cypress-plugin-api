@@ -14,6 +14,7 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "start": "node ./server",
+    "cy:run:requestMode": "cypress run --config specPattern='cypress/e2e/requestMode.cy.ts',excludeSpecPattern=null --env=requestMode=true",
     "build": "vite build",
     "build:watch": "vite build --watch",
     "lint": "tsc --noEmit",

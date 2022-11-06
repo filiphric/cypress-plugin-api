@@ -18,7 +18,7 @@ before(() => {
   window.props = {}
 })
 
-Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
+const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...args: Partial<apiRequestOptions>[]) => {
 
   // create an attribute that should be unique to the current test
   const currentTestTitle = Cypress.currentTest.titlePath.join('.')
@@ -136,10 +136,7 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     message: `${options.url}`
   })
 
-  return cy.request({
-    ...options,
-    log: false
-  }).then((res: apiResponseBody) => {
+  return cy.wrap<apiResponseBody>(originalFn({ ...options, log: false }, options), { log: false }).then((res: apiResponseBody) => {
 
     const { body, status, headers, statusText, duration } = res
 
@@ -223,4 +220,22 @@ Cypress.Commands.add('api', (...args: any[]): Cypress.Chainable<any> => {
     })
 
   })
-})
+}
+
+if (Cypress.env('requestMode')) {
+
+  Cypress.Commands.overwrite('request', api)
+  Cypress.Commands.add('api', (...args: Partial<apiRequestOptions>[]) => {
+    let options: apiRequestOptions = resolveOptions(...args)
+    return cy.request({ ...options, log: false })
+  })
+
+} else {
+
+  Cypress.Commands.add('api', (...args: Partial<apiRequestOptions>[]) => {
+    Cypress.Commands.overwrite('request', api)
+    let options: apiRequestOptions = resolveOptions(...args)
+    return cy.request({ ...options, log: false })
+  })
+
+}
