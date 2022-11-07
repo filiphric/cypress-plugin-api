@@ -11,6 +11,7 @@ import { anonymize } from './utils/anonymize';
 import { transform } from "./utils/transform";
 import { convertSize } from './utils/convertSize';
 import { calculateSize } from './utils/calculateSize';
+import { isValidUrl } from './utils/isValidUrl';
 const setCookie = require('set-cookie-parser');
 
 before(() => {
@@ -110,7 +111,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   props.push(propItem)
 
   props[index].method = structuredClone(options.method) || 'GET'
-  props[index].url = (Cypress.config('baseUrl') + structuredClone(options.url).replace(Cypress.config('baseUrl') as string, '')).replace('null', '') || Cypress.config('baseUrl') + '/'
+  props[index].url = isValidUrl(options.url) ? options.url : Cypress.config('baseUrl') + options.url
   props[index].query.body = structuredClone(options.qs)
   props[index].auth.body = structuredClone(options.auth)
   props[index].requestHeaders.body = structuredClone(options.headers)
