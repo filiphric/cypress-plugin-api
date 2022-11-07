@@ -14,6 +14,7 @@ Cypress plugin for effective API testing. Imagine Postman, but in Cypress. Print
 - cy.api() command, that will information about the API call, such as URL, headers, response and more to the UI frame
 - all of the info can be viewed in a time-travel snapshots
 - simple table for viewing cookies
+- JSON data object and array folding
 - color coding of methods in UI view and in timeline
 - calculating size of the response
 - [combine API calls with UI](#snapshot-only-mode)

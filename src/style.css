@@ -118,3 +118,53 @@ code.hljs{
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.line-number {
+  @apply pr-2 inline-block;
+}
+
+details summary { 
+  cursor: pointer;
+}
+
+details summary {
+  @apply text-cy-gray
+}
+
+code > details:first-of-type > summary{
+  @apply -ml-4;
+}
+
+details[open] summary.brace::before { 
+  content: " ▼ ";
+  @apply text-slate-700 -ml-2;
+}
+
+details[open] summary.bracket::before { 
+  content: " ▼ ";
+  @apply text-slate-700 -ml-2;
+}
+
+details:not([open]) summary.brace::before { 
+  content: " ▶︎ ";
+  @apply text-slate-700 -ml-2;
+}
+
+details:not([open]) summary.bracket::before { 
+  content: " ▶︎ ";
+  @apply text-slate-700 -ml-2;
+}
+
+details:not([open]) summary.brace::after { 
+  content: "…";
+  @apply w-full inline-block
+}
+
+details:not([open]) summary.bracket::after { 
+  content: "…";
+  @apply w-full inline-block
+}
+
+details:not([open]) { 
+  @apply inline-block
+}
