@@ -7,8 +7,7 @@
     ],
     "types": [
       "node",
-      "cypress",
-      "cypress-real-events"
+      "cypress"
     ],
     "typeRoots": [
       "./node_modules/@types",
