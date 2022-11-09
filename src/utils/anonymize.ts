@@ -4,7 +4,7 @@ export const anonymize = (options: requestProps) => {
 
   // as defined here https://github.com/request/request#http-authentication
   const authKeys = ['user', 'username', 'pass', 'password', 'bearer']
-  const headerKeys = ['authorization', 'Authorization'] // we may add more in future?
+  const headerKeys = ['authorization', 'Authorization', 'password', 'username'] // we may add more in future?
 
   authKeys.forEach(k => {
     if (options.auth.body && options.auth.body[k]) {

@@ -3,25 +3,22 @@
 const express = require('express')
 const app = express()
 const port = 3003
+const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
 
 app.use(express.static('server-public'));
 
 app.get('/', (req, res) => {
-  const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
   res.send(answerJSON)
 })
 
 app.post('/', (req, res) => {
-  const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
   res.send(answerJSON)
 })
 
 app.put('/', (req, res) => {
-  const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
   res.send(answerJSON)
 })
 app.patch('/', (req, res) => {
-  const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
   res.send(answerJSON)
 })
 
@@ -49,7 +46,6 @@ app.get('/redirect', (req, res) => {
 })
 
 app.get('/json', (req, res) => {
-  const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
   res.send(answerJSON)
 })
 
