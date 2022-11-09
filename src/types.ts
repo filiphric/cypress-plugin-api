@@ -62,7 +62,7 @@ declare global {
         *
         * @see https://on.cypress.io/env
         */
-      env(): Partial<PluginEnvOptions>;
+      env(): Partial<PluginEnvOptions> & Record<string, any>;
       /**
        * Returns specific environment variable or undefined
        * @see https://on.cypress.io/env
