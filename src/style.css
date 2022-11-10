@@ -85,28 +85,17 @@ code.hljs{
 .attr-value {
   @apply text-cy-gray-light
 }
-.strong{
-  font-weight:700;
-  color:#795da3
-}
+
 .addition, .built_in, .code, .doctag, .keyword.atrule, .quote, .regexp, .string, .title.class_.inherited__{
   @apply text-cy-blue
 }
-.attribute, .function .title, .section, .title.function_, .ruby .property{
-  color:#795da3
-}
+
 .diff .meta, .keyword, .template-tag, .type{
   @apply text-cy-purple
 }
-.emphasis{
-  color:#a71d5d;
-  font-style:italic
-}
+
 .meta, .meta .keyword, .meta .string{
   @apply text-cy-gray
-}
-.meta .keyword, .meta-keyword{
-  font-weight:700
 }
 
 /* hiding scrollbars */
@@ -115,7 +104,6 @@ code.hljs{
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
 
