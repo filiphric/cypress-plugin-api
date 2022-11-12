@@ -6,7 +6,7 @@ import timeline from "./timeline.css";
 import { createApp, reactive } from 'vue'
 import App from "./components/App.vue";
 import { resolveOptions } from './utils/resolveOptions';
-import { apiRequestOptions, apiResponseBody, requestProps } from './types';
+import { ApiRequestOptions, ApiResponseBody, RequestProps } from './types';
 import { anonymize } from './utils/anonymize';
 import { transform } from "./utils/transform";
 import { convertSize } from './utils/convertSize';
@@ -19,7 +19,7 @@ before(() => {
   window.props = {}
 })
 
-const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...args: Partial<apiRequestOptions>[]) => {
+const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...args: Partial<ApiRequestOptions>[]) => {
 
   // create an attribute that should be unique to the current test
   const currentTestTitle = Cypress.currentTest.titlePath.join('.')
@@ -33,7 +33,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   const propsExist = window.props[currentTestTitle]?.length ? true : false
 
   // initialize an empty array for current test if this is a first call of cy.api() in current test
-  const currentProps: requestProps[] = propsExist && !isRetry ? window.props[currentTestTitle] : [] as requestProps[]
+  const currentProps: RequestProps[] = propsExist && !isRetry ? window.props[currentTestTitle] : [] as RequestProps[]
 
   // @ts-ignore
   const doc: Document = cy.state('document');
@@ -69,11 +69,11 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
     app.mount(plugin as Element)
   }
 
-  let options: apiRequestOptions = resolveOptions(...args)
+  let options: ApiRequestOptions = resolveOptions(...args)
 
   let index = props.length
 
-  const propItem: requestProps = {
+  const propItem: RequestProps = {
     method: 'GET',
     status: '',
     time: 0,
@@ -130,14 +130,14 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   props[index].auth.formatted = transform(props[index].auth.body)
 
   // log the request
-  let yielded: apiResponseBody
+  let yielded: ApiResponseBody
   let log = Cypress.log({
     name: options.method || 'GET',
     autoEnd: false,
     message: `${options.url}`
   })
 
-  return cy.wrap<apiResponseBody>(originalFn({ ...options, log: false }, options), { log: false }).then((res: apiResponseBody) => {
+  return cy.wrap<ApiResponseBody>(originalFn({ ...options, log: false }, options), { log: false }).then((res: ApiResponseBody) => {
 
     const { body, status, headers, statusText, duration } = res
 
@@ -226,16 +226,16 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
 if (Cypress.env('requestMode')) {
 
   Cypress.Commands.overwrite('request', api)
-  Cypress.Commands.add('api', (...args: Partial<apiRequestOptions>[]) => {
-    let options: apiRequestOptions = resolveOptions(...args)
+  Cypress.Commands.add('api', (...args: Partial<ApiRequestOptions>[]) => {
+    let options: ApiRequestOptions = resolveOptions(...args)
     return cy.request({ ...options, log: false })
   })
 
 } else {
 
-  Cypress.Commands.add('api', (...args: Partial<apiRequestOptions>[]) => {
+  Cypress.Commands.add('api', (...args: Partial<ApiRequestOptions>[]) => {
     Cypress.Commands.overwrite('request', api)
-    let options: apiRequestOptions = resolveOptions(...args)
+    let options: ApiRequestOptions = resolveOptions(...args)
     return cy.request({ ...options, log: false })
   })
 

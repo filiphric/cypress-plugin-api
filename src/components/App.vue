@@ -16,8 +16,8 @@
 import RequestPanel from "./RequestPanel.vue";
 import ResponsePanel from "./ResponsePanel.vue";
 // support should come with Vue 3.3
-// import type { requestProps } from '../types'
-// const props = defineProps<requestProps[]>()
+// import type { RequestProps } from '../types'
+// const props = defineProps<RequestProps[]>()
 
 const requests = defineProps({
   props: {
