@@ -91,6 +91,38 @@ The result will look like this:
 
 ![Cypress plugin for testing API](./images/hideCredentials.png)
 
+You can also hide any credentials you want by defining array of keys in `hideCredentialsOptions`,
+
+```js
+it('my secret test', { 
+  env: { 
+    hideCredentials: true, 
+    hideCredentialsOptions: {
+      headers: ['authorization'],
+      auth: ['pass'],
+      body: ['username']
+    }
+  }
+}, () => {
+
+  cy.api({
+      url: '/',
+      headers: {
+        authorization: Cypress.env('myToken') // hidden
+      },
+      auth: {
+        pass: Cypress.env('myPass') // hidden
+      },
+      body: {
+        username: Cypress.env('myUser') // hidden
+      }
+    })
+
+})
+```
+
+This will override all the defaults set by `hideCredentials`.
+
 #### `requestMode` - enable UI for `cy.request()` command
 This setting adds all the functionality of `cy.api()` command to `cy.request()`. Can only be enabled globally, via `cypress.config.{js,ts}` file. It’s set to `false` by default.
 
