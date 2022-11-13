@@ -13,6 +13,7 @@ import { convertSize } from './utils/convertSize';
 import { calculateSize } from './utils/calculateSize';
 import { isValidUrl } from './utils/isValidUrl';
 const setCookie = require('set-cookie-parser');
+const { _ } = Cypress
 
 before(() => {
   // initialize global props object
@@ -110,12 +111,12 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
 
   props.push(propItem)
 
-  props[index].method = structuredClone(options.method) || 'GET'
+  props[index].method = _.cloneDeep(options.method) || 'GET'
   props[index].url = isValidUrl(options.url) ? options.url : Cypress.config('baseUrl') + options.url
-  props[index].query.body = structuredClone(options.qs)
-  props[index].auth.body = structuredClone(options.auth)
-  props[index].requestHeaders.body = structuredClone(options.headers)
-  props[index].requestBody.body = structuredClone(options.body)
+  props[index].query.body = _.cloneDeep(options.qs)
+  props[index].auth.body = _.cloneDeep(options.auth)
+  props[index].requestHeaders.body = _.cloneDeep(options.headers)
+  props[index].requestBody.body = _.cloneDeep(options.body)
 
   // hide credentials if the options was set up
   if (Cypress.env('hideCredentials')) props[index] = anonymize(props[index])
