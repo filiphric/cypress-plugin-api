@@ -1,6 +1,6 @@
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-json';
-import { isStringValidJson } from './isStringValidJson';
+import { isStringValidJson } from '../utils/isStringValidJson';
 
 export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'plaintext' = 'json') => {
   let content = language === 'json' ? JSON.stringify(body, null, 2) : body

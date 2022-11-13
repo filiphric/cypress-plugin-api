@@ -1,17 +1,18 @@
 /// <reference types="cypress" />
 
 import './types'
-import base from "./style.css";
-import timeline from "./timeline.css";
+
 import { createApp, reactive } from 'vue'
 import App from "./components/App.vue";
 import { resolveOptions } from './utils/resolveOptions';
 import { ApiRequestOptions, ApiResponseBody, RequestProps } from './types';
 import { anonymize } from './utils/anonymize';
-import { transform } from "./utils/transform";
+import { transform } from "./modules/transform";
 import { convertSize } from './utils/convertSize';
 import { calculateSize } from './utils/calculateSize';
 import { isValidUrl } from './utils/isValidUrl';
+import { getDoc } from './utils/getDoc';
+import { mountPlugin } from './modules/mountPlugin';
 const setCookie = require('set-cookie-parser');
 const { _ } = Cypress
 
@@ -36,8 +37,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   // initialize an empty array for current test if this is a first call of cy.api() in current test
   const currentProps: RequestProps[] = propsExist && !isRetry ? window.props[currentTestTitle] : [] as RequestProps[]
 
-  // @ts-ignore
-  const doc: Document = cy.state('document');
+  const doc = getDoc()
 
   // load props saved into window if any present in current test
   let props = reactive(currentProps)
@@ -48,26 +48,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
 
   // mount plugin only on first call in the test or on retry
   if (!propsExist || isRetry || Cypress.env('snapshotOnly')) {
-
-    // append styles
-    const head = doc.head || doc.getElementsByTagName('head')[0]
-
-    const style = doc.createElement('style');
-    head.appendChild(style);
-    style.appendChild(doc.createTextNode(base));
-
-    let reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
-    const reporterStyleEl = document.createElement('style')
-    reporterEl?.appendChild(reporterStyleEl)
-    reporterStyleEl.appendChild(doc.createTextNode(timeline));
-
-    // create an element where our plugin will mount
-    const root = doc.createElement('div');
-    root.setAttribute('id', 'api-plugin-root')
-    doc.body.appendChild(root);
-
-    const plugin = doc.getElementById('api-plugin-root')
-    app.mount(plugin as Element)
+    mountPlugin(app)
   }
 
   let options: ApiRequestOptions = resolveOptions(...args)
@@ -189,7 +170,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
 
     // count content size from header if available, or calculate manually
     const size = contentLengthHeader ? parseInt(contentLengthHeader) : calculateSize(props[index].responseBody.body)
-    props[index].size = convertSize(size)
+    props[index].size = convertSize(size) // convert to readable format (kB, MB...)
     res.size = size
 
     yielded = res
