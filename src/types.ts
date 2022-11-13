@@ -8,7 +8,7 @@ declare global {
        * @example
        *    cy.api('http://dev.local/seed')
        */
-      api<T = any>(url: string, body?: RequestBody): Chainable<ApiResponseBody>
+      api(url: string, body?: RequestBody): Chainable<ApiResponseBody>
       /**
        * Make an HTTP request with specific method. Command works the same way as cy.request()
        *
@@ -16,7 +16,7 @@ declare global {
        * @example
        *    cy.api('POST', 'http://localhost:8888/users', {name: 'Jane'})
        */
-      api<T = any>(method: HttpMethod, url: string, body?: RequestBody): Chainable<ApiResponseBody>
+      api(method: HttpMethod, url: string, body?: RequestBody): Chainable<ApiResponseBody>
       /**
        * Make an HTTP request with specific behavior. Command works the same way as cy.request()
        *
@@ -27,7 +27,7 @@ declare global {
        *      followRedirect: false // turn off following redirects
        *    })
        */
-      api<T = any>(options: Partial<RequestOptions>): Chainable<ApiResponseBody>
+      api(options: Partial<RequestOptions>): Chainable<ApiResponseBody>
       /**
        * Make an HTTP GET request. Command works the same way as cy.request()
        *
@@ -35,7 +35,7 @@ declare global {
        * @example
        *    cy.request('http://dev.local/seed')
        */
-      request<T = any>(url: string, body?: RequestBody): Chainable<ApiResponseBody>
+      request(url: string, body?: RequestBody): Chainable<ApiResponseBody>
       /**
        * Make an HTTP request with specific method. Command works the same way as cy.request()
        *
@@ -43,7 +43,7 @@ declare global {
        * @example
        *    cy.request('POST', 'http://localhost:8888/users', {name: 'Jane'})
        */
-      request<T = any>(method: HttpMethod, url: string, body?: RequestBody): Chainable<ApiResponseBody>
+      request(method: HttpMethod, url: string, body?: RequestBody): Chainable<ApiResponseBody>
       /**
        * Make an HTTP request with specific behavior. Command works the same way as cy.request()
        *
@@ -54,7 +54,7 @@ declare global {
        *      followRedirect: false // turn off following redirects
        *    })
        */
-      request<T = any>(options: Partial<RequestOptions>): Chainable<ApiResponseBody>
+      request(options: Partial<RequestOptions>): Chainable<ApiResponseBody>
     }
     interface Cypress {
       /**
@@ -62,7 +62,7 @@ declare global {
         *
         * @see https://on.cypress.io/env
         */
-      env(): Partial<PluginEnvOptions> & Record<string, any>;
+      env(): Partial<PluginEnvOptions> & object;
       /**
        * Returns specific environment variable or undefined
        * @see https://on.cypress.io/env

@@ -1,6 +1,6 @@
 import { isStringValidJson } from "./isStringValidJson"
 
-export const calculateSize = (value: any) => {
+export const calculateSize = (value: object) => {
 
   const stringified = value.toString()
   // remove all carriage return symbols

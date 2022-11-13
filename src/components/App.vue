@@ -1,15 +1,24 @@
 <template>
   <div id="api-view">
-    <div v-for="(item, index) in requests.props">
+    <div
+      v-for="(item, index) in requests.props"
+      :key="item.url"
+    >
       <section class="bg-cy-blue-darker rounded-sm m-4 p-4 pb-2">
         <div class="grid grid-cols-2 gap-4">
-          <RequestPanel :item='item' :index='index' />
-          <ResponsePanel :item='item' :index='index' />
+          <RequestPanel
+            :item="item"
+            :index="index"
+          />
+          <ResponsePanel
+            :item="item"
+            :index="index"
+          />
         </div>
-        <hr class="border-slate-800 mt-8" />
+        <hr class="border-slate-800 mt-8">
       </section>
     </div>
-    <div id="api-view-bottom"></div>
+    <div id="api-view-bottom" />
   </div>
 </template>
 <script setup lang="ts">
@@ -21,7 +30,7 @@ import ResponsePanel from "./ResponsePanel.vue";
 
 const requests = defineProps({
   props: {
-    default: [],
+    default: () => { return [] },
     type: Object
   }
 });

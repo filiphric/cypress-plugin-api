@@ -1,7 +1,7 @@
 // this test will fail on first try, but pass on second
 it('Retry resets api state', { retries: 1 }, () => {
 
-  // @ts-ignore
+  // @ts-ignore cy.state() has no type definitions
   const currentRetry = cy.state('runnable')._currentRetry
 
   // making sure we don’t see requests from previous retry
