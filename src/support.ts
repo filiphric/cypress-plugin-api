@@ -13,7 +13,7 @@ import { calculateSize } from './utils/calculateSize';
 import { isValidUrl } from './utils/isValidUrl';
 import { getDoc } from './utils/getDoc';
 import { mountPlugin } from './modules/mountPlugin';
-const setCookie = require('set-cookie-parser');
+import setCookie from 'set-cookie-parser';
 const { _ } = Cypress
 
 before(() => {
@@ -27,7 +27,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   const currentTestTitle = Cypress.currentTest.titlePath.join('.')
 
   // get the number of retry, 0 if first attempt
-  // @ts-ignore 
+  // @ts-ignore cy.state() has no type definitions
   const attempt = cy.state('runnable')._currentRetry
   const isRetry = attempt !== 0
 
@@ -40,7 +40,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   const doc = getDoc()
 
   // load props saved into window if any present in current test
-  let props = reactive(currentProps)
+  const props = reactive(currentProps)
 
   const app = createApp(App, {
     props
@@ -51,9 +51,9 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
     mountPlugin(app)
   }
 
-  let options: ApiRequestOptions = resolveOptions(...args)
+  const options: ApiRequestOptions = resolveOptions(...args)
 
-  let index = props.length
+  const index = props.length
 
   const propItem: RequestProps = {
     method: 'GET',
@@ -113,7 +113,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
 
   // log the request
   let yielded: ApiResponseBody
-  let log = Cypress.log({
+  const log = Cypress.log({
     name: options.method || 'GET',
     autoEnd: false,
     message: `${options.url}`
@@ -209,7 +209,7 @@ if (Cypress.env('requestMode')) {
 
   Cypress.Commands.overwrite('request', api)
   Cypress.Commands.add('api', (...args: Partial<ApiRequestOptions>[]) => {
-    let options: ApiRequestOptions = resolveOptions(...args)
+    const options: ApiRequestOptions = resolveOptions(...args)
     return cy.request({ ...options, log: false })
   })
 
@@ -217,7 +217,7 @@ if (Cypress.env('requestMode')) {
 
   Cypress.Commands.add('api', (...args: Partial<ApiRequestOptions>[]) => {
     Cypress.Commands.overwrite('request', api)
-    let options: ApiRequestOptions = resolveOptions(...args)
+    const options: ApiRequestOptions = resolveOptions(...args)
     return cy.request({ ...options, log: false })
   })
 

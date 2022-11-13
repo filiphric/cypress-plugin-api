@@ -4,7 +4,7 @@ export const anonymize = (options: RequestProps) => {
 
   const optionsUndefined = Cypress.env('hideCredentialsOptions') === undefined
 
-  let anonymizeOptions: HideCredentialsOptions = {
+  const anonymizeOptions: HideCredentialsOptions = {
     auth: [],
     body: [],
     headers: [],
@@ -32,7 +32,7 @@ export const anonymize = (options: RequestProps) => {
 
   anonymizeOptions.body?.forEach(k => {
     if (options.requestBody.body && options.requestBody.body[k as keyof Cypress.RequestBody]) {
-      // @ts-ignore
+      // @ts-ignore until I figure out how to fix this
       options.requestBody.body[k] = options?.requestBody.body[k].replace(/./g, '*')
     }
   })

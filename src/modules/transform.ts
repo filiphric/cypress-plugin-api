@@ -3,9 +3,9 @@ import 'prismjs/components/prism-json';
 import { isStringValidJson } from '../utils/isStringValidJson';
 
 export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'plaintext' = 'json') => {
-  let content = language === 'json' ? JSON.stringify(body, null, 2) : body
+  const content = language === 'json' ? JSON.stringify(body, null, 2) : body
   if (body) {
-    let formatted = Prism.highlight(content, Prism.languages[language], language)
+    const formatted = Prism.highlight(content, Prism.languages[language], language)
 
     let code = formatted.split('\n')
       .map((line, num) => `<span class="line-number text-slate-700 select-none contents align-top">${(num + 1).toString().padStart(4, ' ')}  </span>${line}`)

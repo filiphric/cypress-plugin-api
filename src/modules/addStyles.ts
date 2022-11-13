@@ -12,7 +12,7 @@ export const addStyles = () => {
   head.appendChild(style);
   style.appendChild(doc.createTextNode(base));
 
-  let reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
+  const reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
   const reporterStyleEl = document.createElement('style')
   reporterEl?.appendChild(reporterStyleEl)
   reporterStyleEl.appendChild(doc.createTextNode(timeline));
