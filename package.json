@@ -23,8 +23,20 @@
   "pre-commit": [
     "lint"
   ],
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/changelog"
+    ]
+  },
   "devDependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
     "@rollup/plugin-typescript": "^8.5.0",
+    "@semantic-release/changelog": "^6.0.1",
     "@types/node": "^18.11.8",
     "@types/prismjs": "^1.26.0",
     "@types/set-cookie-parser": "^2.4.2",
@@ -37,6 +49,8 @@
     "eslint-plugin-no-only-tests": "^3.1.0",
     "eslint-plugin-vue": "^9.7.0",
     "express": "4.17.1",
+    "generate-changelog": "^1.8.0",
+    "husky": "^8.0.2",
     "postcss": "^8.4.17",
     "pre-commit": "^1.2.2",
     "semantic-release": "^19.0.5",
