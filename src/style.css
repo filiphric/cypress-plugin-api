@@ -8,6 +8,29 @@
   z-index: 9999999
 }
 
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.__cypress-highlight {
+  opacity: 0.2 !important;
+}
+
+[data-layer="Padding"], [data-layer="Border"], [data-layer="Content"] {
+  opacity: 0 !important;
+}
+
+[data-layer="Margin"] {
+  @apply bg-yellow-100 !important;
+  opacity: 0;
+  animation: fade-out 2s ease-in-out;
+}
+
 [data-cy=showAuth]:checked + label,
 [data-cy=showQuery]:checked + label,
 [data-cy=showRequestHeaders]:checked + label,

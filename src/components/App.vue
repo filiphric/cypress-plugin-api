@@ -2,9 +2,12 @@
   <div id="api-view">
     <div
       v-for="(item, index) in requests.props"
-      :key="item.url"
+      :key="item.id"
     >
-      <section class="bg-cy-blue-darker rounded-sm m-4 p-4 pb-2">
+      <section
+        :id="item.id"
+        class="bg-cy-blue-darker rounded-sm m-4 p-4 pb-2"
+      >
         <div class="grid grid-cols-2 gap-4">
           <RequestPanel
             :item="item"
@@ -15,8 +18,8 @@
             :index="index"
           />
         </div>
-        <hr class="border-slate-800 mt-8">
       </section>
+      <hr class="border-slate-800 mt-6">
     </div>
     <div id="api-view-bottom" />
   </div>
