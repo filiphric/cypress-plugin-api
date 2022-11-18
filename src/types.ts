@@ -119,6 +119,7 @@ export interface ApiResponseBody extends Cypress.Response<any> {
 }
 
 export interface RequestProps {
+  id: string
   method: string
   status: string
   time: number

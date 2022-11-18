@@ -13,6 +13,7 @@ import { calculateSize } from './utils/calculateSize';
 import { isValidUrl } from './utils/isValidUrl';
 import { getDoc } from './utils/getDoc';
 import { mountPlugin } from './modules/mountPlugin';
+import { removeStyles } from './modules/removeStyles'
 import setCookie from 'set-cookie-parser';
 const { _ } = Cypress
 
@@ -56,6 +57,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   const index = props.length
 
   const propItem: RequestProps = {
+    id: _.uniqueId(),
     method: 'GET',
     status: '',
     time: 0,
@@ -176,7 +178,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
     yielded = res
 
     // we need to make sure we do the snapshot at a right moment
-    cy.then(() => {
+    cy.get(`#${props[index].id}`, { log: false }).then(($el) => {
 
       // add response to console output
       log.set({
@@ -190,13 +192,17 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
       // save all props to current window to be loaded
       window.props[currentTestTitle] = props
 
+      log.set({ $el });
       log.snapshot('snapshot').end()
 
       // scroll to the bottom
       doc.getElementById('api-view-bottom')?.scrollIntoView()
 
       // if in snapshot mode, unmount plugin from view
-      if (Cypress.env('snapshotOnly')) { app.unmount() }
+      if (Cypress.env('snapshotOnly')) {
+        app.unmount()
+        removeStyles()
+      }
 
       return res
 
