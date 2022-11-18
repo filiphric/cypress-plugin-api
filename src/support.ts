@@ -119,7 +119,7 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
     message: `${options.url}`
   })
 
-  return cy.wrap<ApiResponseBody>(originalFn({ ...options, log: false }, options), { log: false }).then((res: ApiResponseBody) => {
+  return cy.wrap<ApiResponseBody>(originalFn({ ...options, log: false }, options), { log: false, timeout: options.timeout || Cypress.config('responseTimeout') }).then((res: ApiResponseBody) => {
 
     const { body, status, headers, statusText, duration } = res
 

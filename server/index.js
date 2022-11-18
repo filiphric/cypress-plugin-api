@@ -11,6 +11,14 @@ app.get('/', (req, res) => {
   res.send(answerJSON)
 })
 
+app.get('/delay', (req, res) => {
+
+  setTimeout((() => {
+    res.send('delayed by 5000ms')
+  }), 5000)
+  
+})
+
 app.post('/', (req, res) => {
   res.send(answerJSON)
 })
