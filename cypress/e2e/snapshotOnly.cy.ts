@@ -21,3 +21,11 @@ it('snapshotOnly does not affect later plugin use', () => {
     .should('be.visible')
 
 });
+
+it('visiting a page does not affect showing plugin', { baseUrl: null }, () => {
+
+  cy.api('http://localhost:3003/')
+  cy.visit('server-public/test.html')
+  cy.api('http://localhost:3003/')
+
+});
