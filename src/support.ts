@@ -27,10 +27,13 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   // create an attribute that should be unique to the current test
   const currentTestTitle = Cypress.currentTest.titlePath.join('.')
 
+  const doc = getDoc()
+
   // get the number of retry, 0 if first attempt
   // @ts-ignore cy.state() has no type definitions
   const attempt = cy.state('runnable')._currentRetry
   const isRetry = attempt !== 0
+  const hasNavigated = doc.URL !== 'about:blank'
 
   // determine if there are props from the same test but previous cy.api() call
   const propsExist = window.props[currentTestTitle]?.length ? true : false
@@ -38,7 +41,6 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
   // initialize an empty array for current test if this is a first call of cy.api() in current test
   const currentProps: RequestProps[] = propsExist && !isRetry ? window.props[currentTestTitle] : [] as RequestProps[]
 
-  const doc = getDoc()
 
   // load props saved into window if any present in current test
   const props = reactive(currentProps)
@@ -47,8 +49,8 @@ const api: Cypress.CommandFnWithOriginalFn<"request"> = (originalFn: any, ...arg
     props
   })
 
-  // mount plugin only on first call in the test or on retry
-  if (!propsExist || isRetry || Cypress.env('snapshotOnly')) {
+  // mount plugin only on first call in the test, on retry, or when we left the initial page with cy.visit()
+  if (!propsExist || isRetry || Cypress.env('snapshotOnly') || hasNavigated) {
     mountPlugin(app)
   }
 
