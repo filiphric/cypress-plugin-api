@@ -90,6 +90,7 @@ app.get('/text', (req, res) => {
 })
 
 app.get('/empty', (req, res) => {
+  res.status(204)
   res.send()
 })
 

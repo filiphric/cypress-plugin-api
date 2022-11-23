@@ -14,6 +14,7 @@ export default defineConfig({
       formats: ['cjs'],
       fileName: 'support'
     },
+    sourcemap: true,
     rollupOptions: {
       external: ['vue'],
       output: {
