@@ -42,3 +42,9 @@ it('shows failed status code', () => {
     .and('have.css', 'color', 'rgb(255, 87, 112)')
 
 });
+
+it('works with empty response', () => {
+
+  cy.api('/empty')
+
+});
