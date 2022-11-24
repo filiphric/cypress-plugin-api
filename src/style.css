@@ -19,6 +19,7 @@
 
 .__cypress-highlight {
   opacity: 0.2 !important;
+  pointer-events: none !important;
 }
 
 [data-layer="Padding"], [data-layer="Border"], [data-layer="Content"] {
