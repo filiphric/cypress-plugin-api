@@ -2,6 +2,10 @@ import { isStringValidJson } from "./isStringValidJson"
 
 export const calculateSize = (value: object) => {
 
+  if (value === null || value === undefined) {
+    return 0
+  }
+
   const stringified = value.toString()
   // remove all carriage return symbols
   const cleanString = stringified.replace(/\r\n/g, '\n')
