@@ -1,16 +1,20 @@
-it('shows cookie table', () => {
+describe('cookie table', () => {
 
-  cy.api('/cookies')
-  cy.get('[data-cy=showCookies] + label')
-    .click()
+  it('shows cookie table', () => {
 
-  cy.get('[data-cy=cookies]')
-    .should('be.visible')
+    cy.api('/cookies')
+    cy.get('[data-cy=showCookies] + label')
+      .click()
 
-  cy.contains('th', 'Name')
-  cy.contains('th', 'Value')
+    cy.get('[data-cy=cookies]')
+      .should('be.visible')
 
-  cy.contains('td', 'hello')
-  cy.contains('td', 'cookie')
+    cy.contains('th', 'Name')
+    cy.contains('th', 'Value')
+
+    cy.contains('td', 'hello')
+    cy.contains('td', 'cookie')
+
+  });
 
 });

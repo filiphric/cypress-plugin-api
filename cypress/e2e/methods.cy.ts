@@ -23,19 +23,23 @@ const methods = [{
   color: 'rgb(255, 87, 112)'
 }]
 
-it(`works with basic methods`, () => {
+describe('api methods', () => {
 
-  methods.forEach(({ method, color }, i) => {
-    cy.api({
-      method,
-      url: '/'
-    })
+  it(`works with basic methods`, () => {
 
-    cy.get('[data-cy=method]')
-      .eq(i)
-      .should('have.css', 'color', color)
+    methods.forEach(({ method }) => {
+      cy.api({
+        method,
+        url: '/'
+      })
+    });
 
-  });
+    methods.forEach(({ color }, i) => {
+      cy.get('[data-cy=method]')
+        .eq(i)
+        .should('have.css', 'color', color)
+    });
 
-})
+  })
 
+});

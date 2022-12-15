@@ -1,8 +1,8 @@
-import { getDoc } from "../utils/getDoc";
+import { getState } from "../utils/getState";
 
 export const removeStyles = () => {
 
-  const doc = getDoc()
+  const { doc } = getState()
 
   const style = doc.getElementsByTagName('style')[0];
   style.remove()

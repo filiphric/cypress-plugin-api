@@ -1,28 +1,32 @@
-it('takes a single argument', () => {
+describe('syntax', () => {
 
-  cy.api('/')
+  it('takes a single argument', () => {
 
-  // default method is GET
-  cy.contains('GET')
+    cy.api('/')
 
-});
+    // default method is GET
+    cy.contains('GET')
 
-it('takes two arguments', () => {
+  });
 
-  cy.api('GET', '/')
-  cy.contains('GET')
+  it('takes two arguments', () => {
 
-});
+    cy.api('GET', '/')
+    cy.contains('GET')
 
-it('takes three arguments', () => {
+  });
 
-  cy.api('POST', '/', { hello: 'world' })
-  cy.contains('POST')
-  cy.get('[data-cy=requestBody]')
-    .should('contain', '{')
-    .should('contain', 'hello')
-    .should('contain', ':')
-    .should('contain', 'world')
-    .should('contain', '}')
+  it('takes three arguments', () => {
+
+    cy.api('POST', '/', { hello: 'world' })
+    cy.contains('POST')
+    cy.get('[data-cy=requestBody]')
+      .should('contain', '{')
+      .should('contain', 'hello')
+      .should('contain', ':')
+      .should('contain', 'world')
+      .should('contain', '}')
+
+  });
 
 });

@@ -17,7 +17,18 @@
             "DOM"
         ],
         "skipLibCheck": true,
-        "baseUrl": "./"
+        "baseUrl": "./",
+        "paths": {
+            "@modules/*": [
+                "src/modules/*"
+            ],
+            "@utils/*": [
+                "src/utils/*"
+            ],
+            "@models/*": [
+                "src/models/*"
+            ]
+        }
     },
     "include": [
         "src/**/*.ts",

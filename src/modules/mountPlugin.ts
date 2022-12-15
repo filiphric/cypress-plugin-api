@@ -1,10 +1,10 @@
 import { App } from "vue";
 import { addStyles } from "./addStyles";
-import { getDoc } from "../utils/getDoc";
+import { getState } from "../utils/getState";
 
 export const mountPlugin = (app: App<Element>) => {
 
-  const doc = getDoc()
+  const { doc } = getState()
   addStyles()
 
   // create an element where our plugin will mount
