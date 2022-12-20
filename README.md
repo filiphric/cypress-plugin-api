@@ -124,21 +124,7 @@ it('my secret test', {
 This will override all the defaults set by `hideCredentials`.
 
 #### `requestMode` - enable UI for `cy.request()` command
-This setting adds all the functionality of `cy.api()` command to `cy.request()`. Can only be enabled globally, via `cypress.config.{js,ts}` file. It’s set to `false` by default.
-
-```js
-import { defineConfig } from 'cypress'
-
-export default defineConfig({
-  e2e: {
-    setupNodeEvents(on, config) {
-    },
-    env: {
-      requestMode: true
-    }
-  },
-})
-```
+This setting adds all the functionality of `cy.api()` command to `cy.request()`. It’s set to `false` by default. This means that when you call `cy.request()` in your test, it will show UI.
 
 #### TypeScript support
 In most cases, types work just by installing plugin, but you can add the types to your `tsconfig.json`
