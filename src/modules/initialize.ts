@@ -49,7 +49,6 @@ export const initialize = () => {
   const { doc, attempt } = getState()
 
   // get the number of retry, 0 if first attempt
-  // @ts-ignore cy.state() has no type definitions
   const isRetry = attempt !== 0
   const hasNavigated = doc.URL !== 'about:blank'
 
