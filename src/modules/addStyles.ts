@@ -8,10 +8,13 @@ export const addStyles = () => {
   // append styles
   const head = doc.head || doc.getElementsByTagName('head')[0]
 
+  // add plugin styles
   const style = doc.createElement('style');
+  style.setAttribute('id', 'api-plugin-styles')
   head.appendChild(style);
   style.appendChild(doc.createTextNode(base));
 
+  // add timeline styles
   const reporterEl = top?.document.querySelector('#unified-reporter') || top?.document.querySelector('#app')
   const reporterStyleEl = document.createElement('style')
   reporterEl?.appendChild(reporterStyleEl)

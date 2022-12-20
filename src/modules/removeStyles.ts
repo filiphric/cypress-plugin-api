@@ -4,7 +4,7 @@ export const removeStyles = () => {
 
   const { doc } = getState()
 
-  const style = doc.getElementsByTagName('style')[0];
-  style.remove()
+  const style = doc.getElementById('api-plugin-styles');
+  style?.remove()
 
 }
