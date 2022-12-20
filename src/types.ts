@@ -101,7 +101,8 @@ declare global {
 export interface PluginEnvOptions {
   snapshotOnly: boolean
   hideCredentials: boolean
-  hideCredentialsOptions: HideCredentialsOptions
+  hideCredentialsOptions: HideCredentialsOptions,
+  requestMode: boolean
 }
 
 export interface HideCredentialsOptions {

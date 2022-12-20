@@ -11,16 +11,6 @@ jobs:
         with:
           start: npm start
           build: npm run build
-          group: smoke tests
-          record: true
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          group: requestMode tests
-          config: specPattern=cypress/e2e/requestMode.cy.ts,excludeSpecPattern=null
-          env: requestMode=true
           record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

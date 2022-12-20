@@ -3,6 +3,10 @@ const { _ } = Cypress
 
 export const resolveOptions = (...args: any[]) => {
 
+  if (_.isFunction(args[0])) {
+    args.shift()
+  }
+
   const o: any = {}
   const userOptions = o
 

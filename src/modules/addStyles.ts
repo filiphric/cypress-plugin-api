@@ -1,10 +1,10 @@
 import base from "../style.css";
 import timeline from "../timeline.css";
-import { getDoc } from "../utils/getDoc";
+import { getState } from "../utils/getState";
 
 export const addStyles = () => {
 
-  const doc = getDoc()
+  const { doc } = getState()
   // append styles
   const head = doc.head || doc.getElementsByTagName('head')[0]
 

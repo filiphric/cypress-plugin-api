@@ -38,3 +38,12 @@
   min-width: 10px;
   margin-right: 6px;
 }
+
+.command.command-name-GET span.command-method:before,
+.command.command-name-DELETE span.command-method:before,
+.command.command-name-PATCH span.command-method:before,
+.command.command-name-HEAD span.command-method:before,
+.command.command-name-PUT span.command-method:before,
+.command.command-name-POST span.command-method:before {
+  content: ''
+} 
