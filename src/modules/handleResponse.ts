@@ -9,9 +9,7 @@ import { App } from 'vue';
 
 export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions, props: RequestProps[], index: number, app: App<Element>) => {
 
-  const { doc } = getState()
-
-  const currentTestTitle = Cypress.currentTest.titlePath.join('.')
+  const { doc, testId } = getState()
 
   // log the request
   const log = Cypress.log({
@@ -87,7 +85,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     })
 
     // save all props to current window to be loaded
-    window.props[currentTestTitle] = props
+    window.props[testId] = props
 
     log.set({ $el });
     log.snapshot('snapshot').end()

@@ -43,20 +43,17 @@ export const initialize = () => {
     }
   }
 
-  // create an attribute that should be unique to the current test
-  const currentTestTitle = Cypress.currentTest.titlePath.join('.')
-
-  const { doc, attempt } = getState()
+  const { doc, attempt, testId } = getState()
 
   // get the number of retry, 0 if first attempt
   const isRetry = attempt !== 0
   const hasNavigated = doc.URL !== 'about:blank'
 
   // determine if there are props from the same test but previous cy.api() call
-  const propsExist = window.props[currentTestTitle]?.length ? true : false
+  const propsExist = window.props[testId]?.length ? true : false
 
   // initialize an empty array for current test if this is a first call of cy.api() in current test
-  const currentProps: RequestProps[] = propsExist && !isRetry ? window.props[currentTestTitle] : [] as RequestProps[]
+  const currentProps: RequestProps[] = propsExist && !isRetry ? window.props[testId] : [] as RequestProps[]
 
   // add empty props object to be filled in upcoming call
   currentProps.push(propItem)
