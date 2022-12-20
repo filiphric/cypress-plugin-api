@@ -8,8 +8,6 @@ before(() => {
   window.props = {}
 })
 
-
-
 Cypress.Commands.addAll({ api })
 
 Cypress.Commands.overwrite('request', (originalFn, ...args) => {
