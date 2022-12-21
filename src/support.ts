@@ -17,3 +17,5 @@ Cypress.Commands.overwrite('request', (originalFn, ...args) => {
     return originalFn(...args)
   }
 })
+
+export { api }
