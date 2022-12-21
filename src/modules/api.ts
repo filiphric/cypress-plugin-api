@@ -7,6 +7,7 @@ import { transformData } from './transformData';
 import { cloneProps } from './cloneProps';
 
 // make a copy of cy.request() function
+// this prevents unusual behavior when using requestMode
 const requestFn = cy.request.bind({})
 
 export const api = (...params: Partial<ApiRequestOptions>[]) => {
