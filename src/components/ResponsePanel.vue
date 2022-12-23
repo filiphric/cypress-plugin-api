@@ -18,7 +18,7 @@
     >
     <label 
       v-show="item?.responseBody.body" 
-      class="pr-4 pl-1 cursor-pointer text-cy-gray"
+      class="pr-4 md:pl-1 cursor-pointer text-cy-gray"
       :for="'responseBody' + index"
     >
       Response
