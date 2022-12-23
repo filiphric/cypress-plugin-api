@@ -2,7 +2,8 @@
   "author": "Filip Hric (https://filiphric.com/)",
   "license": "ISC",
   "name": "cypress-plugin-api",
-  "version": "0.0.0-development",
+  "version": "2.8.0",
+  "keywords": ["cypress", "api", "testing", "plugin"],
   "description": "UI for testing API in Cypress",
   "main": "dist/support.js",
   "types": "dist/types.d.ts",
@@ -14,11 +15,14 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "start": "node ./server",
-    "cy:run:requestMode": "cypress run --config specPattern='cypress/e2e/requestMode.cy.ts',excludeSpecPattern=null --env=requestMode=true",
     "build": "vite build",
     "build:watch": "vite build --watch",
     "lint": "tsc --noEmit && eslint . --max-warnings=15 --quiet",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major"
   },
   "pre-commit": [
     "lint"
@@ -27,9 +31,9 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      "@semantic-release/npm",
+      "@semantic-release/changelog",
       "@semantic-release/github",
-      "@semantic-release/changelog"
+      "@semantic-release/npm"
     ]
   },
   "devDependencies": {
@@ -54,6 +58,7 @@
     "postcss": "^8.4.17",
     "pre-commit": "^1.2.2",
     "semantic-release": "^19.0.5",
+    "standard-version": "^9.5.0",
     "tailwindcss": "^3.1.8",
     "typescript": "4.5.4",
     "vite": "^3.1.4"

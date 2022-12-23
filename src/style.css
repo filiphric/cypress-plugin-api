@@ -180,3 +180,11 @@ details:not([open]) summary.bracket::after {
 details:not([open]) { 
   @apply inline-block
 }
+
+.separator{
+    font-size: 50px;
+    display: block;
+    text-align: center;
+    letter-spacing: 5px;
+    @apply text-cy-blue-dark block md:hidden -my-6;
+}
