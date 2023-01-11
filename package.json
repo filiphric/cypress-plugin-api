@@ -2,7 +2,7 @@
   "author": "Filip Hric (https://filiphric.com/)",
   "license": "ISC",
   "name": "cypress-plugin-api",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "keywords": [
     "cypress",
     "api",

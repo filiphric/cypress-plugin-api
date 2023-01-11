@@ -1,5 +1,13 @@
 # Changelog
 
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [2.9.1](https://github.com/filiphric/cypress-plugin-api/compare/v2.9.0...v2.9.1) (2023-01-11)
+
+
+### Bug Fixes
+
+* displaying of url when request is sent to IP address ([3c240b1](https://github.com/filiphric/cypress-plugin-api/commits/3c240b15c3c01a78da95679959d7da0f1dbb100a))
 
 ## [2.9.0](https://github.com/filiphric/cypress-plugin-api/compare/v2.8.0...v2.9.0) (2022-12-23)
 
