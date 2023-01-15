@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/filiphric/cypress-plugin-api/compare/v2.9.1...v2.10.0) (2023-01-15)
+
+
+### Features
+
+* add support for missing or unknown content-type ([d283156](https://github.com/filiphric/cypress-plugin-api/commits/d28315664d1a800ae8a1a0543418c41b10f90f6f))
+
 ### [2.9.1](https://github.com/filiphric/cypress-plugin-api/compare/v2.9.0...v2.9.1) (2023-01-11)
 
 

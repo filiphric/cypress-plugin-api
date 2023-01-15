@@ -6,6 +6,7 @@ import { ApiRequestOptions, ApiResponseBody, RequestProps } from 'src/types';
 import { transform } from "@modules/transform";
 import { getState } from '@utils/getState';
 import { App } from 'vue';
+import { getFormat } from '@utils/getFormat';
 
 export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions, props: RequestProps[], index: number, app: App<Element>) => {
 
@@ -37,7 +38,9 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
       'text/html': 'html',
       'text/plain': 'plaintext',
     } as const
-    const language = formats[contentType as keyof typeof formats]
+    const definedFormat = formats[contentType as keyof typeof formats]
+    // if format is in the "formats" object use that, else try to determine by the function
+    const language = definedFormat || getFormat(body)
     // format response
     props[index].responseBody.formatted = transform(body, language)
     props[index].responseBody.body = bodyRaw

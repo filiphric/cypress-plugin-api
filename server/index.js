@@ -84,6 +84,11 @@ app.get('/xml', (req, res) => {
   res.send(answerXML)
 })
 
+app.get('/undefined', (req, res) => {
+  const answerXML = "<xml>XML</xml>"
+  res.send(answerXML)
+})
+
 app.get('/text', (req, res) => {
   const answerText = "Hey there 👋"
   res.send(answerText)
