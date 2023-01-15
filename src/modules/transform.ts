@@ -1,8 +1,8 @@
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-json';
-import { isStringValidJson } from '../utils/isStringValidJson';
+import { isValidJson } from '../utils/isValidJson';
 
-export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'plaintext' = 'json') => {
+export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' | 'plaintext' = 'json') => {
   const content = language === 'json' ? JSON.stringify(body, null, 2) : body
   if (body) {
     const formatted = Prism.highlight(content, Prism.languages[language], language)
@@ -13,7 +13,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'plaint
 
 
     // add folding to every json object and array
-    if (isStringValidJson(content)) {
+    if (isValidJson(content)) {
       code = code
         .replaceAll('<span class="token punctuation">{</span>', '<details class="contents" open><summary class="inline-block brace"><span class="token punctuation">{</span></summary>')
         .replaceAll('<span class="token punctuation">[</span>', '<details class="contents" open><summary class="inline-block bracket"><span class="token punctuation">[</span></summary>')
