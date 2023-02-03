@@ -62,7 +62,7 @@ declare global {
         *
         * @see https://on.cypress.io/env
         */
-      env(): Partial<PluginEnvOptions> & object;
+      env(): PluginEnvOptions;
       /**
        * Returns specific environment variable or undefined
        * @see https://on.cypress.io/env
@@ -87,10 +87,10 @@ declare global {
        * @example
        *    Cypress.env({ host: "http://server.dev.local", foo: "foo" })
        */
-      env(object: Partial<PluginEnvOptions>): void;
+      env(object: PluginEnvOptions): void;
     }
     interface TestConfigOverrides {
-      env?: Partial<PluginEnvOptions>
+      env?: PluginEnvOptions
     }
   }
   interface Window {
@@ -98,11 +98,11 @@ declare global {
   }
 }
 
-export interface PluginEnvOptions {
-  snapshotOnly: boolean
-  hideCredentials: boolean
-  hideCredentialsOptions: HideCredentialsOptions,
-  requestMode: boolean
+export interface PluginEnvOptions extends Cypress.ObjectLike {
+  snapshotOnly?: boolean
+  hideCredentials?: boolean
+  hideCredentialsOptions?: HideCredentialsOptions,
+  requestMode?: boolean
 }
 
 export interface HideCredentialsOptions {
