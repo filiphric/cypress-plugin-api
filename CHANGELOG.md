@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.3](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.2...v2.10.3) (2023-02-03)
+
+
+### Bug Fixes
+
+* incorrect parsing of JSON formats ([e71c3ce](https://github.com/filiphric/cypress-plugin-api/commits/e71c3ce380f22558ebc936e8bc54a7be3b2d0508))
+
 ### [2.10.2](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.1...v2.10.2) (2023-02-03)
 
 

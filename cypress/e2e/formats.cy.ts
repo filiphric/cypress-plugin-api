@@ -30,6 +30,16 @@ describe('response formats', () => {
 
   });
 
+  it('works with json that does not contain proper header', () => {
+
+    cy.api('/json-weird')
+
+    // numbers in json are formatted
+    cy.contains('1234')
+      .should('have.css', 'color', 'rgb(31, 169, 113)')
+
+  });
+
   it('works with text', () => {
 
     cy.api({
