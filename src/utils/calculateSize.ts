@@ -2,7 +2,7 @@ import { isValidJson } from "./isValidJson"
 
 export const calculateSize = (value: object) => {
 
-  if (value === null || value === undefined) {
+  if (!value) {
     return 0
   }
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.1](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.0...v2.10.1) (2023-02-03)
+
+
+### Bug Fixes
+
+* issue with failing replace function ([b0862cd](https://github.com/filiphric/cypress-plugin-api/commits/b0862cdec229fbb4ed653e1ebeabe2d1b5df5b84))
+
 ## [2.10.0](https://github.com/filiphric/cypress-plugin-api/compare/v2.9.1...v2.10.0) (2023-01-15)
 
 
