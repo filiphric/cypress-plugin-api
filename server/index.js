@@ -84,6 +84,11 @@ app.get('/xml', (req, res) => {
   res.send(answerXML)
 })
 
+app.get('/json-weird', (req, res) => {
+  res.set('Content-Type', 'application/abcd+json');
+  res.send(answerJSON)
+})
+
 app.get('/undefined', (req, res) => {
   const answerXML = "<xml>XML</xml>"
   res.send(answerXML)
