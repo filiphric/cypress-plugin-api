@@ -69,7 +69,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
   props[index].responseHeaders.formatted = transform(headers)
 
   // count content size from header if available, or calculate manually
-  const size = contentLengthHeader ? parseInt(contentLengthHeader) : calculateSize(props[index].responseBody.body)
+  const size = contentLengthHeader ? parseInt(contentLengthHeader) : calculateSize(props[index].responseBody.body.value)
   props[index].size = convertSize(size) // convert to readable format (kB, MB...)
   res.size = size
 
