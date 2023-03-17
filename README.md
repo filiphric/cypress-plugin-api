@@ -100,7 +100,8 @@ it('my secret test', {
     hideCredentialsOptions: {
       headers: ['authorization'],
       auth: ['pass'],
-      body: ['username']
+      body: ['username'],
+      query: ['password']
     }
   }
 }, () => {
@@ -115,6 +116,9 @@ it('my secret test', {
       },
       body: {
         username: Cypress.env('myUser') // hidden
+      },
+      qs: {
+        password: Cypress.env('password') // hidden
       }
     })
 

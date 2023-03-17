@@ -130,6 +130,29 @@ describe('Hiding credentials by defining them', () => {
 
   });
 
+  it('hides credentials in query', {
+    env: {
+      hideCredentials: true,
+      hideCredentialsOptions: {
+        qs: ['password']
+      }
+    }
+  }, () => {
+
+    cy.api({
+      method: 'POST',
+      url: '/',
+      qs: {
+        password: 'secret'
+      }
+    })
+
+    cy.get('[data-cy="query"]')
+      .should('contain', '******')
+      .should('contain', 'password')
+
+  });
+
 });
 
 describe('Showing credentials', () => {
