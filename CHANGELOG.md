@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.5...v2.11.0) (2023-03-17)
+
+
+### Features
+
+* add support for hiding query parameters ([9122abc](https://github.com/filiphric/cypress-plugin-api/commits/9122abcb68e683b5e2d8da6d35e703de593b8e73))
+
 ### [2.10.5](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.4...v2.10.5) (2023-03-17)
 
 
