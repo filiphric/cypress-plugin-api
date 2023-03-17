@@ -14,7 +14,7 @@
           class="mx-2 font-mono text-cy-green"
         >{{ time }}&nbsp;ms</span>
       </p>
-      <p>
+      <p v-if="size">
         Size:<span
           data-cy="size"
           class="mx-2 font-mono text-cy-green"

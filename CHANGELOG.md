@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.4](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.3...v2.10.4) (2023-03-17)
+
+
+### Bug Fixes
+
+* make size attribute optional ([7950f38](https://github.com/filiphric/cypress-plugin-api/commits/7950f38d04a1197d2b6600e5fb7a6f1be058cf9f))
+
 ### [2.10.3](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.2...v2.10.3) (2023-02-03)
 
 
