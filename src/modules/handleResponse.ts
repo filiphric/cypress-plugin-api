@@ -17,7 +17,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     name: options.method || 'GET',
     autoEnd: false,
     message: `${options.url}`
-  })
+  }).snapshot('request')
 
   const { body, status, headers, statusText, duration } = res
 
@@ -75,34 +75,40 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
   const yielded = res
 
+  const findSnapshotElement = () => {
+    return Cypress.$(`#${props[index].id}`, { log: false })
+  }
+
   // we need to make sure we do the snapshot at a right moment
-  cy.get(`#${props[index].id}`, { log: false }).then(($el) => {
+  cy.window({ log: false })
+    .then(findSnapshotElement)
+    .then(($el) => {
 
-    // add response to console output
-    log.set({
-      consoleProps() {
-        return {
-          yielded
+      // add response to console output
+      log.set({
+        consoleProps() {
+          return {
+            yielded
+          }
         }
+      })
+
+      // save all props to current window to be loaded
+      window.props[testId] = props
+
+      log.set({ $el });
+      log.snapshot('response').end()
+
+      // scroll to the bottom
+      doc.getElementById('api-view-bottom')?.scrollIntoView()
+
+      // if in snapshot mode, unmount plugin from view
+      if (Cypress.env('snapshotOnly')) {
+        app.unmount()
+        removeStyles()
       }
+
+      return res
+
     })
-
-    // save all props to current window to be loaded
-    window.props[testId] = props
-
-    log.set({ $el });
-    log.snapshot('snapshot').end()
-
-    // scroll to the bottom
-    doc.getElementById('api-view-bottom')?.scrollIntoView()
-
-    // if in snapshot mode, unmount plugin from view
-    if (Cypress.env('snapshotOnly')) {
-      app.unmount()
-      removeStyles()
-    }
-
-    return res
-
-  })
 }
