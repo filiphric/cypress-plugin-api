@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.5](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.4...v2.10.5) (2023-03-17)
+
+
+### Bug Fixes
+
+* snapshot handling that causes unexpected errors ([f60021d](https://github.com/filiphric/cypress-plugin-api/commits/f60021d0f3c52cc7e6fc60955279362a848f8e90))
+
 ### [2.10.4](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.3...v2.10.4) (2023-03-17)
 
 
