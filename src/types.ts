@@ -109,6 +109,7 @@ export interface HideCredentialsOptions {
   auth?: string[]
   headers?: string[]
   body?: string[]
+  qs?: string[]
 }
 
 export interface ApiRequestOptions extends Cypress.RequestOptions {

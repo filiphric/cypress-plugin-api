@@ -8,6 +8,7 @@ export const anonymize = (options: RequestProps) => {
     auth: [],
     body: [],
     headers: [],
+    qs: [],
     ...Cypress.env('hideCredentialsOptions')
   }
 
@@ -34,6 +35,13 @@ export const anonymize = (options: RequestProps) => {
     if (options.requestBody.body && options.requestBody.body[k as keyof Cypress.RequestBody]) {
       // @ts-ignore until I figure out how to fix this
       options.requestBody.body[k] = options?.requestBody.body[k].replace(/./g, '*')
+    }
+  })
+
+  anonymizeOptions.qs?.forEach(k => {
+    if (options.query.body && options.query.body[k as keyof Cypress.RequestBody]) {
+      // @ts-ignore until I figure out how to fix this
+      options.query.body[k] = options?.query.body[k].replace(/./g, '*')
     }
   })
 
