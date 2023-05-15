@@ -90,7 +90,7 @@ declare global {
       env(object: PluginEnvOptions): void;
     }
     interface TestConfigOverrides {
-      env?: PluginEnvOptions
+      env?: Partial<PluginEnvOptions>
     }
   }
   interface Window {

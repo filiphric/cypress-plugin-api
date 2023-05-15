@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.11.1](https://github.com/filiphric/cypress-plugin-api/compare/v2.11.0...v2.11.1) (2023-05-15)
+
+
+### Bug Fixes
+
+* types for env object being wrongly set as required ([8a1a995](https://github.com/filiphric/cypress-plugin-api/commits/8a1a9954eebaa16ed505cd2715d4ba77d07c1d9b))
+
 ## [2.11.0](https://github.com/filiphric/cypress-plugin-api/compare/v2.10.5...v2.11.0) (2023-03-17)
 
 
