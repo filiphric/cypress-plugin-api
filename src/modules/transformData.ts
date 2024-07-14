@@ -1,4 +1,4 @@
-import { RequestProps } from "src/types"
+import { RequestProps } from "../types"
 import { transform } from "./transform"
 
 export const transformData = (props: RequestProps[], index: number) => {

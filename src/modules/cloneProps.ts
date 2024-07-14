@@ -1,5 +1,5 @@
 import { isValidUrlOrIp } from "@utils/isValidUrlOrIp"
-import { ApiRequestOptions, RequestProps } from "src/types"
+import { ApiRequestOptions, RequestProps } from "../types"
 const { _ } = Cypress
 
 export const cloneProps = (props: RequestProps[], index: number, options: ApiRequestOptions) => {
