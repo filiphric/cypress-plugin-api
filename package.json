@@ -69,7 +69,7 @@
     "vite": "^3.1.4"
   },
   "peerDependencies": {
-    "cypress": ">=3"
+    "cypress": ">=10"
   },
   "dependencies": {
     "highlight.js": "11.4.0",

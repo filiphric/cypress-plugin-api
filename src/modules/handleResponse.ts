@@ -2,7 +2,7 @@ import { removeStyles } from '@modules/removeStyles'
 import setCookie from 'set-cookie-parser';
 import { convertSize } from '@utils/convertSize';
 import { calculateSize } from '@utils/calculateSize';
-import { ApiRequestOptions, ApiResponseBody, RequestProps } from 'src/types';
+import { ApiRequestOptions, ApiResponseBody, RequestProps } from '../types';
 import { transform } from "@modules/transform";
 import { getState } from '@utils/getState';
 import { App } from 'vue';

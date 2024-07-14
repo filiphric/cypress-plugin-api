@@ -1,5 +1,5 @@
 import { getState } from '@utils/getState'
-import { RequestProps } from "src/types"
+import { RequestProps } from "../types"
 import { reactive, createApp } from "vue"
 import App from "../components/App.vue";
 import { mountPlugin } from "./mountPlugin";
