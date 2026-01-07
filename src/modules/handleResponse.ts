@@ -7,6 +7,7 @@ import { transform } from "@modules/transform";
 import { getState } from '@utils/getState';
 import { App } from 'vue';
 import { getFormat } from '@utils/getFormat';
+import { generateCurl } from '@utils/generateCurl';
 
 export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions, props: RequestProps[], index: number, app: App<Element>) => {
 
@@ -30,6 +31,9 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
   const type = typeof body
   const bodyRaw = type === 'object' ? JSON.stringify(body, null, 2) : body
 
+  // Always set the response body, even if there's no content-type header
+  props[index].responseBody.body = bodyRaw
+
   if (contentTypeHeader) {
     const contentType = contentTypeHeader.split(';')[0]
     const formats = {
@@ -43,8 +47,10 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     const language = definedFormat || getFormat(body)
     // format response
     props[index].responseBody.formatted = transform(body, language)
-    props[index].responseBody.body = bodyRaw
-
+  } else if (body !== undefined && body !== null && body !== '') {
+    // If no content-type header, try to determine format from body
+    const language = getFormat(body)
+    props[index].responseBody.formatted = transform(body, language)
   }
 
   // format cookies
@@ -84,11 +90,30 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     .then(findSnapshotElement)
     .then(($el) => {
 
+      // Generate cURL for this request
+      const generateCurl = () => {
+        let curl = `curl -X ${options.method || 'GET'} "${options.url}"`;
+        if (options.headers) {
+          Object.entries(options.headers).forEach(([key, value]) => {
+            curl += ` -H "${key}: ${value}"`;
+          });
+        }
+        if (options.body) {
+          if (typeof options.body === 'object') {
+            curl += ` -d '${JSON.stringify(options.body)}'`;
+          } else {
+            curl += ` -d '${options.body}'`;
+          }
+        }
+        return curl;
+      };
+
       // add response to console output
       log.set({
         consoleProps() {
           return {
-            yielded
+            yielded,
+            cURL: generateCurl()
           }
         }
       })

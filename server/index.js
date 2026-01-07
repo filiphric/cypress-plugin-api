@@ -1,6 +1,6 @@
 // test server
 
-const express = require('express')
+import express from 'express'
 const app = express()
 const port = 3003
 const answerJSON = { string: 'string', int: 1234, object: { array: [1, 2] } }
@@ -13,9 +13,9 @@ app.get('/', (req, res) => {
 
 app.get('/delay', (req, res) => {
 
-  setTimeout((() => {
+  setTimeout(() => {
     res.send('delayed by 5000ms')
-  }), 5000)
+  }, 5000)
   
 })
 
@@ -50,7 +50,6 @@ app.get('/400', (req, res) => {
 
 app.get('/redirect', (req, res) => {
   res.redirect(301, '/')
-  res.send()
 })
 
 app.get('/json', (req, res) => {

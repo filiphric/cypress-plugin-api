@@ -4,9 +4,10 @@
     v-if="dataFormatted"
     class="bg-cy-blue-darker"
     :data-cy="selector"
+    @click.capture="handleCodeBlockClick"
   >
     <pre
-      class="hljs overflow-scroll no-scrollbar"
+      :class="[selector === 'copyCurl' ? 'copy-curl-pre' : 'overflow-scroll no-scrollbar']"
       v-html="dataFormatted"
     />
   </div>
@@ -21,4 +22,19 @@ defineProps({
     type: String
   }
 })
+
+const handleCodeBlockClick = (e: MouseEvent) => {
+  const target = e.target as HTMLElement;
+  
+  const isSummaryClick = target.tagName === 'SUMMARY' || 
+                        target.closest('summary') !== null ||
+                        target.tagName === 'DETAILS' ||
+                        target.closest('details summary') !== null;
+  
+  if (isSummaryClick) {
+    return;
+  }
+  
+  e.stopPropagation();
+}
 </script>

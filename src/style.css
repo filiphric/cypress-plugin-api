@@ -18,16 +18,175 @@
 }
 
 .__cypress-highlight {
-  opacity: 0.2 !important;
-  pointer-events: none !important;
+  /* Use border instead of graying out */
+  outline: 3px solid rgba(59, 130, 246, 0.6) !important;
+  outline-offset: 2px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
+
+/* Only apply outline to sections, not to CodeBlocks or other elements */
+.__cypress-highlight:not(section),
+.__cypress-highlight [data-cy],
+.__cypress-highlight [data-cy] *,
+.__cypress-highlight pre,
+.__cypress-highlight div[data-cy] {
+  outline: none !important;
+}
+
+/* Allow clicks on highlighted sections for cURL copying */
+section.__cypress-highlight {
+  pointer-events: auto !important;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  /* Allow text selection within highlighted sections */
+  user-select: auto !important;
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+}
+
+/* Override section cursor for CodeBlocks */
+section.__cypress-highlight [data-cy],
+section.__cypress-highlight [data-cy] div,
+section.__cypress-highlight [data-cy] pre,
+section.__cypress-highlight [data-cy] pre * {
+  cursor: text !important;
+  pointer-events: auto !important;
+}
+
+/* Override select-none on CodeBlocks when section is highlighted */
+section.__cypress-highlight [data-cy] *,
+section.__cypress-highlight [data-cy] pre *,
+section.__cypress-highlight [data-cy] code *,
+section.__cypress-highlight [data-cy] span,
+section.__cypress-highlight [data-cy] .line-number {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Prevent section from interfering with text selection in CodeBlocks */
+section.__cypress-highlight [data-cy] pre,
+section.__cypress-highlight [data-cy] code {
+  /* Ensure these elements can receive mouse events for text selection */
+  pointer-events: auto !important;
+  /* Prevent parent section from capturing selection events */
+  -webkit-touch-callout: default !important;
+}
+
+/* CodeBlocks inside highlighted sections must be fully interactive */
+section.__cypress-highlight [data-cy],
+section.__cypress-highlight [data-cy] *,
+section.__cypress-highlight [data-cy="auth"],
+section.__cypress-highlight [data-cy="query"],
+section.__cypress-highlight [data-cy="requestHeaders"],
+section.__cypress-highlight [data-cy="requestBody"],
+section.__cypress-highlight [data-cy="responseBody"],
+section.__cypress-highlight [data-cy="responseHeaders"],
+section.__cypress-highlight [data-cy="copyCurl"],
+/* Also target CodeBlocks within requestPanel and responsePanel divs */
+section.__cypress-highlight [data-cy="requestPanel"] [data-cy],
+section.__cypress-highlight [data-cy="responsePanel"] [data-cy],
+section.__cypress-highlight [data-cy="requestPanel"] [data-cy] *,
+section.__cypress-highlight [data-cy="responsePanel"] [data-cy] * {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  /* Ensure CodeBlocks are above the section background */
+  position: relative;
+  z-index: 1;
+}
+
+/* Override cursor for CodeBlocks within highlighted sections - they should use text cursor */
+/* This applies to ALL CodeBlocks, not just copyCurl */
+/* Works for both RequestPanel and ResponsePanel CodeBlocks */
+section.__cypress-highlight [data-cy],
+section.__cypress-highlight [data-cy] pre,
+section.__cypress-highlight [data-cy] pre *,
+section.__cypress-highlight [data-cy] *,
+section.__cypress-highlight [data-cy="auth"] *,
+section.__cypress-highlight [data-cy="query"] *,
+section.__cypress-highlight [data-cy="requestHeaders"] *,
+section.__cypress-highlight [data-cy="requestBody"] *,
+section.__cypress-highlight [data-cy="responseBody"] *,
+section.__cypress-highlight [data-cy="responseHeaders"] *,
+section.__cypress-highlight [data-cy="copyCurl"] *,
+/* Also target CodeBlocks within requestPanel and responsePanel divs */
+section.__cypress-highlight [data-cy="requestPanel"] [data-cy] *,
+section.__cypress-highlight [data-cy="responsePanel"] [data-cy] *,
+section.__cypress-highlight [data-cy="requestPanel"] [data-cy] pre,
+section.__cypress-highlight [data-cy="responsePanel"] [data-cy] pre,
+section.__cypress-highlight [data-cy="requestPanel"] [data-cy] pre *,
+section.__cypress-highlight [data-cy="responsePanel"] [data-cy] pre * {
+  cursor: text !important;
+  pointer-events: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+
+/* Ensure all interactive elements stay clickable */
+section.__cypress-highlight label,
+section.__cypress-highlight input,
+section.__cypress-highlight a,
+.__cypress-highlight label,
+.__cypress-highlight input,
+.__cypress-highlight a {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+
+/* Ensure Copy cURL tab label is clickable even when section is highlighted */
+section.__cypress-highlight label[for*="copyCurl"],
+section.__cypress-highlight [data-cy="copy-curl-tab"],
+.__cypress-highlight label[for*="copyCurl"],
+.__cypress-highlight [data-cy="copy-curl-tab"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  z-index: 10000001 !important;
+  position: relative !important;
+}
+
+/* Ensure Copy cURL CodeBlock is clickable and selectable when section is highlighted */
+section.__cypress-highlight [data-cy="copyCurl"],
+.__cypress-highlight [data-cy="copyCurl"],
+section.__cypress-highlight [data-cy="copyCurl"] pre,
+.__cypress-highlight [data-cy="copyCurl"] pre,
+section.__cypress-highlight [data-cy="copyCurl"] pre *,
+.__cypress-highlight [data-cy="copyCurl"] pre *,
+section.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre,
+section.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre *,
+.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre,
+.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre * {
+  pointer-events: auto !important;
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  opacity: 1 !important;
+  /* Ensure text can be selected even when parent is highlighted */
+  -webkit-touch-callout: default !important;
+  -webkit-tap-highlight-color: transparent !important;
+  /* Override any cursor from parent section */
+  cursor: text !important;
+}
+
 
 [data-layer="Padding"], [data-layer="Border"], [data-layer="Content"] {
   opacity: 0 !important;
 }
 
 [data-layer="Margin"] {
-  @apply bg-yellow-100 !important;
+  @apply bg-white !important;
   opacity: 0;
   animation: fade-out 2s ease-in-out;
 }
@@ -38,7 +197,8 @@
 [data-cy=showRequestBody]:checked + label,
 [data-cy=showResponseBody]:checked + label,
 [data-cy=showResponseHeaders]:checked + label,
-[data-cy=showCookies]:checked + label {
+[data-cy=showCookies]:checked + label,
+[data-cy=showCopyCurl]:checked + label {
   @apply text-cy-gray-light
 }
 
@@ -48,18 +208,23 @@
 [data-cy=showRequestBody]:checked ~ [data-cy=requestBody],
 [data-cy=showResponseBody]:checked ~ [data-cy=responseBody],
 [data-cy=showResponseHeaders]:checked ~ [data-cy=responseHeaders],
-[data-cy=showCookies]:checked ~ [data-cy=cookies] {
+[data-cy=showCookies]:checked ~ [data-cy=cookies],
+[data-cy=showCopyCurl]:checked ~ [data-cy=copyCurl] {
   @apply block
 }
 
+/* Hide tabs when not selected */
+/* These rules ensure only one tab content is visible at a time */
+/* Use !important to ensure these rules always take precedence */
 [data-cy=showAuth]:not(:checked) ~ [data-cy=auth],
 [data-cy=showQuery]:not(:checked) ~ [data-cy=query],
 [data-cy=showRequestHeaders]:not(:checked) ~ [data-cy=requestHeaders],
 [data-cy=showRequestBody]:not(:checked) ~ [data-cy=requestBody],
 [data-cy=showResponseBody]:not(:checked) ~ [data-cy=responseBody],
 [data-cy=showResponseHeaders]:not(:checked) ~ [data-cy=responseHeaders],
-[data-cy=showCookies]:not(:checked) ~ [data-cy=cookies] {
-  @apply hidden
+[data-cy=showCookies]:not(:checked) ~ [data-cy=cookies],
+[data-cy=showCopyCurl]:not(:checked) ~ [data-cy=copyCurl] {
+  display: none !important;
 }
 
 /* PrismJS styles */
@@ -67,26 +232,172 @@ pre {
   @apply p-3 text-cy-gray-light text-xs;
 }
 
-pre code.hljs{
-  display:block;
-  overflow-x:auto;
-  padding:1em;
+pre code {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
 }
-code.hljs{
-  padding:3px 5px
+
+code {
+  padding: 3px 5px;
 }
-.hljs{
-  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2
+
+pre {
+  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2;
+  /* Ensure all pre elements in CodeBlocks are selectable */
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  cursor: text !important;
 }
-.hljs ::selection,.hljs::selection{
+
+pre ::selection,
+pre::selection {
   @apply bg-cy-blue-dark;
+}
+
+/* Ensure CodeBlock pre elements are always selectable */
+/* Must be more specific than section.__cypress-highlight to override user-select: auto */
+[data-cy] pre,
+[data-cy] pre.overflow-scroll,
+[data-cy] pre.no-scrollbar,
+section [data-cy] pre,
+section [data-cy] pre.overflow-scroll,
+section [data-cy] pre.no-scrollbar,
+section.__cypress-highlight [data-cy] pre,
+section.__cypress-highlight [data-cy] pre.overflow-scroll,
+section.__cypress-highlight [data-cy] pre.no-scrollbar,
+pre.overflow-scroll,
+pre.no-scrollbar {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  cursor: text !important;
+}
+
+/* Override for copyCurl pre to allow selection and wrapping */
+.copy-curl-pre {
+  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2;
+  /* Remove no-scrollbar behavior for copyCurl */
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+/* Make cURL CodeBlock easily selectable and allow wrapping/scrolling for long commands */
+[data-cy="copyCurl"],
+section.__cypress-highlight [data-cy="copyCurl"],
+.__cypress-highlight [data-cy="copyCurl"],
+section [data-cy="copyCurl"],
+section.__cypress-highlight [data-cy="copyCurl"] *,
+.__cypress-highlight [data-cy="copyCurl"] * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  cursor: text !important;
+  /* Allow horizontal scrolling if content is too wide */
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  max-width: 100%;
+  /* Ensure no outline from highlight */
+  outline: none !important;
+  pointer-events: auto !important;
+  /* Ensure it's above other elements */
+  position: relative;
+  z-index: 10;
+}
+
+/* Specific class for copyCurl pre element */
+.copy-curl-pre {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  cursor: text !important;
+  /* Allow text to wrap for long cURL commands */
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  word-break: break-all !important;
+  overflow-wrap: break-word !important;
+  /* Allow horizontal scrolling as fallback if wrapping isn't enough */
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  max-width: 100%;
+  /* Show scrollbar for long content */
+  scrollbar-width: thin;
+  /* Ensure no outline */
+  outline: none !important;
+}
+
+.copy-curl-pre::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.copy-curl-pre::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.copy-curl-pre::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.copy-curl-pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+[data-cy="copyCurl"] pre,
+[data-cy="copyCurl"] pre * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  cursor: text !important;
+  /* Ensure no outline from highlight */
+  outline: none !important;
 }
 
 .comment{
   @apply text-cy-gray
 }
+/* Default tag color - will be overridden by language-specific rules */
 .tag{
   @apply text-cy-blue
+}
+
+/* XML-specific tag styling - tags should be purple/blue (rgb(100, 112, 243)) */
+/* Must come before HTML rules to ensure XML takes precedence when both could match */
+code.language-xml .tag,
+code.language-xml .token.tag,
+code.language-xml .token.tag-name,
+code.language-xml .token.tag .token.tag-name,
+.language-xml code .tag,
+.language-xml code .token.tag,
+.language-xml code .token.tag-name,
+.language-xml .tag,
+.language-xml .token.tag,
+.language-xml .token.tag-name,
+.language-xml .token.tag .token.tag-name {
+  color: rgb(100, 112, 243) !important;
+}
+
+/* HTML-specific tag styling - tags should be red/pink (rgb(255, 87, 112)) */
+code.language-html .tag,
+code.language-html .token.tag,
+code.language-html .token.tag-name,
+code.language-html .token.tag .token.tag-name,
+.language-html code .tag,
+.language-html code .token.tag,
+.language-html code .token.tag-name,
+.language-html .tag,
+.language-html .token.tag,
+.language-html .token.tag-name,
+.language-html .token.tag .token.tag-name {
+  color: rgb(255, 87, 112) !important;
 }
 .operator, .punctuation, .subst{
   @apply text-cy-gray
@@ -137,10 +448,22 @@ code.hljs{
 
 details summary { 
   cursor: pointer;
+  pointer-events: auto !important;
+  user-select: none !important;
 }
 
 details summary {
   @apply text-cy-gray
+}
+
+/* Ensure details and summary elements are clickable and not blocked */
+details,
+details summary,
+details[data-cy] summary,
+section.__cypress-highlight details,
+section.__cypress-highlight details summary {
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 code > details:first-of-type > summary{

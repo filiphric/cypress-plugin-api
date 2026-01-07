@@ -4,4 +4,12 @@ declare module '*.vue' {
   export default component;
 }
 
-declare module '*.css';
+declare module '*.css' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.css?inline' {
+  const content: string;
+  export default content;
+}

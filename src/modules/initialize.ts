@@ -5,6 +5,10 @@ import App from "../components/App.vue";
 import { mountPlugin } from "./mountPlugin";
 const { _ } = Cypress
 
+// Store the current mount root element and app instance so we can clean it up on retry
+let currentMountRoot: Element | null = null
+let currentApp: ReturnType<typeof createApp> | null = null
+
 export const initialize = () => {
 
   const propItem: RequestProps = {
@@ -61,14 +65,34 @@ export const initialize = () => {
   // load props saved into window if any present in current test
   const props = reactive(currentProps)
 
+  // Clean up previous mount on retry to avoid DOM accumulation
+  if (isRetry) {
+    // Clear window props for this test to start fresh
+    if (window.props[testId]) {
+      delete window.props[testId]
+    }
+    // Unmount previous Vue app if it exists
+    if (currentApp) {
+      currentApp.unmount()
+      currentApp = null
+    }
+    // Remove previous mount root element
+    if (currentMountRoot) {
+      currentMountRoot.remove()
+      currentMountRoot = null
+    }
+  }
+
   const app = createApp(App, {
-    props
+    props: props
   })
 
+  // Store app instance for cleanup on retry
+  currentApp = app
 
   // mount plugin only on first call in the test, on retry, or when we left the initial page with cy.visit()
   if (!propsExist || isRetry || Cypress.env('snapshotOnly') || hasNavigated) {
-    mountPlugin(app)
+    currentMountRoot = mountPlugin(app)
   }
 
   return { app, props }
