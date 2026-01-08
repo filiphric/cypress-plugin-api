@@ -4,8 +4,27 @@ import 'prismjs/components/prism-markup';
 import { isValidJson } from '../utils/isValidJson';
 
 export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' | 'plaintext' = 'json') => {
-  const content = language === 'json' ? JSON.stringify(body, null, 2) : body
-  if (body) {
+  // Convert body to string for processing
+  let content: string
+  if (language === 'json') {
+    if (typeof body === 'string') {
+      // Try to parse and re-stringify to format it
+      try {
+        const parsed = JSON.parse(body)
+        content = JSON.stringify(parsed, null, 2)
+      } catch {
+        // If it's not valid JSON, use as-is
+        content = body
+      }
+    } else {
+      content = JSON.stringify(body, null, 2)
+    }
+  } else {
+    // For non-JSON, convert to string if needed
+    content = typeof body === 'string' ? body : String(body)
+  }
+  
+  if (content) {
     // Map language names to Prism.js language names
     // prism-markup registers the language as 'markup' (not 'html' or 'xml')
     // We use 'markup' for highlighting but keep the original language for CSS class
@@ -29,7 +48,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
 
 
     // add folding to every json object and array
-    if (isValidJson(content)) {
+    if (language === 'json' && isValidJson(content)) {
       code = code
         .replaceAll('<span class="token punctuation">{</span>', '<details class="contents"><summary class="inline-block brace"><span class="token punctuation">{</span></summary>')
         .replaceAll('<span class="token punctuation">[</span>', '<details class="contents"><summary class="inline-block bracket"><span class="token punctuation">[</span></summary>')

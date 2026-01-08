@@ -144,7 +144,7 @@ export interface RequestProps {
     formatted: string
   }
   responseBody: {
-    body: Record<string, any>
+    body: string | Record<string, any>
     formatted: string
   },
   responseHeaders: {

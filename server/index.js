@@ -118,4 +118,21 @@ app.post('/auth', (req, res) => {
   res.send()
 })
 
+// Handle file uploads (simplified - no multer needed for test)
+app.post('/upload', (req, res) => {
+  res.status(201)
+  res.send('File uploaded successfully')
+})
+
+app.get('/binary', (req, res) => {
+  const binaryContent = new TextEncoder().encode('Binary content response')
+  res.set('Content-Type', 'application/octet-stream')
+  res.send(Buffer.from(binaryContent))
+})
+
+app.get('/binary-decoded', (req, res) => {
+  res.set('Content-Type', 'text/plain')
+  res.send('Decoded binary content')
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
