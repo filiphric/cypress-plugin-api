@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+/// <reference types="../../dist/types" />
 
 describe('binary response handling', () => {
 
