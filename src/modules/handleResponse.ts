@@ -52,7 +52,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     bodyRaw = decoder.decode(body)
     bodyForTransform = bodyRaw
   } else {
-    const type = typeof body
+  const type = typeof body
     // Only JSON.stringify if it's a plain object (not ArrayBuffer, Blob, etc.)
     if (type === 'object' && body !== null && !(body instanceof Blob) && !(body instanceof FormData)) {
       try {
