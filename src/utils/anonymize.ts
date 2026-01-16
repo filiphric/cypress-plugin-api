@@ -13,7 +13,6 @@ export const anonymize = (options: RequestProps) => {
   }
 
   if (optionsUndefined) {
-    // as defined here https://github.com/request/request#http-authentication
     anonymizeOptions.auth?.push('user', 'username', 'pass', 'password', 'bearer')
     anonymizeOptions.headers?.push('authorization', 'Authorization', 'password', 'username')
     anonymizeOptions.body?.push('pass', 'password')
@@ -32,16 +31,20 @@ export const anonymize = (options: RequestProps) => {
   })
 
   anonymizeOptions.body?.forEach(k => {
-    if (options.requestBody.body && options.requestBody.body[k as keyof Cypress.RequestBody]) {
-      // @ts-ignore until I figure out how to fix this
-      options.requestBody.body[k] = options?.requestBody.body[k].replace(/./g, '*')
+    if (options.requestBody.body && typeof options.requestBody.body === 'object' && options.requestBody.body !== null && k in options.requestBody.body) {
+      const bodyValue = (options.requestBody.body as Record<string, any>)[k]
+      if (typeof bodyValue === 'string') {
+        (options.requestBody.body as Record<string, any>)[k] = bodyValue.replace(/./g, '*')
+      }
     }
   })
 
   anonymizeOptions.qs?.forEach(k => {
-    if (options.query.body && options.query.body[k as keyof Cypress.RequestBody]) {
-      // @ts-ignore until I figure out how to fix this
-      options.query.body[k] = options?.query.body[k].replace(/./g, '*')
+    if (options.query.body && k in options.query.body) {
+      const queryValue = options.query.body[k]
+      if (typeof queryValue === 'string') {
+        options.query.body[k] = queryValue.replace(/./g, '*')
+      }
     }
   })
 

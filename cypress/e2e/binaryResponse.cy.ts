@@ -42,7 +42,7 @@ describe('binary response handling', () => {
             try {
               const uint8Array = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
               decodedBody = dec.decode(uint8Array);
-            } catch (e) {
+            } catch {
               decodedBody = dec.decode(buffer);
             }
           } else if (typeof response.body === 'string') {
@@ -126,8 +126,7 @@ describe('binary response handling', () => {
             try {
               const uint8Array = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
               decodedBody = dec.decode(uint8Array);
-            } catch (e) {
-              // If decoding fails, try direct decode
+            } catch {
               decodedBody = dec.decode(buffer);
             }
           } else if (typeof response.body === 'string') {
@@ -145,8 +144,7 @@ describe('binary response handling', () => {
               try {
                 const uint8Array = new Uint8Array(buffer);
                 decodedBody = dec.decode(uint8Array);
-              } catch (e) {
-                // If we can't decode it, the plugin should have handled it
+              } catch {
                 // This indicates the plugin might not be working correctly
                 throw new Error('Response body is ArrayBuffer but could not be decoded. Plugin should have handled this.');
               }

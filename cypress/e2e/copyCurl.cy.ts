@@ -1,53 +1,3 @@
-// Helper function to verify text selection works in any CodeBlock
-const verifyTextSelection = (selector: string, expectedText: string) => {
-  cy.get(`[data-cy="${selector}"]`)
-    .should('exist')
-    .should('be.visible')
-    .then(($codeBlock) => {
-      const codeBlock = $codeBlock[0] as HTMLElement
-      const preElement = codeBlock.querySelector('pre')
-      
-      if (!preElement) {
-        throw new Error(`No pre element found in ${selector}`)
-      }
-      
-      // Verify text is accessible (this is what matters for manual selection)
-      const textContent = preElement.textContent || preElement.innerText || ''
-      expect(textContent.length).to.be.greaterThan(0, `Text should be accessible in ${selector}`)
-      expect(textContent).to.contain(expectedText, `Text should contain "${expectedText}" in ${selector}`)
-      
-      // Verify CSS properties allow selection
-      const styles = window.getComputedStyle(preElement)
-      cy.log(`${selector} - user-select:`, styles.userSelect)
-      cy.log(`${selector} - pointer-events:`, styles.pointerEvents)
-      cy.log(`${selector} - cursor:`, styles.cursor)
-      
-      // Verify selection properties are correct
-      expect(['text', 'auto']).to.include(styles.userSelect, `${selector} should allow text selection`)
-      expect(styles.pointerEvents).to.not.equal('none', `${selector} should allow pointer events`)
-      
-      // Try programmatic selection (may not work in Cypress, but verify text is accessible)
-      const selection = window.getSelection()
-      if (selection) {
-        try {
-          const range = document.createRange()
-          range.selectNodeContents(preElement)
-          selection.removeAllRanges()
-          selection.addRange(range)
-          const selectedText = selection.toString()
-          
-          if (selectedText.length > 0) {
-            cy.log(`${selector} - Programmatic selection works, length:`, selectedText.length)
-            expect(selectedText).to.contain(expectedText, `Selected text should contain "${expectedText}"`)
-          } else {
-            cy.log(`${selector} - Programmatic selection not working, but text is accessible (this is OK for manual selection)`)
-          }
-        } catch (e) {
-          cy.log(`${selector} - Selection API error (this is OK):`, e)
-        }
-      }
-    })
-}
 
 describe('Copy cURL functionality', () => {
 
@@ -466,9 +416,10 @@ describe('Copy cURL functionality', () => {
             
             // Verify the CodeBlock content is selectable (pre tag is selectable by default)
             const preElement = codeBlock.querySelector('pre')
-            expect(preElement).to.exist
             if (preElement) {
               expect(preElement.textContent).to.include('curl -X POST')
+            } else {
+              throw new Error('Pre element not found in copyCurl CodeBlock')
             }
           })
       })
@@ -731,11 +682,9 @@ describe('Copy cURL functionality', () => {
         
         // Try to select text in the CodeBlock
         cy.get('[data-cy="copyCurl"] pre')
+          .should('exist')
           .should('be.visible')
           .then(($pre) => {
-            // Verify the pre element exists and is visible
-            expect($pre).to.exist
-            expect($pre.is(':visible')).to.be.true
             
             // Check if element has text content (this gets all text including from child elements)
             const textContent = $pre[0].textContent || $pre[0].innerText || ''
@@ -818,7 +767,7 @@ describe('Copy cURL functionality', () => {
                 let firstNode = null
                 let lastNode = null
                 let node
-                while (node = walker.nextNode()) {
+                while ((node = walker.nextNode())) {
                   if (!firstNode) firstNode = node
                   lastNode = node
                 }

@@ -4,7 +4,26 @@ const { _ } = Cypress
 
 export const cloneProps = (props: RequestProps[], index: number, options: ApiRequestOptions) => {
   props[index].method = _.cloneDeep(options.method) || 'GET'
-  props[index].url = isValidUrlOrIp(options.url) ? options.url : Cypress.config('baseUrl') + options.url
+  
+  let finalUrl = ''
+  
+  if (options.url) {
+    if (isValidUrlOrIp(options.url)) {
+      finalUrl = options.url
+    } else {
+      const baseUrl = Cypress.config('baseUrl')
+      if (baseUrl && typeof baseUrl === 'string' && baseUrl.trim() !== '') {
+        const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+        const path = options.url.startsWith('/') ? options.url : '/' + options.url
+        finalUrl = base + path
+      } else {
+        finalUrl = options.url
+      }
+    }
+  }
+  
+  props[index].url = finalUrl
+  
   props[index].query.body = _.cloneDeep(options.qs)
   props[index].auth.body = _.cloneDeep(options.auth)
   props[index].requestHeaders.body = _.cloneDeep(options.headers)

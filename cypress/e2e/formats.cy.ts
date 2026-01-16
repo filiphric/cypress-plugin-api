@@ -135,7 +135,7 @@ describe('response formats', () => {
       
       // Verify it can also be parsed as HTML (format detection checks HTML first)
       const htmlParser = new DOMParser()
-      const htmlDoc = htmlParser.parseFromString(response.body, 'text/html')
+      htmlParser.parseFromString(response.body, 'text/html')
       // It will be detected as HTML since HTML check comes before XML
       
       // Verify the content is displayed (detected as HTML, so uses HTML tag color)

@@ -6,8 +6,6 @@ import { initialize } from './initialize';
 import { transformData } from './transformData';
 import { cloneProps } from './cloneProps';
 
-// make a copy of cy.request() function
-// this prevents unusual behavior when using requestMode
 const requestFn = cy.request.bind({})
 
 export const api = (...params: Partial<ApiRequestOptions>[]) => {
@@ -16,7 +14,6 @@ export const api = (...params: Partial<ApiRequestOptions>[]) => {
   const options: ApiRequestOptions = resolveOptions(...params)
   const index = props.length - 1
   cloneProps(props, index, options)
-  // hide credentials if the options was set up
   if (Cypress.env('hideCredentials')) props[index] = anonymize(props[index])
   transformData(props, index)
 

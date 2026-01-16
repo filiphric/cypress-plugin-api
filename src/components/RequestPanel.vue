@@ -111,7 +111,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import Title from "./TitlePanel.vue";
 import CodeBlock from "./CodeBlock.vue";
 
@@ -127,12 +127,9 @@ const props = defineProps({
 import { generateCurl } from '../utils/generateCurl';
 import { transform } from '../modules/transform';
 
-// Track which radio button should be checked - initialize once to prevent blinking
 const selectedTab = ref<string>('requestBody');
-// Track the item ID to detect when it's a new item instance
 const lastItemId = ref<string | null>(null);
 
-// Computed property for cURL text - always up-to-date
 const curlText = computed(() => {
   if (!props.item) {
     return '';
@@ -140,8 +137,6 @@ const curlText = computed(() => {
   return generateCurl(props.item);
 });
 
-// Computed property for formatted cURL (for CodeBlock display)
-// Always compute the formatted cURL - CodeBlock component will handle visibility
 const curlFormatted = computed(() => {
   if (!props.item) {
     return '';
@@ -150,11 +145,9 @@ const curlFormatted = computed(() => {
   if (!curl) {
     return '';
   }
-  // Format cURL as plaintext using the transform function
   return transform(curl, 'plaintext');
 });
 
-// Initialize the selected tab based on available data
 const initializeTab = () => {
   const item = props.item;
   if (item?.query?.body && !item?.requestBody?.body) {
@@ -168,13 +161,10 @@ const initializeTab = () => {
   }
 };
 
-// Watch for when item changes (by ID) and initialize once per item
 watch(() => props.item?.id, (newId) => {
   if (newId && newId !== lastItemId.value) {
-    // New item instance - reset and initialize
     lastItemId.value = newId;
-    selectedTab.value = 'requestBody'; // Reset to default
-    // Initialize immediately - item should be available
+    selectedTab.value = 'requestBody';
     initializeTab();
   }
 }, { immediate: true });
@@ -186,13 +176,9 @@ onMounted(() => {
   }
 });
 
-// Function to handle clicking the Copy cURL tab label
 const handleCopyCurlTabClick = (event: MouseEvent) => {
-  // Stop propagation to prevent global click handlers from interfering
   event.stopPropagation();
   event.stopImmediatePropagation();
-  
-  // Switch to the Copy cURL tab
   selectedTab.value = 'copyCurl';
 };
 

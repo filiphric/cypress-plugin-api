@@ -6,7 +6,7 @@
     >
       <section
         :id="item.id"
-        :data-curl="getCurlForItem(item)"
+        :data-curl="generateCurl(item)"
         class="bg-cy-blue-darker rounded-sm m-4 p-4 pb-2"
       >
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -27,10 +27,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, onUnmounted, computed } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import RequestPanel from "./RequestPanel.vue";
 import ResponsePanel from "./ResponsePanel.vue";
 import { generateCurl } from '../utils/generateCurl';
+import { fallbackCopyTextToClipboard } from '../utils/copyToClipboard';
 // support should come with Vue 3.3
 // import type { RequestProps } from '../types'
 // const props = defineProps<RequestProps[]>()
@@ -42,132 +43,84 @@ const requests = defineProps({
   }
 });
 
-// Helper function to get cURL for an item
-const getCurlForItem = (item: any) => {
-  return generateCurl(item);
+const copyCurlToClipboard = async (curl: string) => {
+  // In Cypress or when clipboard API might fail, use fallback directly
+  const useFallback = typeof Cypress !== 'undefined' || 
+                      !navigator.clipboard || 
+                      !navigator.clipboard.writeText ||
+                      document.hasFocus === undefined || 
+                      !document.hasFocus();
+
+  if (useFallback) {
+    fallbackCopyTextToClipboard(curl);
+    return;
+  }
+
+  // Try modern Clipboard API with proper error handling
+  try {
+    if (window.focus) {
+      window.focus();
+    }
+    await navigator.clipboard.writeText(curl).catch(() => {
+      fallbackCopyTextToClipboard(curl);
+    });
+  } catch (err) {
+    fallbackCopyTextToClipboard(curl);
+  }
 };
 
 // Listen for when Cypress highlights elements (when clicking on assertions in test body)
 // Only copy cURL when clicking on a highlighted section, and only if not clicking on interactive elements
 let clickHandler: ((e: MouseEvent) => void) | null = null;
-let mouseDownHandler: ((e: MouseEvent) => void) | null = null;
 
 onMounted(() => {
-  mouseDownHandler = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const codeBlockElement = 
-      target.closest('[data-cy="copyCurl"]') ||
-      target.closest('[data-cy="auth"]') ||
-      target.closest('[data-cy="query"]') ||
-      target.closest('[data-cy="requestHeaders"]') ||
-      target.closest('[data-cy="requestBody"]') ||
-      target.closest('[data-cy="responseBody"]') ||
-      target.closest('[data-cy="responseHeaders"]');
-    
-    if (codeBlockElement) {
-      e.stopPropagation();
-    }
-  };
-  
+  // Add a global click handler that checks if a highlighted section was clicked
   clickHandler = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     
-    // Allow details/summary elements to toggle (JSON folding)
-    const isSummaryClick = target.tagName === 'SUMMARY' || 
-                          target.closest('summary') !== null ||
-                          target.tagName === 'DETAILS' ||
-                          target.closest('details summary') !== null;
-    
-    if (isSummaryClick) {
-      return;
-    }
-    
-    // Ignore clicks on CodeBlocks to allow text selection
-    const codeBlockElement = 
-      target.closest('[data-cy="copyCurl"]') ||
-      target.closest('[data-cy="auth"]') ||
-      target.closest('[data-cy="query"]') ||
-      target.closest('[data-cy="requestHeaders"]') ||
-      target.closest('[data-cy="requestBody"]') ||
-      target.closest('[data-cy="responseBody"]') ||
-      target.closest('[data-cy="responseHeaders"]');
-    
-    if (codeBlockElement) {
-      return;
-    }
-    
+    // Don't copy if clicking on any interactive elements - check this FIRST
     if (
-      target.closest('[data-cy="copy-curl-tab"]') !== null ||
-      target.closest('label[for*="copyCurl"]') !== null
-    ) {
-      return;
-    }
-    
-    if (
+      target.tagName === 'BUTTON' ||
       target.closest('button') ||
       target.tagName === 'LABEL' ||
       target.closest('label') ||
       target.tagName === 'INPUT' ||
       target.closest('input') ||
       target.tagName === 'A' ||
-      target.closest('a')
+      target.closest('a') ||
+      target.closest('[data-cy="copy-curl"]')
     ) {
       return;
     }
     
-    const clickedSection = target.closest('section.__cypress-highlight') as HTMLElement;
-    if (clickedSection) {
-      const isCodeBlockClick = 
-        target.closest('[data-cy="copyCurl"]') ||
-        target.closest('[data-cy="auth"]') ||
-        target.closest('[data-cy="query"]') ||
-        target.closest('[data-cy="requestHeaders"]') ||
-        target.closest('[data-cy="requestBody"]') ||
-        target.closest('[data-cy="responseBody"]') ||
-        target.closest('[data-cy="responseHeaders"]');
-      
-      if (isCodeBlockClick) {
-        return;
-      }
-      
-      const isDirectSectionClick = target === clickedSection || target.closest('section.__cypress-highlight') === clickedSection && 
-        !target.closest('[data-cy="copyCurl"]') &&
-        !target.closest('[data-cy="auth"]') &&
-        !target.closest('[data-cy="query"]') &&
-        !target.closest('[data-cy="requestHeaders"]') &&
-        !target.closest('[data-cy="requestBody"]') &&
-        !target.closest('[data-cy="responseBody"]') &&
-        !target.closest('[data-cy="responseHeaders"]') &&
-        !target.closest('label') &&
-        !target.closest('input') &&
-        !target.closest('button');
-      
-      if (isDirectSectionClick) {
-        const requestPanel = clickedSection.querySelector('[data-cy="requestPanel"]');
-        if (requestPanel) {
-          const copyCurlTab = requestPanel.querySelector('[data-cy="copy-curl-tab"]') as HTMLElement;
-          if (copyCurlTab) {
-            setTimeout(() => {
-              copyCurlTab.click();
-            }, 50);
-          }
-        }
-      }
-      
+    // Only proceed if there's a highlighted section (Cypress added __cypress-highlight class)
+    const highlightedSection = document.querySelector('section[data-curl].__cypress-highlight') as HTMLElement;
+    if (!highlightedSection) {
       return;
+    }
+    
+    // Check if the click target is within the highlighted section
+    const clickedSection = target.closest('section[data-curl]') as HTMLElement;
+    if (clickedSection === highlightedSection) {
+      const curl = highlightedSection.getAttribute('data-curl');
+      if (curl) {
+        copyCurlToClipboard(curl);
+        // Stop propagation to avoid interfering with other handlers, but don't prevent default
+        // to allow normal UI interactions to continue
+        e.stopPropagation();
+      }
     }
   };
   
-  document.addEventListener('click', clickHandler!, true);
-  document.addEventListener('mousedown', mouseDownHandler, true);
+  // Use capture phase and a small delay to ensure handler is set up
+  setTimeout(() => {
+    document.addEventListener('click', clickHandler!, true);
+  }, 100);
 });
 
 onUnmounted(() => {
   if (clickHandler) {
     document.removeEventListener('click', clickHandler, true);
-  }
-  if (mouseDownHandler) {
-    document.removeEventListener('mousedown', mouseDownHandler, true);
   }
 });
 

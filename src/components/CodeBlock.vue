@@ -1,4 +1,5 @@
 <!-- eslint-disable vue/no-v-html -->
+<!-- v-html is required here to render Prism.js syntax-highlighted HTML code from transform.ts -->
 <template>
   <div
     v-if="dataFormatted"
@@ -12,6 +13,7 @@
     />
   </div>
 </template>
+<!-- eslint-enable vue/no-v-html -->
 <script setup lang="ts">
 defineProps({
   selector: {

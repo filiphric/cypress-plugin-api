@@ -10,16 +10,19 @@
       </p>
       <input
         data-cy="url"
-        class="px-1 inline-block font-mono bg-cy-blue-darkest w-full outline-0"
-        :value="url"
+        class="px-1 inline-block font-mono bg-cy-blue-darkest text-cy-gray-light w-full outline-0"
+        :value="displayUrl"
         readonly
+        type="text"
       >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  defineProps({
+  import { computed } from 'vue'
+
+  const props = defineProps({
     method: {
       default: '',
       type: String
@@ -28,6 +31,10 @@
       default: '',
       type: String
     }
+  })
+
+  const displayUrl = computed(() => {
+    return props.url || ''
   })
 
   const methodColor = (method: string) => {

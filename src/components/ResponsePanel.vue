@@ -85,15 +85,11 @@ const props = defineProps({
   }
 })
 
-// Track which radio button should be checked - initialize once to prevent blinking
 const selectedTab = ref<string>('responseBody');
-// Track the item ID to detect when it's a new item instance
 const lastItemId = ref<string | null>(null);
 
-// Initialize the selected tab based on available data
 const initializeTab = () => {
   const item = props.item;
-  // Default to responseBody, but can switch to headers or cookies if available
   if (item?.responseHeaders?.body && !item?.responseBody?.body && !item?.cookies?.body) {
     selectedTab.value = 'responseHeaders';
   } else if (item?.cookies?.body && !item?.responseBody?.body && !item?.responseHeaders?.body) {
@@ -103,18 +99,14 @@ const initializeTab = () => {
   }
 };
 
-// Watch for when item changes (by ID) and initialize once per item
 watch(() => props.item?.id, (newId) => {
   if (newId && newId !== lastItemId.value) {
-    // New item instance - reset and initialize
     lastItemId.value = newId;
-    selectedTab.value = 'responseBody'; // Reset to default
-    // Initialize immediately - item should be available
+    selectedTab.value = 'responseBody';
     initializeTab();
   }
 }, { immediate: true });
 
-// Also initialize on mount as fallback
 onMounted(() => {
   if (props.item?.id && props.item.id !== lastItemId.value) {
     lastItemId.value = props.item.id;
