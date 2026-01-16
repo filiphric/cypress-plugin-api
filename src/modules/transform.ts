@@ -113,28 +113,49 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
       const allReplacements: Replacement[] = []
       
       for (const pair of matchedPairs) {
+        const commaPattern = '<span class="token punctuation">,</span>'
+        const closeIndex = pair.close
+        const afterClose = code.substring(closeIndex + (pair.type === 'brace' ? closeBracePattern.length : closeBracketPattern.length))
+        const hasComma = afterClose.trim().startsWith(commaPattern)
+        
         if (pair.type === 'brace') {
           allReplacements.push({
             index: pair.open,
             replacement: '<details class="contents" open><summary class="inline-block brace"><span class="token punctuation">{</span></summary>',
             originalLength: openBracePattern.length
           })
-          allReplacements.push({
-            index: pair.close,
-            replacement: '<span class="token punctuation closing-brace">}</span></details>',
-            originalLength: closeBracePattern.length
-          })
+          if (hasComma) {
+            allReplacements.push({
+              index: pair.close,
+              replacement: '<span class="token punctuation closing-brace">}</span><span class="token punctuation">,</span></details>',
+              originalLength: closeBracePattern.length + commaPattern.length
+            })
+          } else {
+            allReplacements.push({
+              index: pair.close,
+              replacement: '<span class="token punctuation closing-brace">}</span></details>',
+              originalLength: closeBracePattern.length
+            })
+          }
         } else {
           allReplacements.push({
             index: pair.open,
             replacement: '<details class="contents" open><summary class="inline-block bracket"><span class="token punctuation">[</span></summary>',
             originalLength: openBracketPattern.length
           })
-          allReplacements.push({
-            index: pair.close,
-            replacement: '<span class="token punctuation closing-bracket">]</span></details>',
-            originalLength: closeBracketPattern.length
-          })
+          if (hasComma) {
+            allReplacements.push({
+              index: pair.close,
+              replacement: '<span class="token punctuation closing-bracket">]</span><span class="token punctuation">,</span></details>',
+              originalLength: closeBracketPattern.length + commaPattern.length
+            })
+          } else {
+            allReplacements.push({
+              index: pair.close,
+              replacement: '<span class="token punctuation closing-bracket">]</span></details>',
+              originalLength: closeBracketPattern.length
+            })
+          }
         }
       }
       

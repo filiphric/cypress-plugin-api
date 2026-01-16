@@ -135,4 +135,21 @@ app.get('/binary-decoded', (req, res) => {
   res.send('Decoded binary content')
 })
 
+app.post('/json-with-commas', (req, res) => {
+  const responseWithCommas = {
+    message: 'Response with commas',
+    data: {
+      items: [1, 2, 3],
+      nested: {
+        array: [4, 5],
+        value: 'test'
+      }
+    },
+    metadata: {
+      count: 2
+    }
+  }
+  res.send(responseWithCommas)
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

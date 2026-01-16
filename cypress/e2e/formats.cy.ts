@@ -146,4 +146,73 @@ describe('response formats', () => {
 
   });
 
+  it('aligns commas on the same line as closing brackets and braces', () => {
+    const jsonWithCommas = {
+      message: 'Form data received',
+      formData: {
+        name: 'Auth User',
+        email: 'auth@example.com'
+      },
+      items: [1, 2, 3],
+      nested: {
+        array: [1, 2],
+        object: { key: 'value' }
+      }
+    }
+
+    cy.api('POST', '/json-with-commas', jsonWithCommas).then((response) => {
+      // Verify the response is valid JSON
+      expect(response.status).to.eq(200)
+      
+      // Verify commas appear on the same line as closing braces/brackets in REQUEST body
+      cy.get('[data-cy="requestBody"]')
+        .should('be.visible')
+        .within(() => {
+          // Get the pre element containing the formatted JSON
+          cy.get('pre').then(($pre) => {
+            const text = $pre[0].textContent || $pre[0].innerText || ''
+            
+            // Verify commas are on the same line as closing braces
+            // The closing brace followed by comma should appear together
+            expect(text).to.match(/}\s*,/)
+            
+            // Verify commas are on the same line as closing brackets
+            // The closing bracket followed by comma should appear together
+            expect(text).to.match(/\]\s*,/)
+            
+            // Verify the structure is correct - closing brace of formData followed by comma
+            expect(text).to.include('"email": "auth@example.com"')
+            expect(text).to.include('},')
+            
+            // Verify closing bracket of array followed by comma
+            expect(text).to.include('],')
+          })
+        })
+      
+      // Verify commas appear on the same line as closing braces/brackets in RESPONSE body
+      cy.get('[data-cy="responseBody"]')
+        .should('be.visible')
+        .within(() => {
+          // Get the pre element containing the formatted JSON
+          cy.get('pre').then(($pre) => {
+            const text = $pre[0].textContent || $pre[0].innerText || ''
+            
+            // Verify commas are on the same line as closing braces
+            // The closing brace followed by comma should appear together
+            expect(text).to.match(/}\s*,/)
+            
+            // Verify commas are on the same line as closing brackets
+            // The closing bracket followed by comma should appear together
+            expect(text).to.match(/\]\s*,/)
+            
+            // Verify the structure is correct - response has nested objects with commas
+            // The response should have: data: { items: [1, 2, 3], nested: { ... } }
+            // So we should see ], followed by }, and }, followed by ,
+            expect(text).to.include('],')
+            expect(text).to.include('},')
+          })
+        })
+    })
+  });
+
 });
