@@ -116,7 +116,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
         if (pair.type === 'brace') {
           allReplacements.push({
             index: pair.open,
-            replacement: '<details class="contents"><summary class="inline-block brace"><span class="token punctuation">{</span></summary>',
+            replacement: '<details class="contents" open><summary class="inline-block brace"><span class="token punctuation">{</span></summary>',
             originalLength: openBracePattern.length
           })
           allReplacements.push({
@@ -127,7 +127,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
         } else {
           allReplacements.push({
             index: pair.open,
-            replacement: '<details class="contents"><summary class="inline-block bracket"><span class="token punctuation">[</span></summary>',
+            replacement: '<details class="contents" open><summary class="inline-block bracket"><span class="token punctuation">[</span></summary>',
             originalLength: openBracketPattern.length
           })
           allReplacements.push({

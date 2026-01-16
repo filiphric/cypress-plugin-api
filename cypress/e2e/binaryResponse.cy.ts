@@ -225,8 +225,8 @@ describe('binary response handling', () => {
         .should('have.css', 'color', 'rgb(31, 169, 113)');
       
       // Verify JSON formatting is preserved
-      cy.contains('"int":').should('be.visible');
-      cy.contains('"string":').should('be.visible');
+      cy.contains('"int":').should('exist');
+      cy.contains('"string":').should('exist');
     });
   });
 

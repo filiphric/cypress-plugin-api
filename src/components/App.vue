@@ -31,10 +31,6 @@ import { onMounted, onUnmounted } from 'vue';
 import RequestPanel from "./RequestPanel.vue";
 import ResponsePanel from "./ResponsePanel.vue";
 import { generateCurl } from '../utils/generateCurl';
-import { fallbackCopyTextToClipboard } from '../utils/copyToClipboard';
-// support should come with Vue 3.3
-// import type { RequestProps } from '../types'
-// const props = defineProps<RequestProps[]>()
 
 const requests = defineProps({
   props: {
@@ -43,8 +39,24 @@ const requests = defineProps({
   }
 });
 
+const fallbackCopyTextToClipboard = (text: string) => {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-999999px';
+  textArea.style.top = '-999999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+  } catch (err) {
+    // Fallback failed
+  }
+  document.body.removeChild(textArea);
+};
+
 const copyCurlToClipboard = async (curl: string) => {
-  // In Cypress or when clipboard API might fail, use fallback directly
   const useFallback = typeof Cypress !== 'undefined' || 
                       !navigator.clipboard || 
                       !navigator.clipboard.writeText ||
@@ -56,7 +68,6 @@ const copyCurlToClipboard = async (curl: string) => {
     return;
   }
 
-  // Try modern Clipboard API with proper error handling
   try {
     if (window.focus) {
       window.focus();
