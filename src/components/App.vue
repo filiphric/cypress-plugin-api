@@ -50,7 +50,7 @@ const fallbackCopyTextToClipboard = (text: string) => {
   textArea.select();
   try {
     document.execCommand('copy');
-  } catch (err) {
+  } catch {
     // Fallback failed
   }
   document.body.removeChild(textArea);
@@ -75,7 +75,7 @@ const copyCurlToClipboard = async (curl: string) => {
     await navigator.clipboard.writeText(curl).catch(() => {
       fallbackCopyTextToClipboard(curl);
     });
-  } catch (err) {
+  } catch {
     fallbackCopyTextToClipboard(curl);
   }
 };
