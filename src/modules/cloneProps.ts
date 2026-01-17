@@ -27,5 +27,18 @@ export const cloneProps = (props: RequestProps[], index: number, options: ApiReq
   props[index].query.body = _.cloneDeep(options.qs)
   props[index].auth.body = _.cloneDeep(options.auth)
   props[index].requestHeaders.body = _.cloneDeep(options.headers)
-  props[index].requestBody.body = _.cloneDeep(options.body)
+  
+  if (options.body instanceof FormData) {
+    const formData = new FormData()
+    options.body.forEach((value, key) => {
+      formData.append(key, value)
+    })
+    props[index].requestBody.body = formData
+  } else if (options.body instanceof ArrayBuffer) {
+    props[index].requestBody.body = options.body.slice(0)
+  } else if (options.body instanceof Blob) {
+    props[index].requestBody.body = options.body
+  } else {
+    props[index].requestBody.body = _.cloneDeep(options.body)
+  }
 }

@@ -248,4 +248,89 @@ describe('binary response handling', () => {
     });
   });
 
+  it('handles ArrayBuffer in request body', () => {
+    const requestContent = 'ArrayBuffer request body content'
+    const encoder = new TextEncoder()
+    const arrayBuffer = encoder.encode(requestContent).buffer
+
+    cy.api({
+      method: 'POST',
+      url: '/arraybuffer-request',
+      body: arrayBuffer,
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      }
+    }).then((response) => {
+      // Verify the response indicates the ArrayBuffer was received
+      expect(response.status).to.equal(200)
+      expect(response.body).to.have.property('message', 'ArrayBuffer request received')
+      expect(response.body).to.have.property('bodyContent', requestContent)
+      
+      // Verify the request body is displayed in the UI
+      cy.get('[data-cy="requestBody"]')
+        .should('be.visible')
+        .within(() => {
+          cy.get('pre')
+            .should('be.visible')
+            .and('contain', requestContent)
+        })
+      
+      // Verify the response is displayed
+      cy.contains('200').should('be.visible')
+      cy.contains('Response').should('be.visible')
+      cy.contains('ArrayBuffer request received').should('be.visible')
+    })
+  })
+
+  it('handles ArrayBuffer in response body', () => {
+    cy.api({
+      method: 'GET',
+      url: '/arraybuffer-response'
+    }).then((response) => {
+      // Verify the response status
+      expect(response.status).to.equal(200)
+      
+      // Handle ArrayBuffer detection (same as plugin does)
+      const bodyString = typeof response.body === 'object' && response.body !== null 
+        ? Object.prototype.toString.call(response.body) 
+        : ''
+      const isArrayBuffer = response.body instanceof ArrayBuffer || bodyString === '[object ArrayBuffer]'
+      
+      let responseText: string
+      if (isArrayBuffer) {
+        const decoder = new TextDecoder()
+        const buffer = response.body instanceof ArrayBuffer 
+          ? response.body 
+          : (response.body as any).buffer || response.body
+        try {
+          const uint8Array = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
+          responseText = decoder.decode(uint8Array)
+        } catch {
+          responseText = decoder.decode(buffer)
+        }
+      } else if (typeof response.body === 'string') {
+        responseText = response.body
+      } else {
+        responseText = String(response.body)
+      }
+      
+      // Verify the decoded content
+      expect(responseText).to.include('This is an ArrayBuffer response')
+      
+      // Verify the response body is displayed in the UI
+      // The plugin should have decoded the ArrayBuffer and displayed it
+      cy.get('[data-cy="responseBody"]')
+        .should('be.visible')
+        .within(() => {
+          cy.get('pre')
+            .should('be.visible')
+            .and('contain', 'This is an ArrayBuffer response')
+        })
+      
+      // Verify status and response tab
+      cy.contains('200').should('be.visible')
+      cy.contains('Response').should('be.visible')
+    })
+  })
+
 });

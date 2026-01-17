@@ -51,12 +51,53 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
   if (isArrayBuffer) {
     const decoder = new TextDecoder()
     const buffer = body instanceof ArrayBuffer ? body : (body as any).buffer || body
-    bodyRaw = decoder.decode(buffer)
-    bodyForTransform = bodyRaw
+    let decodedString = ''
+    try {
+      const uint8Array = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
+      decodedString = decoder.decode(uint8Array)
+    } catch {
+      try {
+        decodedString = decoder.decode(buffer)
+      } catch {
+        decodedString = String(body)
+      }
+    }
+    
+    if (decodedString && isValidJson(decodedString)) {
+      try {
+        const parsed = JSON.parse(decodedString)
+        bodyRaw = decodedString
+        bodyForTransform = parsed
+      } catch {
+        bodyRaw = decodedString
+        bodyForTransform = decodedString
+      }
+    } else {
+      bodyRaw = decodedString
+      bodyForTransform = decodedString
+    }
   } else if (body instanceof Uint8Array) {
     const decoder = new TextDecoder()
-    bodyRaw = decoder.decode(body)
-    bodyForTransform = bodyRaw
+    let decodedString = ''
+    try {
+      decodedString = decoder.decode(body)
+    } catch {
+      decodedString = String(body)
+    }
+    
+    if (decodedString && isValidJson(decodedString)) {
+      try {
+        const parsed = JSON.parse(decodedString)
+        bodyRaw = decodedString
+        bodyForTransform = parsed
+      } catch {
+        bodyRaw = decodedString
+        bodyForTransform = decodedString
+      }
+    } else {
+      bodyRaw = decodedString
+      bodyForTransform = decodedString
+    }
   } else {
   const type = typeof body
     if (type === 'object' && body !== null && !(body instanceof Blob) && !(body instanceof FormData)) {
@@ -91,6 +132,14 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     const language = getFormat(bodyForTransform)
     props[index].responseBody.formatted = transform(bodyForTransform, language)
   }
+  
+  if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
+    if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
+      props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
+    } else if (bodyRaw && typeof bodyRaw === 'object' && bodyRaw !== null) {
+      props[index].responseBody.formatted = transform(bodyRaw, 'json')
+    }
+  }
 
   const parsedCookie = setCookie.parse(contentCookieHeader, {
     decodeValues: true
@@ -98,12 +147,16 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
   props[index].cookies.body = parsedCookie
 
-  if (!props[index].requestBody.formatted.length) {
+  if (!props[index].requestBody.formatted || !props[index].requestBody.formatted.length) {
     props[index].requestBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
   }
 
-  if (!props[index].responseBody.formatted.length) {
-    props[index].responseBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
+  if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
+    if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
+      props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
+    } else {
+      props[index].responseBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
+    }
   }
 
   props[index].responseHeaders.body = headers

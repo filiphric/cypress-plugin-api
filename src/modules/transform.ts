@@ -6,6 +6,9 @@ import { isValidJson } from '../utils/isValidJson';
 export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' | 'plaintext' = 'json') => {
   let content: string
   if (language === 'json') {
+    if (body === undefined || body === null) {
+      return ''
+    }
     if (typeof body === 'string') {
       try {
         const parsed = JSON.parse(body)
@@ -16,7 +19,15 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
     } else {
       content = JSON.stringify(body, null, 2)
     }
+    
+    if (content) {
+      content = content.replace(/\[\s*\n\s*\]/gm, '[]')
+      content = content.replace(/\{\s*\n\s*\}/gm, '{}')
+    }
   } else {
+    if (body === undefined || body === null) {
+      return ''
+    }
     content = typeof body === 'string' ? body : String(body)
   }
   
@@ -113,6 +124,14 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
       const allReplacements: Replacement[] = []
       
       for (const pair of matchedPairs) {
+        const openEnd = pair.open + (pair.type === 'brace' ? openBracePattern.length : openBracketPattern.length)
+        const contentBetween = code.substring(openEnd, pair.close)
+        const isEmpty = contentBetween.trim().length === 0 || contentBetween.match(/^[\s\n]*$/)
+        
+        if (isEmpty) {
+          continue
+        }
+        
         const commaPattern = '<span class="token punctuation">,</span>'
         const closeIndex = pair.close
         const afterClose = code.substring(closeIndex + (pair.type === 'brace' ? closeBracePattern.length : closeBracketPattern.length))
