@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="root"
     data-cy="requestPanel"
     class="col-span-1"
   >
@@ -111,7 +112,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import Title from "./TitlePanel.vue";
 import CodeBlock from "./CodeBlock.vue";
 
@@ -129,6 +130,8 @@ import { transform } from '../modules/transform';
 
 const selectedTab = ref<string>('requestBody');
 const lastItemId = ref<string | null>(null);
+const root = ref<HTMLElement | null>(null);
+let highlightObserver: MutationObserver | null = null;
 
 const curlText = computed(() => {
   if (!props.item) {
@@ -150,11 +153,29 @@ const curlFormatted = computed(() => {
 
 const initializeTab = () => {
   const item = props.item;
-  if (item?.query?.body && !item?.requestBody?.body) {
+  if (!item) {
+    return;
+  }
+
+  // Helper to check if an object has actual content
+  const hasContent = (obj: any): boolean => {
+    if (!obj) return false;
+    if (typeof obj !== 'object') return true; // non-objects are considered content
+    if (Array.isArray(obj)) return obj.length > 0;
+    return Object.keys(obj).length > 0;
+  };
+
+  const hasQuery = hasContent(item.query?.body);
+  const hasHeaders = hasContent(item.requestHeaders?.body);
+  const hasAuth = hasContent(item.auth?.body);
+  const hasBody = hasContent(item.requestBody?.body);
+
+  // Priority: query > headers > auth > body
+  if (hasQuery && !hasBody) {
     selectedTab.value = 'query';
-  } else if (item?.requestHeaders?.body && !item?.requestBody?.body && !item?.query?.body && !item?.auth?.body) {
+  } else if (hasHeaders && !hasBody && !hasQuery && !hasAuth) {
     selectedTab.value = 'requestHeaders';
-  } else if (item?.auth?.body && !item?.requestBody?.body && !item?.query?.body) {
+  } else if (hasAuth && !hasBody && !hasQuery) {
     selectedTab.value = 'auth';
   } else {
     selectedTab.value = 'requestBody';
@@ -169,10 +190,89 @@ watch(() => props.item?.id, (newId) => {
   }
 }, { immediate: true });
 
+// Also watch for when formatted data becomes available
+// This ensures we update the tab selection when data is populated
+watch(() => [
+  props.item?.query?.formatted,
+  props.item?.requestHeaders?.formatted,
+  props.item?.auth?.formatted,
+  props.item?.requestBody?.formatted
+], () => {
+  if (props.item?.id) {
+    initializeTab();
+  }
+}, { deep: false });
+
 onMounted(() => {
   if (props.item?.id && props.item.id !== lastItemId.value) {
     lastItemId.value = props.item.id;
     initializeTab();
+  }
+
+  // When Cypress highlights an assertion in the Command Log, it adds the
+  // `__cypress-highlight` class to the section that represents a given
+  // request. We observe those class changes and, whenever the section that
+  // contains this panel is highlighted, we choose the most appropriate tab
+  // to show (query, headers, body or auth). This ensures that if the user
+  // previously selected "Copy cURL", clicking an assertion will switch back
+  // to a content tab so headers/query/body are visible.
+  if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
+    const checkAndUpdateTab = () => {
+      if (!root.value) {
+        return;
+      }
+
+      const section = root.value.closest('section[data-curl]') as HTMLElement | null;
+      if (!section) {
+        return;
+      }
+
+      if (section.classList.contains('__cypress-highlight')) {
+        // Rely on our normal initialization rules to pick the "best" tab
+        // for this request (query/headers/auth/body).
+        initializeTab();
+      }
+    };
+
+    highlightObserver = new MutationObserver((mutations) => {
+      if (!root.value) {
+        return;
+      }
+
+      const section = root.value.closest('section[data-curl]') as HTMLElement | null;
+      if (!section) {
+        return;
+      }
+
+      // Check if this mutation is relevant to our section
+      const isRelevantMutation = mutations.some(mutation => {
+        const target = mutation.target as HTMLElement;
+        return target === section || section.contains(target);
+      });
+
+      if (!isRelevantMutation) {
+        return;
+      }
+
+      // Check immediately
+      checkAndUpdateTab();
+
+      // Also check after a small delay to handle async class additions
+      setTimeout(checkAndUpdateTab, 10);
+    });
+
+    highlightObserver.observe(document.body, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['class']
+    });
+  }
+});
+
+onUnmounted(() => {
+  if (highlightObserver) {
+    highlightObserver.disconnect();
+    highlightObserver = null;
   }
 });
 
