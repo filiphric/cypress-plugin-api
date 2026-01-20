@@ -209,6 +209,8 @@ pre code {
   display: block;
   overflow-x: auto;
   padding: 1em;
+  line-height: 1.5;
+  white-space: pre;
 }
 
 code {
@@ -222,6 +224,9 @@ pre {
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   cursor: text !important;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre;
 }
 
 pre ::selection,
@@ -397,11 +402,23 @@ code.language-html .token.tag .token.tag-name,
 
 .line-number {
   @apply pr-2 inline-block;
+  line-height: 1.5;
+  vertical-align: top;
 }
 
 span.closing-brace,
 span.closing-bracket {
   display: inline;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+/* Ensure closing braces maintain proper indentation and spacing */
+pre code span.closing-brace,
+pre code span.closing-bracket {
+  display: inline;
+  white-space: pre;
 }
 
 details summary { 
@@ -411,8 +428,39 @@ details summary {
 }
 
 details summary {
-  @apply text-cy-gray
+  @apply text-cy-gray;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
 }
+
+details.contents[open] {
+  display: contents;
+}
+
+/* Ensure details/summary don't create extra spacing or line breaks */
+pre code details.contents[open] {
+  display: contents;
+}
+
+pre code details.contents[open] summary {
+  display: inline;
+  line-height: 1.5;
+  vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure brace and bracket summaries are inline */
+pre code details.contents[open] summary.brace,
+pre code details.contents[open] summary.bracket {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
 
 details,
 details summary,

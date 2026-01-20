@@ -19,7 +19,9 @@
             :index="index"
           />
         </div>
-        <div class="separator">...</div>
+        <div class="separator">
+          ...
+        </div>
         <hr class="border-slate-800 mt-6 hidden md:block">
       </section>
     </div>

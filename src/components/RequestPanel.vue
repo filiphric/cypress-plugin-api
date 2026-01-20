@@ -83,10 +83,10 @@
     <label 
       class="pr-3 pl-1 cursor-pointer text-cy-gray select-none"
       :for="'copyCurl' + index"
-      @click.stop="handleCopyCurlTabClick"
       data-cy="copy-curl-tab"
+      @click.stop="handleCopyCurlTabClick"
     >
-      Copy cURL
+      cURL
     </label>
       
     <CodeBlock 
@@ -112,13 +112,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed, type PropType } from 'vue';
 import Title from "./TitlePanel.vue";
 import CodeBlock from "./CodeBlock.vue";
+import type { RequestProps } from '../types';
 
 const props = defineProps({
   item: {
-    type: Object
+    type: Object as PropType<RequestProps>
   },
   index: {
     type: [Number, String]
@@ -162,13 +163,27 @@ const initializeTab = () => {
     if (!obj) return false;
     if (typeof obj !== 'object') return true; // non-objects are considered content
     if (Array.isArray(obj)) return obj.length > 0;
+    
+    // Handle special object types that don't have enumerable keys
+    if (obj instanceof ArrayBuffer) return obj.byteLength > 0;
+    if (obj instanceof Blob) return obj.size > 0;
+    if (obj instanceof FormData) {
+      // FormData doesn't have a length property, but we can check if it has entries
+      let hasEntries = false;
+      obj.forEach(() => { hasEntries = true; });
+      return hasEntries;
+    }
+    if (obj instanceof Uint8Array || obj instanceof Uint16Array || obj instanceof Uint32Array) {
+      return obj.length > 0;
+    }
+    
     return Object.keys(obj).length > 0;
   };
 
-  const hasQuery = hasContent(item.query?.body);
-  const hasHeaders = hasContent(item.requestHeaders?.body);
-  const hasAuth = hasContent(item.auth?.body);
-  const hasBody = hasContent(item.requestBody?.body);
+  const hasQuery = hasContent(item.query?.body) && item.query?.formatted;
+  const hasHeaders = hasContent(item.requestHeaders?.body) && item.requestHeaders?.formatted;
+  const hasAuth = hasContent(item.auth?.body) && item.auth?.formatted;
+  const hasBody = hasContent(item.requestBody?.body) && item.requestBody?.formatted;
 
   // Priority: query > headers > auth > body
   if (hasQuery && !hasBody) {
@@ -214,7 +229,7 @@ onMounted(() => {
   // request. We observe those class changes and, whenever the section that
   // contains this panel is highlighted, we choose the most appropriate tab
   // to show (query, headers, body or auth). This ensures that if the user
-  // previously selected "Copy cURL", clicking an assertion will switch back
+  // previously selected "cURL", clicking an assertion will switch back
   // to a content tab so headers/query/body are visible.
   if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
     const checkAndUpdateTab = () => {

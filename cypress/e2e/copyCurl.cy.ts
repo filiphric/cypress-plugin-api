@@ -1,10 +1,10 @@
 
-describe('Copy cURL functionality', () => {
+describe('cURL functionality', () => {
 
-  it('displays cURL for a simple GET request in the Copy cURL tab', () => {
+  it('displays cURL for a simple GET request in the cURL tab', () => {
     cy.api('/')
 
-    // Wait for request panel to be visible, then click on the "Copy cURL" tab label
+    // Wait for request panel to be visible, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -24,7 +24,7 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL for GET request with query parameters in the Copy cURL tab', () => {
+  it('displays cURL for GET request with query parameters in the cURL tab', () => {
     cy.api({
       method: 'GET',
       url: '/',
@@ -35,7 +35,7 @@ describe('Copy cURL functionality', () => {
       }
     })
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -53,12 +53,12 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL for POST request with body in the Copy cURL tab', () => {
+  it('displays cURL for POST request with body in the cURL tab', () => {
     const requestBody = { hello: 'world', number: 123 }
 
     cy.api('POST', '/', requestBody)
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -77,12 +77,12 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL for PUT request with body in the Copy cURL tab', () => {
+  it('displays cURL for PUT request with body in the cURL tab', () => {
     const requestBody = { id: 1, name: 'Updated Item' }
 
     cy.api('PUT', '/', requestBody)
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -100,12 +100,12 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL for PATCH request with body in the Copy cURL tab', () => {
+  it('displays cURL for PATCH request with body in the cURL tab', () => {
     const requestBody = { status: 'active' }
 
     cy.api('PATCH', '/', requestBody)
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -123,10 +123,10 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL for DELETE request in the Copy cURL tab', () => {
+  it('displays cURL for DELETE request in the cURL tab', () => {
     cy.api('DELETE', '/')
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -145,7 +145,7 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL with custom headers in the Copy cURL tab', () => {
+  it('displays cURL with custom headers in the cURL tab', () => {
     cy.api({
       method: 'POST',
       url: '/',
@@ -157,7 +157,7 @@ describe('Copy cURL functionality', () => {
       body: { test: 'data' }
     })
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -177,7 +177,7 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL with query parameters and headers in the Copy cURL tab', () => {
+  it('displays cURL with query parameters and headers in the cURL tab', () => {
     cy.api({
       method: 'GET',
       url: '/',
@@ -190,7 +190,7 @@ describe('Copy cURL functionality', () => {
       }
     })
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -208,7 +208,7 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL with string body in the Copy cURL tab', () => {
+  it('displays cURL with string body in the cURL tab', () => {
     const stringBody = 'plain text body'
 
     cy.api({
@@ -217,7 +217,7 @@ describe('Copy cURL functionality', () => {
       body: stringBody
     })
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -315,7 +315,7 @@ describe('Copy cURL functionality', () => {
         $section[0].classList.add('__cypress-highlight')
       })
 
-    // Wait for request panel, then click on the "Copy cURL" tab for the highlighted section
+    // Wait for request panel, then click on the "cURL" tab for the highlighted section
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -333,7 +333,7 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL with complex nested JSON body in the Copy cURL tab', () => {
+  it('displays cURL with complex nested JSON body in the cURL tab', () => {
     const complexBody = {
       user: {
         name: 'John Doe',
@@ -348,7 +348,7 @@ describe('Copy cURL functionality', () => {
 
     cy.api('POST', '/', complexBody)
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -366,10 +366,10 @@ describe('Copy cURL functionality', () => {
       })
   })
 
-  it('displays cURL without body for GET requests in the Copy cURL tab', () => {
+  it('displays cURL without body for GET requests in the cURL tab', () => {
     cy.api('GET', '/')
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -392,7 +392,7 @@ describe('Copy cURL functionality', () => {
 
     cy.api('POST', '/', requestBody)
 
-    // Wait for request panel, then click on the "Copy cURL" tab label
+    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
@@ -647,7 +647,7 @@ describe('Copy cURL functionality', () => {
 
   })
 
-  it('allows text selection in Copy cURL CodeBlock when section is highlighted from assertion', () => {
+  it('allows text selection in cURL CodeBlock when section is highlighted from assertion', () => {
     cy.api('POST', '/', { test: 'data' })
 
     // Click on an assertion in the test body to highlight the section
@@ -662,7 +662,7 @@ describe('Copy cURL functionality', () => {
         $section[0].classList.add('__cypress-highlight')
       })
 
-    // Wait for request panel, then click on the "Copy cURL" tab
+    // Wait for request panel, then click on the "cURL" tab
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')

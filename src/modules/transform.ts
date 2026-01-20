@@ -23,6 +23,125 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
     if (content) {
       content = content.replace(/\[\s*\n\s*\]/gm, '[]')
       content = content.replace(/\{\s*\n\s*\}/gm, '{}')
+      
+      // Increase indentation for content inside root brace
+      const lines = content.split('\n')
+      const adjustedLines = lines.map((line) => {
+        const trimmed = line.trim()
+        const indent = line.length - trimmed.length
+        
+        if (indent > 0 && trimmed !== '}' && trimmed !== ']') {
+          return '  ' + line
+        }
+        if (indent > 0 && (trimmed === '}' || trimmed === ']' || trimmed.endsWith('},') || trimmed.endsWith('],'))) {
+          return '  ' + line
+        }
+        
+        return line
+      })
+      content = adjustedLines.join('\n')
+      
+      // Align closing braces/brackets with their opening counterparts
+      const linesForBraceFix = content.split('\n')
+      const braceStack: Array<{lineIndex: number, indent: number, type: 'brace' | 'bracket'}> = []
+      const closingMap = new Map<number, number>()
+      
+      // Track opening braces/brackets and match with closing ones
+      for (let i = 0; i < linesForBraceFix.length; i++) {
+        const line = linesForBraceFix[i]
+        const trimmed = line.trim()
+        const baseIndent = line.length - trimmed.length
+        
+        // Skip empty objects/arrays
+        if (/^\s*\{\s*\}[,\s]*$/.test(line) || 
+            /^\s*\[\s*\][,\s]*$/.test(line) ||
+            /:\s*\{\s*\}[,\s]*$/.test(trimmed) ||
+            /:\s*\[\s*\][,\s]*$/.test(trimmed)) {
+          continue
+        }
+        
+        if (trimmed.includes('{') && 
+            !/^\s*\{\s*\}[,\s]*$/.test(line) && 
+            !/:\s*\{\s*\}[,\s]*$/.test(trimmed)) {
+          braceStack.push({lineIndex: i, indent: baseIndent, type: 'brace'})
+        }
+        
+        if (trimmed.includes('[') && 
+            !/^\s*\[\s*\][,\s]*$/.test(line) && 
+            !/:\s*\[\s*\][,\s]*$/.test(trimmed)) {
+          braceStack.push({lineIndex: i, indent: baseIndent, type: 'bracket'})
+        }
+        
+        if (/^[^}]*\}[,]*$/.test(trimmed) && 
+            !/^\s*\{\s*\}[,\s]*$/.test(line) &&
+            !/:\s*\{\s*\}[,\s]*$/.test(trimmed)) {
+          for (let j = braceStack.length - 1; j >= 0; j--) {
+            if (braceStack[j].type === 'brace') {
+              closingMap.set(i, braceStack[j].indent)
+              braceStack.splice(j, 1)
+              break
+            }
+          }
+        }
+        else if (/^[^\]]*\][,]*$/.test(trimmed) && 
+                 !/^\s*\[\s*\][,\s]*$/.test(line) &&
+                 !/:\s*\[\s*\][,\s]*$/.test(trimmed)) {
+          for (let j = braceStack.length - 1; j >= 0; j--) {
+            if (braceStack[j].type === 'bracket') {
+              closingMap.set(i, braceStack[j].indent)
+              braceStack.splice(j, 1)
+              break
+            }
+          }
+        }
+      }
+      
+      // Fix indentation of closing braces/brackets
+      const fixedLines: string[] = []
+      for (let i = 0; i < linesForBraceFix.length; i++) {
+        const line = linesForBraceFix[i]
+        const trimmed = line.trim()
+        
+        if (/^\s*\{\s*\}[,\s]*$/.test(line) || 
+            /^\s*\[\s*\][,\s]*$/.test(line) ||
+            /:\s*\{\s*\}[,\s]*$/.test(trimmed) ||
+            /:\s*\[\s*\][,\s]*$/.test(trimmed)) {
+          fixedLines.push(line)
+          continue
+        }
+        
+        if (closingMap.has(i)) {
+          const targetIndent = closingMap.get(i)!
+          const closingMatch = trimmed.match(/([}\]][,]*)$/)
+          if (closingMatch) {
+            const closing = closingMatch[1]
+            fixedLines.push(' '.repeat(targetIndent) + closing)
+            continue
+          }
+        }
+        
+        fixedLines.push(line)
+      }
+      
+      // Remove empty lines before closing braces/brackets
+      const cleanedLines: string[] = []
+      for (let i = 0; i < fixedLines.length; i++) {
+        const line = fixedLines[i]
+        const trimmed = line.trim()
+        
+        if (!trimmed && i + 1 < fixedLines.length) {
+          const nextTrimmed = fixedLines[i + 1].trim()
+          if (/^[}\]][,]*$/.test(nextTrimmed)) {
+            continue
+          }
+        }
+        
+        cleanedLines.push(line)
+      }
+      
+      content = cleanedLines.join('\n')
+      content = content.replace(/\[\s*\n\s*\]/gm, '[]')
+      content = content.replace(/\{\s*\n\s*\}/gm, '{}')
     }
   } else {
     if (body === undefined || body === null) {
@@ -140,7 +259,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
         if (pair.type === 'brace') {
           allReplacements.push({
             index: pair.open,
-            replacement: '<details class="contents" open><summary class="inline-block brace"><span class="token punctuation">{</span></summary>',
+            replacement: '<details class="contents" open><summary class="brace"><span class="token punctuation">{</span></summary>',
             originalLength: openBracePattern.length
           })
           if (hasComma) {
@@ -159,7 +278,7 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
         } else {
           allReplacements.push({
             index: pair.open,
-            replacement: '<details class="contents" open><summary class="inline-block bracket"><span class="token punctuation">[</span></summary>',
+            replacement: '<details class="contents" open><summary class="bracket"><span class="token punctuation">[</span></summary>',
             originalLength: openBracketPattern.length
           })
           if (hasComma) {
@@ -183,6 +302,10 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
       for (const replacement of allReplacements) {
         code = code.substring(0, replacement.index) + replacement.replacement + code.substring(replacement.index + replacement.originalLength)
       }
+      
+      code = code.replace(/<\/summary>\s*\n\s*(<span class="line-number)/g, '</summary>$1')
+      code = code.replace(/(<span class="line-number[^>]*>[^<]*<\/span>)\s*\n\s*(<span class="line-number[^>]*>[^<]*<\/span>\s*<span class="token punctuation closing-[^"]*">[}\]])/g, '$2')
+      code = code.replace(/(<\/details>)\s*\n\s*(<span class="line-number[^>]*>[^<]*<\/span>\s*<span class="token punctuation closing-[^"]*">[}\]])/g, '$1$2')
     }
 
     return `<code class="language-${language}">${code}</code>`

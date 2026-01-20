@@ -23,14 +23,38 @@
     "start": "node ./server",
     "build": "vite build",
     "build:watch": "vite build --watch",
-    "lint": "tsc --noEmit && eslint . --max-warnings=15 --quiet"
+    "lint": "tsc --noEmit && eslint . --max-warnings=15 --quiet",
+    "semantic-release": "semantic-release",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true
+        }
+      ]
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",
     "@commitlint/config-conventional": "^18.6.3",
     "@eslint/js": "^9.39.2",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^25.0.3",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/npm": "^12.0.2",
+    "@types/node": "^25.0.9",
     "@types/prismjs": "^1.26.5",
     "@types/set-cookie-parser": "^2.4.10",
     "@vitejs/plugin-vue": "^5.2.4",
@@ -43,9 +67,11 @@
     "generate-changelog": "^1.8.0",
     "husky": "^8.0.3",
     "postcss": "^8.5.6",
+    "semantic-release": "^24.2.9",
+    "standard-version": "^9.5.0",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.53.0",
+    "typescript-eslint": "^8.53.1",
     "vite": "^6.4.1"
   },
   "peerDependencies": {
@@ -54,7 +80,10 @@
   "dependencies": {
     "prismjs": "^1.30.0",
     "set-cookie-parser": "^3.0.1",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
+  },
+  "overrides": {
+    "undici": ">=6.23.0"
   },
   "publishConfig": {
     "access": "public"
