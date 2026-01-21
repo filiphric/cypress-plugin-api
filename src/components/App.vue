@@ -33,12 +33,12 @@ import { onMounted, onUnmounted } from 'vue';
 import RequestPanel from "./RequestPanel.vue";
 import ResponsePanel from "./ResponsePanel.vue";
 import { generateCurl } from '../utils/generateCurl';
+import type { RequestProps } from '../types';
 
-const requests = defineProps({
-  props: {
-    default: () => [],
-    type: Array
-  }
+const requests = withDefaults(defineProps<{
+  props?: RequestProps[];
+}>(), {
+  props: () => []
 });
 
 const fallbackCopyTextToClipboard = (text: string) => {

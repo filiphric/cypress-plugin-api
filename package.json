@@ -53,7 +53,7 @@
     "@eslint/js": "^9.39.2",
     "@rollup/plugin-typescript": "^11.1.6",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/npm": "^13.1.1",
     "@types/node": "^25.0.9",
     "@types/prismjs": "^1.26.5",
     "@types/set-cookie-parser": "^2.4.10",
@@ -67,12 +67,15 @@
     "generate-changelog": "^1.8.0",
     "husky": "^8.0.3",
     "postcss": "^8.5.6",
-    "semantic-release": "^24.2.9",
+    "semantic-release": "^25.0.2",
     "standard-version": "^9.5.0",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.1",
     "vite": "^6.4.1"
+  },
+  "engines": {
+    "node": ">=22.14.0"
   },
   "peerDependencies": {
     "cypress": ">=15.9.0"
