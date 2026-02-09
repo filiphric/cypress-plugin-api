@@ -1,4 +1,5 @@
 import { getState } from '@utils/getState'
+import { getPluginConfig } from '@utils/pluginConfig'
 import { RequestProps } from "../types"
 import { reactive, createApp } from "vue"
 import App from "../components/App.vue";
@@ -79,7 +80,7 @@ export const initialize = () => {
 
   currentApp = app
 
-  if (!propsExist || isRetry || Cypress.env('snapshotOnly') || hasNavigated) {
+  if (!propsExist || isRetry || getPluginConfig('snapshotOnly') || hasNavigated) {
     currentMountRoot = mountPlugin(app)
   }
 

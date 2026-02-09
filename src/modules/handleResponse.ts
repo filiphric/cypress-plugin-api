@@ -6,6 +6,7 @@ import { isValidJson } from '@utils/isValidJson';
 import { ApiRequestOptions, ApiResponseBody, RequestProps } from '../types';
 import { transform } from "@modules/transform";
 import { getState } from '@utils/getState';
+import { getPluginConfig } from '@utils/pluginConfig';
 import { App } from 'vue';
 import { getFormat } from '@utils/getFormat';
 import { isValidUrlOrIp } from '@utils/isValidUrlOrIp';
@@ -221,7 +222,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
       doc.getElementById('api-view-bottom')?.scrollIntoView()
 
-      if (Cypress.env('snapshotOnly')) {
+      if (getPluginConfig('snapshotOnly')) {
         app.unmount()
         removeStyles()
       }

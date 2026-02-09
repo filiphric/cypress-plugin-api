@@ -3,7 +3,15 @@
 
 describe('binary response handling', () => {
 
-  it('handles FormData file upload with cy.request() and requestMode - exact user scenario', { env: { requestMode: true } }, () => {
+  function setPluginConfig(key: string, value: unknown) {
+  const fn = (window as unknown as { setPluginConfig?: (k: string, v: unknown) => void }).setPluginConfig
+  if (typeof fn === 'function') fn(key, value)
+  else if (typeof (Cypress as unknown as { expose?: unknown }).expose === 'function') (Cypress as unknown as { expose: (k: string, v: unknown) => void }).expose(key, value)
+  else Cypress.env(key, value)
+}
+
+it('handles FormData file upload with cy.request() and requestMode - exact user scenario', () => {
+    setPluginConfig('requestMode', true)
     const fileName = 'test.html';
     const type = 'text/html';
     const statusCode = 201;

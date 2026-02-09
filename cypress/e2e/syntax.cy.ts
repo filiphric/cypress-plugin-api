@@ -1,4 +1,4 @@
-describe('syntax', () => {
+describe('syntax', { env: { hideCredentials: false } }, () => {
 
   it('takes a single argument', () => {
 
@@ -20,7 +20,7 @@ describe('syntax', () => {
 
     cy.api('POST', '/', { hello: 'world' })
     cy.contains('POST')
-    cy.get('[data-cy=requestBody]')
+    cy.get('[data-cy="requestBody"]')
       .should('contain', '{')
       .should('contain', 'hello')
       .should('contain', ':')

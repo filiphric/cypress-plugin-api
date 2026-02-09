@@ -3,9 +3,19 @@ import * as fs from 'fs'
 
 export default defineConfig({
   projectId: 'v2x96h',
+  expose: {
+    enableTimeline: true,
+    requestMode: false,
+  },
   e2e: {
     baseUrl: 'http://localhost:3003',
     defaultCommandTimeout: 1000,
+    env: {
+      // Hide credentials in UI (headers, auth, body, query, cURL) so values from cy.env() stay masked
+      hideCredentials: true,
+      // Used only by authorization.cy.ts to verify cy.env() + hideCredentials masking
+      testToken: 'secret-env-token-for-test',
+    },
     experimentalRunAllSpecs: true,
     video: process.env.CI ? true : false,
     screenshotOnRunFailure: process.env.CI ? true : false,

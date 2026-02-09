@@ -1,3 +1,10 @@
+// Use plugin config helper (works when Cypress.expose is not available; uses Cypress.env)
+function setPluginConfig(key: string, value: unknown) {
+  const fn = (window as unknown as { setPluginConfig?: (k: string, v: unknown) => void }).setPluginConfig
+  if (typeof fn === 'function') fn(key, value)
+  else if (typeof (Cypress as unknown as { expose?: unknown }).expose === 'function') (Cypress as unknown as { expose: (k: string, v: unknown) => void }).expose(key, value)
+  else Cypress.env(key, value)
+}
 
 describe('cURL functionality', () => {
 
@@ -146,6 +153,7 @@ describe('cURL functionality', () => {
   })
 
   it('displays cURL with custom headers in the cURL tab', () => {
+    setPluginConfig('hideCredentials', false)
     cy.api({
       method: 'POST',
       url: '/',
@@ -495,8 +503,11 @@ describe('cURL functionality', () => {
     })
   })
 
-  describe('Hiding credentials in cURL', { env: { hideCredentials: true } }, () => {
-    
+  describe('Hiding credentials in cURL', () => {
+    before(() => {
+      setPluginConfig('hideCredentials', true)
+    })
+
     it('hides authorization header in cURL', () => {
       cy.api({
         method: 'POST',
@@ -614,7 +625,10 @@ describe('cURL functionality', () => {
   })
 
   describe('Showing credentials in cURL when hideCredentials is false', () => {
-    
+    before(() => {
+      setPluginConfig('hideCredentials', false)
+    })
+
     it('shows authorization header in cURL', () => {
       cy.api({
         method: 'POST',

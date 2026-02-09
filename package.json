@@ -59,7 +59,7 @@
     "@types/set-cookie-parser": "^2.4.10",
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.23",
-    "cypress": "^15.9.0",
+    "cypress": "^15.10.0",
     "eslint": "^9.39.2",
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-vue": "^9.33.0",
@@ -78,7 +78,7 @@
     "node": ">=22.14.0"
   },
   "peerDependencies": {
-    "cypress": ">=15.9.0"
+    "cypress": ">=15.10.0"
   },
   "dependencies": {
     "prismjs": "^1.30.0",

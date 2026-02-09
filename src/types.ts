@@ -58,39 +58,26 @@ declare global {
     }
     interface Cypress {
       /**
-        * Returns all environment variables set with CYPRESS_ prefix or in "env" object in "cypress.json"
-        *
-        * @see https://on.cypress.io/env
-        */
+       * Plugin config (Cypress 15.10+). Use Cypress.expose() for non-sensitive options.
+       * @see https://docs.cypress.io/api/cypress-api/expose
+       */
+      expose(): PluginEnvOptions;
+      expose<T extends keyof PluginEnvOptions>(key: T): PluginEnvOptions[T] | undefined;
+      expose<T extends keyof PluginEnvOptions>(key: T, value: PluginEnvOptions[T]): void;
+      expose(object: Partial<PluginEnvOptions>): void;
+      /**
+       * @deprecated Use Cypress.expose() for plugin config or cy.env() for secrets.
+       * @see https://docs.cypress.io/guides/references/migration-guide#migrating-away-from-cypressenv
+       */
       env(): PluginEnvOptions;
-      /**
-       * Returns specific environment variable or undefined
-       * @see https://on.cypress.io/env
-       * @example
-       *    // cypress.json
-       *    { "env": { "foo": "bar" } }
-       *    Cypress.env("foo") // => bar
-       */
       env<T extends keyof PluginEnvOptions>(key: T): PluginEnvOptions[T];
-      /**
-       * Set value for a variable.
-       * Any value you change will be permanently changed for the remainder of your tests.
-       * @see https://on.cypress.io/env
-       * @example
-       *    Cypress.env("host", "http://server.dev.local")
-       */
       env<T extends keyof PluginEnvOptions>(key: T, value: PluginEnvOptions[T]): void;
-
-      /**
-       * Set values for multiple variables at once. Values are merged with existing values.
-       * @see https://on.cypress.io/env
-       * @example
-       *    Cypress.env({ host: "http://server.dev.local", foo: "foo" })
-       */
       env(object: PluginEnvOptions): void;
     }
     interface TestConfigOverrides {
       env?: Partial<PluginEnvOptions>
+      /** Cypress 15.10+: use expose for plugin options (requestMode, snapshotOnly, etc.) */
+      expose?: Partial<PluginEnvOptions>
     }
   }
   interface Window {
@@ -99,9 +86,10 @@ declare global {
 }
 
 export interface PluginEnvOptions extends Cypress.ObjectLike {
+  enableTimeline?: boolean
   snapshotOnly?: boolean
   hideCredentials?: boolean
-  hideCredentialsOptions?: HideCredentialsOptions,
+  hideCredentialsOptions?: HideCredentialsOptions
   requestMode?: boolean
 }
 

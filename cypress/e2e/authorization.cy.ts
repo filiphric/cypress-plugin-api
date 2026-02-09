@@ -1,4 +1,4 @@
-describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
+describe('Hiding credentials', { env: { hideCredentials: true } }, () => {
 
   it('hides authorization in headers', () => {
 
@@ -49,21 +49,27 @@ describe('Hiding credentials', { env: { 'hideCredentials': true } }, () => {
       .should('contain', '******')
       .should('not.contain', 'secret')
 
-  });
+  })
 
-});
+  it('hides value from cy.env() in headers when hideCredentials is true', () => {
+    cy.env(['testToken']).then(({ testToken }) => {
+      cy.api({
+        method: 'POST',
+        url: '/auth',
+        headers: { authorization: testToken },
+        failOnStatusCode: false,
+      })
+    })
+    cy.get('[data-cy="requestHeaders"]')
+      .should('contain', '****')
+      .should('not.contain', 'secret-env-token-for-test')
+  })
+
+})
 
 describe('Hiding credentials by defining them', () => {
 
-  it('hides authorization in headers', {
-    env: {
-      hideCredentials: true,
-      hideCredentialsOptions: {
-        headers: ['authorization']
-      }
-    }
-  }, () => {
-
+  it('hides authorization in headers', { env: { hideCredentials: true, hideCredentialsOptions: { headers: ['authorization'] } } }, () => {
     cy.api({
       method: 'POST',
       url: '/auth',
@@ -81,15 +87,7 @@ describe('Hiding credentials by defining them', () => {
 
   });
 
-  it('hides credentials in auth', {
-    env: {
-      hideCredentials: true,
-      hideCredentialsOptions: {
-        auth: ['user']
-      }
-    }
-  }, () => {
-
+  it('hides credentials in auth', { env: { hideCredentials: true, hideCredentialsOptions: { auth: ['user'] } } }, () => {
     cy.api({
       method: 'POST',
       url: '/auth',
@@ -107,15 +105,7 @@ describe('Hiding credentials by defining them', () => {
 
   });
 
-  it('hides credentials in body', {
-    env: {
-      hideCredentials: true,
-      hideCredentialsOptions: {
-        body: ['password']
-      }
-    }
-  }, () => {
-
+  it('hides credentials in body', { env: { hideCredentials: true, hideCredentialsOptions: { body: ['password'] } } }, () => {
     cy.api({
       method: 'POST',
       url: '/',
@@ -130,15 +120,7 @@ describe('Hiding credentials by defining them', () => {
 
   });
 
-  it('hides credentials in query', {
-    env: {
-      hideCredentials: true,
-      hideCredentialsOptions: {
-        qs: ['password']
-      }
-    }
-  }, () => {
-
+  it('hides credentials in query', { env: { hideCredentials: true, hideCredentialsOptions: { qs: ['password'] } } }, () => {
     cy.api({
       method: 'POST',
       url: '/',
@@ -155,7 +137,7 @@ describe('Hiding credentials by defining them', () => {
 
 });
 
-describe('Showing credentials', () => {
+describe('Showing credentials', { env: { hideCredentials: false } }, () => {
 
   it('shows authorization in headers', () => {
 
@@ -171,7 +153,21 @@ describe('Showing credentials', () => {
       .should('contain', 'abcd')
       .should('not.contain', '****')
 
-  });
+  })
+
+  it('shows value from cy.env() in headers when hideCredentials is not set', () => {
+    cy.env(['testToken']).then(({ testToken }) => {
+      cy.api({
+        method: 'POST',
+        url: '/auth',
+        headers: { authorization: testToken },
+        failOnStatusCode: false,
+      })
+    })
+    cy.get('[data-cy="requestHeaders"]')
+      .should('contain', 'secret-env-token-for-test')
+      .should('not.contain', '****')
+  })
 
   it('shows credentials in auth', () => {
 
