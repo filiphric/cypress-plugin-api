@@ -156,9 +156,9 @@ describe('cURL functionality', () => {
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X POST')
-          .should('contain', '-H \"Content-Type: application/json\"')
-          .should('contain', '-H \"Authorization: Bearer token123\"')
-          .should('contain', '-H \"X-Custom-Header: custom-value\"')
+          .should('contain', '-H "Content-Type: application/json"')
+          .should('contain', '-H "Authorization: Bearer token123"')
+          .should('contain', '-H "X-Custom-Header: custom-value"')
       })
   })
 
@@ -187,7 +187,7 @@ describe('cURL functionality', () => {
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X GET')
-          .should('contain', '-H \"Accept: application/json\"')
+          .should('contain', '-H "Accept: application/json"')
       })
   })
 
@@ -204,11 +204,11 @@ describe('cURL functionality', () => {
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy=\"curl-tab\"]')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
 
-        cy.get('[data-cy=\"curl\"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X POST')
@@ -221,16 +221,16 @@ describe('cURL functionality', () => {
     cy.api('POST', '/', { first: 'request' })
     cy.api('PUT', '/', { second: 'request' })
 
-    cy.get('[data-cy=\"requestPanel\"]')
+    cy.get('[data-cy="requestPanel"]')
       .should('have.length', 3)
 
     // Panel 0 (GET)
-    cy.get('[data-cy=\"requestPanel\"]')
+    cy.get('[data-cy="requestPanel"]')
       .eq(0)
       .within(() => {
-        cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        cy.get('[data-cy=\"curl\"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .scrollIntoView()
           .should('be.visible')
@@ -239,12 +239,12 @@ describe('cURL functionality', () => {
       })
 
     // Panel 1 (POST)
-    cy.get('[data-cy=\"requestPanel\"]')
+    cy.get('[data-cy="requestPanel"]')
       .eq(1)
       .within(() => {
-        cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        cy.get('[data-cy=\"curl\"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .scrollIntoView()
           .should('be.visible')
@@ -253,12 +253,12 @@ describe('cURL functionality', () => {
       })
 
     // Panel 2 (PUT)
-    cy.get('[data-cy=\"requestPanel\"]')
+    cy.get('[data-cy="requestPanel"]')
       .eq(2)
       .within(() => {
-        cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        cy.get('[data-cy=\"curl\"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .scrollIntoView()
           .should('be.visible')
@@ -267,12 +267,12 @@ describe('cURL functionality', () => {
       })
 
     // Switch back to panel 1 and verify its cURL is unchanged
-    cy.get('[data-cy=\"requestPanel\"]')
+    cy.get('[data-cy="requestPanel"]')
       .eq(1)
       .within(() => {
-        cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        cy.get('[data-cy=\"curl\"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .scrollIntoView()
           .should('be.visible')
@@ -297,17 +297,17 @@ describe('cURL functionality', () => {
         }
       })
 
-      cy.get('[data-cy=\"requestPanel\"]')
+      cy.get('[data-cy="requestPanel"]')
         .first()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
-          cy.get('[data-cy=\"curl\"]')
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X POST')
-            .should('contain', '-H \"authorization:')
+            .should('contain', '-H "authorization:')
             .should('contain', '****')
             .should('not.contain', 'secret-token-123')
         })
@@ -323,13 +323,13 @@ describe('cURL functionality', () => {
         }
       })
 
-      cy.get('[data-cy=\"requestPanel\"]')
+      cy.get('[data-cy="requestPanel"]')
         .first()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
 
-          cy.get('[data-cy=\"curl\"]')
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
@@ -352,13 +352,13 @@ describe('cURL functionality', () => {
         }
       })
 
-      cy.get('[data-cy=\"requestPanel\"]')
+      cy.get('[data-cy="requestPanel"]')
         .first()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
 
-          cy.get('[data-cy=\"curl\"]')
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
@@ -380,13 +380,13 @@ describe('cURL functionality', () => {
         }
       })
 
-      cy.get('[data-cy=\"requestPanel\"]')
+      cy.get('[data-cy="requestPanel"]')
         .first()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
 
-          cy.get('[data-cy=\"curl\"]')
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
@@ -411,19 +411,19 @@ describe('cURL functionality', () => {
         }
       })
 
-      cy.get('[data-cy=\"requestPanel\"]')
+      cy.get('[data-cy="requestPanel"]')
         .first()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
           cy.wait(100)
 
-          cy.get('[data-cy=\"curl\"]')
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X POST')
-            .should('contain', '-H \"authorization: Bearer visible-token-123\"')
+            .should('contain', '-H "authorization: Bearer visible-token-123"')
             .should('not.contain', '****')
         })
     })
@@ -432,7 +432,7 @@ describe('cURL functionality', () => {
   it('allows text selection in cURL CodeBlock when section is highlighted from assertion', () => {
     cy.api('POST', '/', { test: 'data' })
 
-    cy.get('[data-cy=\"requestBody\"]')
+    cy.get('[data-cy="requestBody"]')
       .should('contain', 'test')
       .click()
 
@@ -442,19 +442,19 @@ describe('cURL functionality', () => {
         $section[0].classList.add('__cypress-highlight')
       })
 
-    cy.get('[data-cy=\"requestPanel\"]')
+    cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy=\"curl-tab\"]').click({ force: true })
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
 
-        cy.get('[data-cy=\"curl\"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .scrollIntoView()
 
         // The cURL block is user-select: all; here we just assert it contains curl text.
-        cy.get('[data-cy=\"curl\"] pre')
+        cy.get('[data-cy="curl"] pre')
           .should('exist')
           .should('be.visible')
           .invoke('text')

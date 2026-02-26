@@ -1,6 +1,5 @@
 // ESLint 10 flat config
 // Migrated from the previous .eslintrc.js setup
-
 const js = require('@eslint/js')
 const tsParser = require('@typescript-eslint/parser')
 const tsPlugin = require('@typescript-eslint/eslint-plugin')
@@ -8,6 +7,7 @@ const vuePlugin = require('eslint-plugin-vue')
 const vueParser = require('vue-eslint-parser')
 const noOnlyTests = require('eslint-plugin-no-only-tests')
 const cypressPlugin = require('eslint-plugin-cypress')
+const globals = require('globals')
 
 /** @type {import('eslint').Linter.Config[]} */
 module.exports = [
@@ -29,6 +29,13 @@ module.exports = [
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.mocha,
+        cy: 'readonly',
+        Cypress: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
@@ -48,6 +55,9 @@ module.exports = [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-namespace': 'off',
       'no-only-tests/no-only-tests': 'error',
+      // TypeScript already checks undefined symbols; avoid duplicate/noisy core rule
+      'no-undef': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 

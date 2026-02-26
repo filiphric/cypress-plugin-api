@@ -84,7 +84,7 @@
       class="pr-3 pl-1 cursor-pointer text-cy-gray select-none"
       :for="'curl' + index"
       data-cy="curl-tab"
-      @click.stop="selectedTab = 'curl'"
+      @click.stop="handleCurlTabClick"
     >
       cURL
     </label>
@@ -133,22 +133,40 @@ const lastItemId = ref<string | null>(null)
 const root = ref<HTMLElement | null>(null)
 let highlightObserver: MutationObserver | null = null
 
-const curlFormatted = computed(() => {
+const curlText = computed(() => {
   if (!props.item) return ''
-  const curl = generateCurl(props.item)
-  return curl ? transform(curl, 'plaintext') : ''
+  return generateCurl(props.item)
 })
 
-const hasContent = (obj: unknown): boolean => {
-  if (!obj) return false
-  if (typeof obj !== 'object') return true
-  if (Array.isArray(obj)) return obj.length > 0
-  return Object.keys(obj as object).length > 0
-}
+const curlFormatted = computed(() => {
+  if (!props.item) return ''
+  const curl = curlText.value
+  if (!curl) return ''
+  return transform(curl, 'plaintext')
+})
 
 const initializeTab = () => {
   const item = props.item
   if (!item) return
+
+  const hasContent = (obj: unknown): boolean => {
+    if (!obj) return false
+    if (typeof obj !== 'object') return true
+    if (Array.isArray(obj)) return obj.length > 0
+
+    if (obj instanceof ArrayBuffer) return obj.byteLength > 0
+    if (obj instanceof Blob) return obj.size > 0
+    if (obj instanceof FormData) {
+      let hasEntries = false
+      obj.forEach(() => { hasEntries = true })
+      return hasEntries
+    }
+    if (obj instanceof Uint8Array || obj instanceof Uint16Array || obj instanceof Uint32Array) {
+      return obj.length > 0
+    }
+
+    return Object.keys(obj as object).length > 0
+  }
 
   const hasQuery = hasContent(item.query?.body) && item.query?.formatted
   const hasHeaders = hasContent(item.requestHeaders?.body) && item.requestHeaders?.formatted
@@ -192,15 +210,28 @@ onMounted(() => {
   if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
     const checkAndUpdateTab = () => {
       if (!root.value) return
-      const section = root.value.closest('section') as HTMLElement | null
-      if (!section?.classList.contains('__cypress-highlight')) return
-      initializeTab()
+
+      const section = root.value.closest('section[data-curl]') as HTMLElement | null
+      if (!section) return
+
+      if (section.classList.contains('__cypress-highlight')) {
+        initializeTab()
+      }
     }
 
-    highlightObserver = new MutationObserver(() => {
+    highlightObserver = new MutationObserver((mutations) => {
       if (!root.value) return
-      const section = root.value.closest('section') as HTMLElement | null
+
+      const section = root.value.closest('section[data-curl]') as HTMLElement | null
       if (!section) return
+
+      const isRelevantMutation = mutations.some((mutation) => {
+        const target = mutation.target as HTMLElement
+        return target === section || section.contains(target)
+      })
+
+      if (!isRelevantMutation) return
+
       checkAndUpdateTab()
       setTimeout(checkAndUpdateTab, 10)
     })
@@ -219,4 +250,10 @@ onUnmounted(() => {
     highlightObserver = null
   }
 })
+
+const handleCurlTabClick = (event: MouseEvent) => {
+  event.stopPropagation()
+  event.stopImmediatePropagation()
+  selectedTab.value = 'curl'
+}
 </script>
