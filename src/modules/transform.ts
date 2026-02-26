@@ -1,8 +1,9 @@
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-markup';
 import { isValidJson } from '../utils/isValidJson';
 
-export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' | 'plaintext' = 'json') => {
+export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'markup' | 'blob' | 'plaintext' = 'json') => {
   const content = language === 'json' ? JSON.stringify(body, null, 2) : body
   if (body) {
     const formatted = Prism.highlight(content, Prism.languages[language], language)

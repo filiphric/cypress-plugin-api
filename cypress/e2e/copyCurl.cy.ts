@@ -284,7 +284,7 @@ describe('cURL functionality', () => {
   })
 
   describe('Hiding credentials in cURL', () => {
-    before(() => {
+    beforeEach(() => {
       Cypress.env('hideCredentials', true)
     })
 
@@ -298,7 +298,7 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
           cy.get('[data-cy="curl-tab"]').click({ force: true })
@@ -324,7 +324,7 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
           cy.get('[data-cy="curl-tab"]').click({ force: true })
@@ -353,7 +353,7 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
           cy.get('[data-cy="curl-tab"]').click({ force: true })
@@ -381,7 +381,7 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
           cy.get('[data-cy="curl-tab"]').click({ force: true })

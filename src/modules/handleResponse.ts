@@ -39,8 +39,8 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
       'text/plain': 'plaintext',
     } as const
     const definedFormat = formats[contentType as keyof typeof formats]
-    // if format is in the "formats" object use that, else try to determine by the function
-    const language = definedFormat || getFormat(body)
+    // Prism registers XML/HTML under "markup"; use it for highlighting
+    const language = (definedFormat === 'xml' || definedFormat === 'html') ? 'markup' : (definedFormat || getFormat(body))
     // format response
     props[index].responseBody.formatted = transform(body, language)
     props[index].responseBody.body = bodyRaw
