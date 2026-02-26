@@ -2,10 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* UI view styles */
+/* UI view styles: main plugin panel (full-screen overlay in Cypress runner) */
 #api-view {
-  @apply fixed top-0 left-0 right-0 bottom-0 bg-cy-blue-darker h-screen overflow-scroll mb-10 ;
-  z-index: 9999999
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1b1e2e; /* cy-blue-darker */
+  height: 100vh;
+  overflow: scroll;
+  margin-bottom: 2.5rem;
+  z-index: 9999999;
 }
 
 @keyframes fade-out {
@@ -27,7 +35,7 @@
 }
 
 [data-layer="Margin"] {
-  @apply bg-yellow-100 !important;
+  background-color: #fef9c3 !important; /* Tailwind bg-yellow-100 */
   opacity: 0;
   animation: fade-out 2s ease-in-out;
 }
@@ -36,16 +44,18 @@
 [data-cy=showQuery]:checked + label,
 [data-cy=showRequestHeaders]:checked + label,
 [data-cy=showRequestBody]:checked + label,
+[data-cy=showCurl]:checked + label,
 [data-cy=showResponseBody]:checked + label,
 [data-cy=showResponseHeaders]:checked + label,
 [data-cy=showCookies]:checked + label {
-  @apply text-cy-gray-light
+  color: #d0d2e0; /* cy-gray-light */
 }
 
 [data-cy=showAuth]:checked ~ [data-cy=auth],
 [data-cy=showQuery]:checked ~ [data-cy=query],
 [data-cy=showRequestHeaders]:checked ~ [data-cy=requestHeaders],
 [data-cy=showRequestBody]:checked ~ [data-cy=requestBody],
+[data-cy=showCurl]:checked ~ [data-cy=curl],
 [data-cy=showResponseBody]:checked ~ [data-cy=responseBody],
 [data-cy=showResponseHeaders]:checked ~ [data-cy=responseHeaders],
 [data-cy=showCookies]:checked ~ [data-cy=cookies] {
@@ -56,15 +66,52 @@
 [data-cy=showQuery]:not(:checked) ~ [data-cy=query],
 [data-cy=showRequestHeaders]:not(:checked) ~ [data-cy=requestHeaders],
 [data-cy=showRequestBody]:not(:checked) ~ [data-cy=requestBody],
+[data-cy=showCurl]:not(:checked) ~ [data-cy=curl],
 [data-cy=showResponseBody]:not(:checked) ~ [data-cy=responseBody],
 [data-cy=showResponseHeaders]:not(:checked) ~ [data-cy=responseHeaders],
 [data-cy=showCookies]:not(:checked) ~ [data-cy=cookies] {
-  @apply hidden
+  display: none;
+}
+
+/* cURL tab: select-all for easy copy (works in pinned snapshots, no clipboard JS) */
+[data-cy=curl] {
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+}
+[data-cy=curl] * {
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+}
+/* cURL tab: wrap long lines so full command is visible (like other panels) */
+[data-cy=curl] pre,
+[data-cy=curl] pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+[data-cy=curl] pre {
+  overflow-x: visible;
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+/* cURL: show line number but exclude it from selection/copy */
+[data-cy=curl] .line-number {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 /* PrismJS styles */
 pre {
-  @apply p-3 text-cy-gray-light text-xs;
+  padding: 0.75rem;
+  color: #d0d2e0; /* cy-gray-light */
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 pre code.hljs{
@@ -75,51 +122,58 @@ pre code.hljs{
 code.hljs{
   padding:3px 5px
 }
-.hljs{
-  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2
+.hljs {
+  background-color: #171926; /* cy-blue-darkest */
+  border: 1px solid #1e293b; /* slate-800 */
+  padding-left: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
+  margin-top: 0.5rem;
 }
-.hljs ::selection,.hljs::selection{
-  @apply bg-cy-blue-dark;
+.hljs ::selection,
+.hljs::selection {
+  background-color: #2e3247; /* cy-blue-dark */
 }
 
-.comment{
-  @apply text-cy-gray
+.comment {
+  color: #9095ad; /* cy-gray */
 }
-.tag{
-  @apply text-cy-blue
+.tag {
+  color: #6470f3; /* cy-blue */
 }
-.operator, .punctuation, .subst{
-  @apply text-cy-gray
+.operator, .punctuation, .subst {
+  color: #9095ad; /* cy-gray */
 }
 .operator{
   opacity:.7
 }
-.bullet, .deletion, .name, .selector-tag, .template-variable, .variable{
-  @apply text-cy-red
+.bullet, .deletion, .name, .selector-tag, .template-variable, .variable {
+  color: #ff5770; /* cy-red */
 }
-.attr, .link, .literal, .number, .symbol, .variable.constant_{
-  @apply text-cy-gray-light
+.attr, .link, .literal, .number, .symbol, .variable.constant_ {
+  color: #d0d2e0; /* cy-gray-light */
 }
-.number{
-  @apply text-cy-green
+.number {
+  color: #1fa971; /* cy-green */
 }
 .attr-name {
-  @apply text-cy-green
+  color: #1fa971; /* cy-green */
 }
 .attr-value {
-  @apply text-cy-gray-light
+  color: #d0d2e0; /* cy-gray-light */
 }
 
-.addition, .built_in, .code, .doctag, .keyword.atrule, .quote, .regexp, .string, .title.class_.inherited__{
-  @apply text-cy-blue
+.addition, .built_in, .code, .doctag, .keyword.atrule, .quote, .regexp, .string, .title.class_.inherited__ {
+  color: #6470f3; /* cy-blue */
 }
 
-.diff .meta, .keyword, .template-tag, .type{
-  @apply text-cy-purple
+.diff .meta, .keyword, .template-tag, .type {
+  color: #7f43c9; /* cy-purple */
 }
 
-.meta, .meta .keyword, .meta .string{
-  @apply text-cy-gray
+.meta, .meta .keyword, .meta .string {
+  color: #9095ad; /* cy-gray */
 }
 
 /* hiding scrollbars */
@@ -132,7 +186,8 @@ code.hljs{
 }
 
 .line-number {
-  @apply pr-2 inline-block;
+  padding-right: 0.5rem;
+  display: inline-block;
 }
 
 details summary { 
@@ -140,31 +195,35 @@ details summary {
 }
 
 details summary {
-  @apply text-cy-gray
+  color: #9095ad; /* cy-gray */
 }
 
-code > details:first-of-type > summary{
-  @apply -ml-4;
+code > details:first-of-type > summary {
+  margin-left: -1rem;
 }
 
 details[open] summary.brace::before { 
   content: " ▼ ";
-  @apply text-slate-700 -ml-2;
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details[open] summary.bracket::before { 
   content: " ▼ ";
-  @apply text-slate-700 -ml-2;
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details:not([open]) summary.brace::before { 
   content: " ▶︎ ";
-  @apply text-slate-700 -ml-2;
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details:not([open]) summary.bracket::before { 
   content: " ▶︎ ";
-  @apply text-slate-700 -ml-2;
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details:not([open]) summary.brace::after { 

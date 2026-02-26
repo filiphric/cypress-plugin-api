@@ -1,5 +1,5 @@
-import base from "../style.css";
-import timeline from "../timeline.css";
+import base from "../style.css?inline";
+import timeline from "../timeline.css?inline";
 import { getState } from "../utils/getState";
 
 export const addStyles = () => {
