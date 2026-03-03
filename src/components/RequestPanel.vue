@@ -212,37 +212,22 @@ onMounted(() => {
   }
 
   if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
+    const section = root.value?.closest('section') as HTMLElement | null
+    if (!section) return
+
     const checkAndUpdateTab = () => {
-      if (!root.value) return
-
-      const section = root.value.closest('section[data-curl]') as HTMLElement | null
-      if (!section) return
-
       if (section.classList.contains('__cypress-highlight') && !userSelectedTab.value) {
         initializeTab()
       }
     }
 
-    highlightObserver = new MutationObserver((mutations) => {
-      if (!root.value) return
-
-      const section = root.value.closest('section[data-curl]') as HTMLElement | null
-      if (!section) return
-
-      const isRelevantMutation = mutations.some((mutation) => {
-        const target = mutation.target as HTMLElement
-        return target === section || section.contains(target)
-      })
-
-      if (!isRelevantMutation) return
-
+    highlightObserver = new MutationObserver(() => {
       checkAndUpdateTab()
       setTimeout(checkAndUpdateTab, 10)
     })
 
-    highlightObserver.observe(document.body, {
+    highlightObserver.observe(section, {
       attributes: true,
-      subtree: true,
       attributeFilter: ['class']
     })
   }
