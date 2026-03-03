@@ -20,7 +20,7 @@
       v-show="item?.query.body"
       class="pr-3 pl-1 cursor-pointer text-cy-gray select-none"
       :for="'query' + index"
-      @click="selectedTab = 'query'"
+      @click="handleTabClick('query')"
     >
       Query
     </label>
@@ -36,7 +36,7 @@
       v-show="item?.requestHeaders.body"
       class="pr-4 pl-1 cursor-pointer text-cy-gray select-none"
       :for="'requestHeaders' + index"
-      @click="selectedTab = 'requestHeaders'"
+      @click="handleTabClick('requestHeaders')"
     >
       Headers
     </label>
@@ -52,7 +52,7 @@
       v-show="item?.auth.body"
       class="pr-3 pl-1 cursor-pointer text-cy-gray select-none"
       :for="'auth' + index"
-      @click="selectedTab = 'auth'"
+      @click="handleTabClick('auth')"
     >
       Auth
     </label>
@@ -68,7 +68,7 @@
       v-show="item?.requestBody.body || (!item?.auth.body && !item?.requestHeaders.body && !item?.query.body)"
       class="pr-3 pl-1 cursor-pointer text-cy-gray select-none"
       :for="'requestBody' + index"
-      @click="selectedTab = 'requestBody'"
+      @click="handleTabClick('requestBody')"
     >
       Body
     </label>
@@ -129,6 +129,7 @@ const props = defineProps({
 })
 
 const selectedTab = ref<string>('requestBody')
+const userSelectedTab = ref(false)
 const lastItemId = ref<string | null>(null)
 const root = ref<HTMLElement | null>(null)
 let highlightObserver: MutationObserver | null = null
@@ -188,6 +189,7 @@ watch(() => props.item?.id, (newId) => {
   if (newId && newId !== lastItemId.value) {
     lastItemId.value = newId
     selectedTab.value = 'requestBody'
+    userSelectedTab.value = false
     initializeTab()
   }
 }, { immediate: true })
@@ -198,7 +200,9 @@ watch(() => [
   props.item?.auth?.formatted,
   props.item?.requestBody?.formatted
 ], () => {
-  if (props.item?.id) initializeTab()
+  if (!props.item?.id) return
+  if (userSelectedTab.value) return
+  initializeTab()
 }, { deep: false })
 
 onMounted(() => {
@@ -214,7 +218,7 @@ onMounted(() => {
       const section = root.value.closest('section[data-curl]') as HTMLElement | null
       if (!section) return
 
-      if (section.classList.contains('__cypress-highlight')) {
+      if (section.classList.contains('__cypress-highlight') && !userSelectedTab.value) {
         initializeTab()
       }
     }
@@ -251,9 +255,14 @@ onUnmounted(() => {
   }
 })
 
+const handleTabClick = (tab: string) => {
+  userSelectedTab.value = true
+  selectedTab.value = tab
+}
+
 const handleCurlTabClick = (event: MouseEvent) => {
   event.stopPropagation()
   event.stopImmediatePropagation()
-  selectedTab.value = 'curl'
+  handleTabClick('curl')
 }
 </script>

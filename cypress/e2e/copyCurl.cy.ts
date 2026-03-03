@@ -313,6 +313,46 @@ describe('cURL functionality', () => {
         })
     })
 
+    it('escapes quotes and newlines in cURL output', () => {
+      // This test verifies escaping, not anonymization; keep credentials visible here.
+      Cypress.env('hideCredentials', false)
+
+      cy.api({
+        method: 'POST',
+        url: '/?q="quoted\nline"',
+        headers: {
+          // HTTP headers cannot contain raw newlines; keep quotes here and exercise newlines via URL/body.
+          'X-Quote': 'value "with" quotes and more'
+        },
+        auth: {
+          user: 'ad"min',
+          pass: 'sec\nret'
+        },
+        body: {
+          text: 'line1\nline2 "double" and \'single\''
+        }
+      })
+
+      cy.get('[data-cy="requestPanel"]')
+        .last()
+        .should('be.visible')
+        .within(() => {
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
+            .should('exist')
+            .scrollIntoView()
+            .should('be.visible')
+            .invoke('text')
+            .then((text) => {
+              expect(text, 'URL escaped').to.contain('\\"quoted\\nline\\"')
+              expect(text, 'header escaped').to.contain('-H "X-Quote: value \\"with\\" quotes and more"')
+              expect(text, 'auth user escaped').to.contain('ad\\"min')
+              expect(text, 'body escaped newlines').to.contain('\\n')
+            })
+        })
+    })
+
     it('hides auth credentials in cURL', () => {
       cy.api({
         method: 'POST',
@@ -338,6 +378,35 @@ describe('cURL functionality', () => {
             .should('contain', '*****')
             .should('contain', '******')
             .should('not.contain', 'admin')
+            .should('not.contain', 'secret')
+        })
+    })
+
+    it('hides username/password auth in cURL', () => {
+      cy.api({
+        method: 'POST',
+        url: '/',
+        auth: {
+          username: 'user',
+          password: 'secret'
+        }
+      })
+
+      cy.get('[data-cy="requestPanel"]')
+        .last()
+        .should('be.visible')
+        .within(() => {
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
+            .should('exist')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('contain', 'curl -X POST')
+            .should('contain', '-u')
+            .should('contain', '****')
+            .should('contain', '******')
+            .should('not.contain', 'user')
             .should('not.contain', 'secret')
         })
     })
