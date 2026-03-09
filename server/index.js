@@ -70,6 +70,7 @@ app.get('/html', (req, res) => {
     
   </body>
   </html>`
+  res.set('Content-Type', 'text/html')
   res.send(answerHTML)
 })
 

@@ -1,21 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "es5",
-      "dom"
-    ],
-    "types": [
-      "node",
-      "cypress"
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./dist"
-    ],
-    "baseUrl": "./"
+    "lib": ["es5", "dom"],
+    "types": ["node", "cypress"],
+    "baseUrl": "../",
+    "noEmit": true
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"]
 }

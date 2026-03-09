@@ -3,7 +3,7 @@ export function isValidHtml(str: string) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(str, "text/html");
     return doc.documentElement.nodeName === "html";
-  } catch (_) {
+  } catch {
     return false;
   }
 }

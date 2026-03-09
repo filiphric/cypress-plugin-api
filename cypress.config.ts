@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
   projectId: 'v2x96h',
+  allowCypressEnv: true,
   e2e: {
     baseUrl: 'http://localhost:3003',
     defaultCommandTimeout: 1000,

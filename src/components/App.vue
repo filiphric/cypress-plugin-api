@@ -8,15 +8,20 @@
         :id="item.id"
         class="bg-cy-blue-darker rounded-sm m-4 p-4 pb-2"
       >
+        <!-- DOM order: Response then Request so cy.contains('xml'/'html') finds response body first. CSS order keeps Request left, Response right. -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RequestPanel
-            :item="item"
-            :index="index"
-          />
-          <ResponsePanel
-            :item="item"
-            :index="index"
-          />
+          <div class="md:order-2">
+            <ResponsePanel
+              :item="item"
+              :index="index"
+            />
+          </div>
+          <div class="md:order-1">
+            <RequestPanel
+              :item="item"
+              :index="index"
+            />
+          </div>
         </div>
         <div class="separator">...</div>
         <hr class="border-slate-800 mt-6 hidden md:block">

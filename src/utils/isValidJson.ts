@@ -7,7 +7,7 @@ export const isValidJson = (input: any): boolean => {
     try {
       JSON.parse(input);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   } else {
