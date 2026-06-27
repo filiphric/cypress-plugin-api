@@ -702,45 +702,45 @@ describe('cURL functionality', () => {
             
             // Check if element has text content (this gets all text including from child elements)
             const textContent = $pre[0].textContent || $pre[0].innerText || ''
-            cy.log('Pre element textContent length:', textContent.length)
-            cy.log('Pre element textContent (first 100 chars):', textContent.substring(0, 100))
+            // cy.log('Pre element textContent length:', textContent.length)
+            // cy.log('Pre element textContent (first 100 chars):', textContent.substring(0, 100))
             
             // Find the code element inside pre (transform wraps content in <code>)
             const codeElement = $pre[0].querySelector('code')
-            cy.log('Code element found:', !!codeElement)
+            // cy.log('Code element found:', !!codeElement)
             if (codeElement) {
-              cy.log('Code element textContent length:', codeElement.textContent?.length || 0)
+              // cy.log('Code element textContent length:', codeElement.textContent?.length || 0)
             }
             
             // Check computed styles for user-select on pre
             const preStyles = window.getComputedStyle($pre[0])
-            cy.log('Pre computed user-select:', preStyles.userSelect)
-            cy.log('Pre computed pointer-events:', preStyles.pointerEvents)
-            cy.log('Pre computed cursor:', preStyles.cursor)
+            // cy.log('Pre computed user-select:', preStyles.userSelect)
+            // cy.log('Pre computed pointer-events:', preStyles.pointerEvents)
+            // cy.log('Pre computed cursor:', preStyles.cursor)
             
             // Check computed styles on code element if it exists
             if (codeElement) {
               const codeStyles = window.getComputedStyle(codeElement)
-              cy.log('Code computed user-select:', codeStyles.userSelect)
-              cy.log('Code computed pointer-events:', codeStyles.pointerEvents)
+              // cy.log('Code computed user-select:', codeStyles.userSelect)
+              // cy.log('Code computed pointer-events:', codeStyles.pointerEvents)
             }
             
             // Check parent element styles
             const parent = $pre[0].parentElement
             if (parent) {
               const parentStyles = window.getComputedStyle(parent)
-              cy.log('Parent user-select:', parentStyles.userSelect)
-              cy.log('Parent pointer-events:', parentStyles.pointerEvents)
-              cy.log('Parent cursor:', parentStyles.cursor)
+              // cy.log('Parent user-select:', parentStyles.userSelect)
+              // cy.log('Parent pointer-events:', parentStyles.pointerEvents)
+              // cy.log('Parent cursor:', parentStyles.cursor)
             }
             
             // Check if section is highlighted
             const section = $pre[0].closest('section')
             if (section) {
-              cy.log('Section has __cypress-highlight:', section.classList.contains('__cypress-highlight'))
+              // cy.log('Section has __cypress-highlight:', section.classList.contains('__cypress-highlight'))
               const sectionStyles = window.getComputedStyle(section)
-              cy.log('Section cursor:', sectionStyles.cursor)
-              cy.log('Section pointer-events:', sectionStyles.pointerEvents)
+              // cy.log('Section cursor:', sectionStyles.cursor)
+              // cy.log('Section pointer-events:', sectionStyles.pointerEvents)
             }
             
             // Verify element has text before trying to select
@@ -765,13 +765,13 @@ describe('cURL functionality', () => {
               
               // Verify text was selected
               const selectedText = selection.toString()
-              cy.log('Selected text length:', selectedText.length)
-              cy.log('Selected text (first 100 chars):', selectedText.substring(0, 100))
-              cy.log('Selection range count:', selection.rangeCount)
+              // cy.log('Selected text length:', selectedText.length)
+              // cy.log('Selected text (first 100 chars):', selectedText.substring(0, 100))
+              // cy.log('Selection range count:', selection.rangeCount)
               
               // If selection is empty, try selecting all text nodes
               if (selectedText.length === 0) {
-                cy.log('Selection is empty, trying to select all text nodes...')
+                // cy.log('Selection is empty, trying to select all text nodes...')
                 const walker = document.createTreeWalker(
                   targetElement,
                   NodeFilter.SHOW_TEXT,
@@ -787,23 +787,23 @@ describe('cURL functionality', () => {
                 }
                 
                 if (firstNode && lastNode) {
-                  cy.log('Found text nodes - first:', firstNode.textContent?.substring(0, 20), 'last:', lastNode.textContent?.substring(0, 20))
+                  // cy.log('Found text nodes - first:', firstNode.textContent?.substring(0, 20), 'last:', lastNode.textContent?.substring(0, 20))
                   
                   // Try selecting the entire pre element first (simpler approach)
-                  cy.log('Trying to select entire pre element contents...')
+                  // cy.log('Trying to select entire pre element contents...')
                   const preRange = document.createRange()
                   preRange.selectNodeContents($pre[0])
                   selection.removeAllRanges()
                   
                   try {
                     selection.addRange(preRange)
-                    cy.log('Pre range added, rangeCount:', selection.rangeCount)
+                    // cy.log('Pre range added, rangeCount:', selection.rangeCount)
                     
                     // Wait a tick for selection to settle
                     cy.wait(10).then(() => {
                       const preSelectedText = selection.toString()
-                      cy.log('After selecting pre contents, length:', preSelectedText.length)
-                      cy.log('Selected text (first 100 chars):', preSelectedText.substring(0, 100))
+                      // cy.log('After selecting pre contents, length:', preSelectedText.length)
+                      // cy.log('Selected text (first 100 chars):', preSelectedText.substring(0, 100))
                       
                       if (preSelectedText.length > 0) {
                         expect(preSelectedText).to.contain('curl', 'Selected text should contain curl command')
@@ -811,7 +811,7 @@ describe('cURL functionality', () => {
                       }
                       
                       // If pre selection failed, try text nodes
-                      cy.log('Pre selection failed, trying text nodes...')
+                      // cy.log('Pre selection failed, trying text nodes...')
                       const textRange = document.createRange()
                       textRange.setStart(firstNode, 0)
                       textRange.setEnd(lastNode, lastNode.textContent?.length || 0)
@@ -820,8 +820,8 @@ describe('cURL functionality', () => {
                       
                       cy.wait(10).then(() => {
                         const newSelectedText = selection.toString()
-                        cy.log('After text node selection, length:', newSelectedText.length)
-                        cy.log('Selected text (first 100 chars):', newSelectedText.substring(0, 100))
+                        // cy.log('After text node selection, length:', newSelectedText.length)
+                        // cy.log('Selected text (first 100 chars):', newSelectedText.substring(0, 100))
                         
                         if (newSelectedText.length > 0) {
                           expect(newSelectedText).to.contain('curl', 'Selected text should contain curl command')
@@ -830,23 +830,23 @@ describe('cURL functionality', () => {
                         
                         // Last resort: verify text is accessible even if selection doesn't work
                         const accessibleText = $pre[0].textContent || $pre[0].innerText || ''
-                        cy.log('Selection API not working, but text is accessible:', accessibleText.length, 'chars')
+                        // cy.log('Selection API not working, but text is accessible:', accessibleText.length, 'chars')
                         expect(accessibleText.length).to.be.greaterThan(0, 'Text should be accessible even if selection fails')
                         expect(accessibleText).to.contain('curl', 'Text should contain curl command')
                       })
                     })
                   } catch (rangeError) {
-                    cy.log('Error adding range:', rangeError)
+                    // cy.log('Error adding range:', rangeError)
                     // Fallback: verify text is accessible
                     const accessibleText = $pre[0].textContent || $pre[0].innerText || ''
-                    cy.log('Range error, but text is accessible:', accessibleText.length, 'chars')
+                    // cy.log('Range error, but text is accessible:', accessibleText.length, 'chars')
                     expect(accessibleText.length).to.be.greaterThan(0, 'Text should be accessible even if selection API fails')
                     expect(accessibleText).to.contain('curl', 'Text should contain curl command')
                   }
                 } else {
-                  cy.log('No text nodes found - checking element structure...')
-                  cy.log('Pre element HTML length:', $pre[0].innerHTML.length)
-                  cy.log('Pre element children count:', $pre[0].children.length)
+                  // cy.log('No text nodes found - checking element structure...')
+                  // cy.log('Pre element HTML length:', $pre[0].innerHTML.length)
+                  // cy.log('Pre element children count:', $pre[0].children.length)
                   
                   // Fallback: try selecting pre element directly
                   const preRange = document.createRange()
@@ -870,7 +870,7 @@ describe('cURL functionality', () => {
                 expect(selectedText).to.contain('curl', 'Selected text should contain curl command')
               }
             } catch (error) {
-              cy.log('Error adding range:', error)
+              // cy.log('Error adding range:', error)
               throw error
             }
           })
@@ -884,7 +884,7 @@ describe('cURL functionality', () => {
             const selection = window.getSelection()
             if (selection) {
               const selectedText = selection.toString()
-              cy.log('After drag selection, text length:', selectedText.length)
+              // cy.log('After drag selection, text length:', selectedText.length)
             }
           })
       })
