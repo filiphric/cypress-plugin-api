@@ -32,13 +32,16 @@ export default [
     },
   },
   {
-    files: ['**/*.config.js'],
+    files: ['**/*.config.{js,cjs,mjs}'],
     languageOptions: {
       globals: {
         module: 'readonly',
         require: 'readonly',
         __dirname: 'readonly',
       },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 ];

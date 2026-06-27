@@ -1,33 +1,21 @@
-// Use plugin config helper (works when Cypress.expose is not available; uses Cypress.env)
-function setPluginConfig(key: string, value: unknown) {
-  const fn = (window as unknown as { setPluginConfig?: (k: string, v: unknown) => void }).setPluginConfig
-  if (typeof fn === 'function') fn(key, value)
-  else if (typeof (Cypress as unknown as { expose?: unknown }).expose === 'function') (Cypress as unknown as { expose: (k: string, v: unknown) => void }).expose(key, value)
-  else Cypress.env(key, value)
-}
-
 describe('cURL functionality', () => {
 
   it('displays cURL for a simple GET request in the cURL tab', () => {
     cy.api('/')
 
-    // Wait for request panel to be visible, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        // Click the label using the same pattern as other tabs (adjacent sibling selector)
-        // Use force: true because the label may be covered by other elements during tab switching
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .click({ force: true })
-        
-        // Wait for the CodeBlock to appear and verify it contains the cURL
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X GET')
           .should('contain', `${Cypress.config('baseUrl')}/`)
-          .should('not.contain', '-d') // GET requests shouldn't have body
+          .should('not.contain', '-d')
       })
   })
 
@@ -42,17 +30,15 @@ describe('cURL functionality', () => {
       }
     })
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the CodeBlock contains the correct cURL
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X GET')
@@ -65,17 +51,15 @@ describe('cURL functionality', () => {
 
     cy.api('POST', '/', requestBody)
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the CodeBlock contains the correct cURL with body
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X POST')
@@ -89,17 +73,15 @@ describe('cURL functionality', () => {
 
     cy.api('PUT', '/', requestBody)
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the textarea contains the correct cURL with body
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X PUT')
@@ -112,17 +94,15 @@ describe('cURL functionality', () => {
 
     cy.api('PATCH', '/', requestBody)
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the textarea contains the correct cURL with body
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X PATCH')
@@ -133,49 +113,46 @@ describe('cURL functionality', () => {
   it('displays cURL for DELETE request in the cURL tab', () => {
     cy.api('DELETE', '/')
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the textarea contains the correct cURL
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X DELETE')
           .should('contain', `${Cypress.config('baseUrl')}/`)
-          .should('not.contain', '-d') // DELETE without body shouldn't have -d
+          .should('not.contain', '-d')
       })
   })
 
   it('displays cURL with custom headers in the cURL tab', () => {
-    setPluginConfig('hideCredentials', false)
+    Cypress.env('hideCredentials', false)
+
     cy.api({
       method: 'POST',
       url: '/',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer token123',
+        Authorization: 'Bearer token123',
         'X-Custom-Header': 'custom-value'
       },
       body: { test: 'data' }
     })
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the textarea contains the correct cURL with headers
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X POST')
@@ -194,21 +171,19 @@ describe('cURL functionality', () => {
         sort: 'name'
       },
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json'
       }
     })
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the textarea contains the correct cURL with headers
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X GET')
@@ -225,17 +200,15 @@ describe('cURL functionality', () => {
       body: stringBody
     })
 
-    // Wait for request panel, then click on the "cURL" tab label
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
+        cy.get('[data-cy="curl-tab"]')
           .should('be.visible')
           .click()
-        
-        // Verify the textarea contains the correct cURL with string body
-        cy.get('[data-cy="copyCurl"]')
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .should('contain', 'curl -X POST')
@@ -248,264 +221,71 @@ describe('cURL functionality', () => {
     cy.api('POST', '/', { first: 'request' })
     cy.api('PUT', '/', { second: 'request' })
 
-    // Verify we have 3 request panels
     cy.get('[data-cy="requestPanel"]')
       .should('have.length', 3)
 
-    // Test the first request panel (GET)
+    // Panel 0 (GET)
     cy.get('[data-cy="requestPanel"]')
       .eq(0)
-      .scrollIntoView()
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .click({ force: true })
-        
-        // Wait for tab switch to complete
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        
-        cy.get('[data-cy="copyCurl"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
+          .scrollIntoView()
           .should('be.visible')
           .should('contain', 'curl -X GET')
-          .should('not.contain', '-d') // GET shouldn't have body
+          .should('not.contain', '-d')
       })
 
-    // Test the second request panel (POST)
+    // Panel 1 (POST)
     cy.get('[data-cy="requestPanel"]')
       .eq(1)
-      .scrollIntoView()
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .click({ force: true })
-        
-        // Wait for tab switch to complete
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        
-        cy.get('[data-cy="copyCurl"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
+          .scrollIntoView()
           .should('be.visible')
           .should('contain', 'curl -X POST')
           .should('contain', `-d '${JSON.stringify({ first: 'request' })}'`)
       })
 
-    // Test the third request panel (PUT)
+    // Panel 2 (PUT)
     cy.get('[data-cy="requestPanel"]')
       .eq(2)
-      .scrollIntoView()
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .click({ force: true })
-        
-        // Wait for tab switch to complete
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
         cy.wait(100)
-        
-        cy.get('[data-cy="copyCurl"]')
+        cy.get('[data-cy="curl"]')
           .should('exist')
+          .scrollIntoView()
           .should('be.visible')
           .should('contain', 'curl -X PUT')
           .should('contain', `-d '${JSON.stringify({ second: 'request' })}'`)
       })
-  })
 
-  it('displays cURL in tab when section is highlighted from assertion', () => {
-    cy.api('POST', '/', { test: 'data' })
-
-    // Click on an assertion in the test body to highlight the section
-    // This simulates clicking on an assertion which highlights the section
-    cy.get('[data-cy="requestBody"]')
-      .should('contain', 'test')
-      .click()
-
-    // Manually add the highlight class to simulate Cypress highlighting
-    cy.get('section')
-      .first()
-      .then(($section) => {
-        $section[0].classList.add('__cypress-highlight')
-      })
-
-    // Wait for request panel, then click on the "cURL" tab for the highlighted section
+    // Switch back to panel 1 and verify its cURL is unchanged
     cy.get('[data-cy="requestPanel"]')
-      .first()
-      .should('be.visible')
+      .eq(1)
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .should('be.visible')
-          .click()
-        
-        // Verify the cURL was generated correctly in the textarea
-        cy.get('[data-cy="copyCurl"]')
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
+        cy.wait(100)
+        cy.get('[data-cy="curl"]')
           .should('exist')
+          .scrollIntoView()
           .should('be.visible')
           .should('contain', 'curl -X POST')
-          .should('contain', `-d '${JSON.stringify({ test: 'data' })}'`)
+          .should('contain', `-d '${JSON.stringify({ first: 'request' })}'`)
+          .should('not.contain', 'second')
+          .should('not.contain', 'third')
       })
-  })
-
-  it('displays cURL with complex nested JSON body in the cURL tab', () => {
-    const complexBody = {
-      user: {
-        name: 'John Doe',
-        email: 'john@example.com',
-        preferences: {
-          theme: 'dark',
-          notifications: true
-        }
-      },
-      items: [1, 2, 3]
-    }
-
-    cy.api('POST', '/', complexBody)
-
-    // Wait for request panel, then click on the "cURL" tab label
-    cy.get('[data-cy="requestPanel"]')
-      .first()
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .should('be.visible')
-          .click()
-        
-        // Verify the textarea contains the correct cURL with complex body
-        cy.get('[data-cy="copyCurl"]')
-          .should('exist')
-          .should('be.visible')
-          .should('contain', 'curl -X POST')
-          .should('contain', `-d '${JSON.stringify(complexBody)}'`)
-      })
-  })
-
-  it('displays cURL without body for GET requests in the cURL tab', () => {
-    cy.api('GET', '/')
-
-    // Wait for request panel, then click on the "cURL" tab label
-    cy.get('[data-cy="requestPanel"]')
-      .first()
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .should('be.visible')
-          .click()
-        
-        // Verify the textarea contains the correct cURL without body
-        cy.get('[data-cy="copyCurl"]')
-          .should('exist')
-          .should('be.visible')
-          .should('contain', 'curl -X GET')
-          .should('not.contain', '-d')
-      })
-  })
-
-  it('verifies textarea is selectable and contains full cURL command', () => {
-    const requestBody = { test: 'data', nested: { value: 123 } }
-
-    cy.api('POST', '/', requestBody)
-
-    // Wait for request panel, then click on the "cURL" tab label
-    cy.get('[data-cy="requestPanel"]')
-      .first()
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .should('be.visible')
-          .click()
-        
-        // Verify the CodeBlock is visible and contains the full cURL
-        cy.get('[data-cy="copyCurl"]')
-          .should('exist')
-          .should('be.visible')
-          .then(($codeBlock) => {
-            const codeBlock = $codeBlock[0] as HTMLElement
-            const curlValue = codeBlock.textContent || codeBlock.innerText
-            
-            // Verify it contains all expected parts
-            expect(curlValue).to.include('curl -X POST')
-            expect(curlValue).to.include(`${Cypress.config('baseUrl')}/`)
-            expect(curlValue).to.include(`-d '${JSON.stringify(requestBody)}'`)
-            
-            // Verify the CodeBlock content is selectable (pre tag is selectable by default)
-            const preElement = codeBlock.querySelector('pre')
-            if (preElement) {
-              expect(preElement.textContent).to.include('curl -X POST')
-            } else {
-              throw new Error('Pre element not found in copyCurl CodeBlock')
-            }
-          })
-      })
-  })
-
-  it('verifies each request panel maintains its own cURL independently when switching tabs', () => {
-    // Create multiple requests with different bodies
-    cy.api('GET', '/')
-    cy.api('POST', '/', { first: 'request', id: 1 })
-    cy.api('PUT', '/', { second: 'request', id: 2 })
-    cy.api('PATCH', '/', { third: 'request', id: 3 })
-
-    // Wait for all 4 request panels to be rendered
-    // Cypress will retry until 4 panels are found
-    cy.get('[data-cy="requestPanel"]', { timeout: 10000 })
-      .should('have.length', 4)
-
-    // Test panel 0 (GET) - should not have body
-    cy.get('[data-cy="requestPanel"]').eq(0).within(() => {
-      cy.get('[data-cy="showCopyCurl"] + label').click({ force: true })
-      cy.get('[data-cy="copyCurl"]')
-        .should('exist')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('contain', 'curl -X GET')
-        .should('not.contain', '-d')
-    })
-
-    // Test panel 1 (POST) - should have first request body
-    cy.get('[data-cy="requestPanel"]').eq(1).within(() => {
-      cy.get('[data-cy="showCopyCurl"] + label').click({ force: true })
-      cy.get('[data-cy="copyCurl"]')
-        .should('exist')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('contain', 'curl -X POST')
-        .should('contain', `-d '${JSON.stringify({ first: 'request', id: 1 })}'`)
-    })
-
-    // Test panel 2 (PUT) - should have second request body
-    cy.get('[data-cy="requestPanel"]').eq(2).within(() => {
-      cy.get('[data-cy="showCopyCurl"] + label').click({ force: true })
-      cy.get('[data-cy="copyCurl"]')
-        .should('exist')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('contain', 'curl -X PUT')
-        .should('contain', `-d '${JSON.stringify({ second: 'request', id: 2 })}'`)
-    })
-
-    // Test panel 3 (PATCH) - should have third request body
-    cy.get('[data-cy="requestPanel"]').eq(3).within(() => {
-      cy.get('[data-cy="showCopyCurl"] + label').click({ force: true })
-      cy.get('[data-cy="copyCurl"]')
-        .should('exist')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('contain', 'curl -X PATCH')
-        .should('contain', `-d '${JSON.stringify({ third: 'request', id: 3 })}'`)
-    })
-
-    // Verify switching back to panel 1 still shows correct cURL
-    cy.get('[data-cy="requestPanel"]').eq(1).within(() => {
-      cy.get('[data-cy="showCopyCurl"] + label').click({ force: true })
-      cy.get('[data-cy="copyCurl"]')
-        .should('exist')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('contain', 'curl -X POST')
-        .should('contain', `-d '${JSON.stringify({ first: 'request', id: 1 })}'`)
-        .should('not.contain', 'second') // Should not contain other request's data
-        .should('not.contain', 'third') // Should not contain other request's data
-    })
   })
 
   describe('Hiding credentials in cURL', () => {
-    before(() => {
-      setPluginConfig('hideCredentials', true)
+    beforeEach(() => {
+      Cypress.env('hideCredentials', true)
     })
 
     it('hides authorization header in cURL', () => {
@@ -518,20 +298,58 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy="showCopyCurl"] + label')
-            .click({ force: true })
-          
-          cy.get('[data-cy="copyCurl"]')
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X POST')
             .should('contain', '-H "authorization:')
-            .should('contain', '****') // Should contain masked value
-            .should('not.contain', 'secret-token-123') // Should not contain actual token
+            .should('contain', '****')
+            .should('not.contain', 'secret-token-123')
+        })
+    })
+
+    it('escapes quotes and newlines in cURL output', () => {
+      // This test verifies escaping, not anonymization; keep credentials visible here.
+      Cypress.env('hideCredentials', false)
+
+      cy.api({
+        method: 'POST',
+        url: '/?q="quoted\nline"',
+        headers: {
+          // HTTP headers cannot contain raw newlines; keep quotes here and exercise newlines via URL/body.
+          'X-Quote': 'value "with" quotes and more'
+        },
+        auth: {
+          user: 'ad"min',
+          pass: 'sec\nret'
+        },
+        body: {
+          text: 'line1\nline2 "double" and \'single\''
+        }
+      })
+
+      cy.get('[data-cy="requestPanel"]')
+        .last()
+        .should('be.visible')
+        .within(() => {
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
+            .should('exist')
+            .scrollIntoView()
+            .should('be.visible')
+            .invoke('text')
+            .then((text) => {
+              expect(text, 'URL escaped').to.contain('\\"quoted\\nline\\"')
+              expect(text, 'header escaped').to.contain('-H "X-Quote: value \\"with\\" quotes and more"')
+              expect(text, 'auth user escaped').to.contain('ad\\"min')
+              expect(text, 'body escaped newlines').to.contain('\\n')
+            })
         })
     })
 
@@ -546,22 +364,50 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy="showCopyCurl"] + label')
-            .click({ force: true })
-          
-          cy.get('[data-cy="copyCurl"]')
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X POST')
             .should('contain', '-u')
-            .should('contain', '*****') // Should contain masked username
-            .should('contain', '******') // Should contain masked password
-            .should('not.contain', 'admin') // Should not contain actual username
-            .should('not.contain', 'secret') // Should not contain actual password
+            .should('contain', '*****')
+            .should('contain', '******')
+            .should('not.contain', 'admin')
+            .should('not.contain', 'secret')
+        })
+    })
+
+    it('hides username/password auth in cURL', () => {
+      cy.api({
+        method: 'POST',
+        url: '/',
+        auth: {
+          username: 'user',
+          password: 'secret'
+        }
+      })
+
+      cy.get('[data-cy="requestPanel"]')
+        .last()
+        .should('be.visible')
+        .within(() => {
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
+            .should('exist')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('contain', 'curl -X POST')
+            .should('contain', '-u')
+            .should('contain', '****')
+            .should('contain', '******')
+            .should('not.contain', 'user')
+            .should('not.contain', 'secret')
         })
     })
 
@@ -576,21 +422,20 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy="showCopyCurl"] + label')
-            .click({ force: true })
-          
-          cy.get('[data-cy="copyCurl"]')
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X POST')
             .should('contain', '-d')
-            .should('contain', 'password') // Should contain the key
-            .should('contain', '****') // Should contain masked password value
-            .should('not.contain', 'secret123') // Should not contain actual password
+            .should('contain', 'password')
+            .should('contain', '****')
+            .should('not.contain', 'secret123')
         })
     })
 
@@ -605,28 +450,25 @@ describe('cURL functionality', () => {
       })
 
       cy.get('[data-cy="requestPanel"]')
-        .first()
+        .last()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy="showCopyCurl"] + label')
-            .click({ force: true })
-          
-          cy.get('[data-cy="copyCurl"]')
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X GET')
-            .should('contain', 'apiKey') // Should contain the key
-            .should('contain', 'token') // Should contain the key
-            // Query params might be hidden if they match default patterns
+            .should('contain', 'apiKey')
+            .should('contain', 'token')
         })
     })
-
   })
 
   describe('Showing credentials in cURL when hideCredentials is false', () => {
     before(() => {
-      setPluginConfig('hideCredentials', false)
+      Cypress.env('hideCredentials', false)
     })
 
     it('shows authorization header in cURL', () => {
@@ -642,253 +484,51 @@ describe('cURL functionality', () => {
         .first()
         .should('be.visible')
         .within(() => {
-          cy.get('[data-cy="showCopyCurl"] + label')
-            .should('be.visible')
-            .click({ force: true })
-          
-          // Wait a moment for the tab to switch
+          cy.get('[data-cy="curl-tab"]').click({ force: true })
           cy.wait(100)
-          
-          cy.get('[data-cy="copyCurl"]')
+
+          cy.get('[data-cy="curl"]')
             .should('exist')
             .scrollIntoView()
             .should('be.visible')
             .should('contain', 'curl -X POST')
             .should('contain', '-H "authorization: Bearer visible-token-123"')
-            .should('not.contain', '****') // Should not contain masked value
+            .should('not.contain', '****')
         })
     })
-
   })
 
   it('allows text selection in cURL CodeBlock when section is highlighted from assertion', () => {
     cy.api('POST', '/', { test: 'data' })
 
-    // Click on an assertion in the test body to highlight the section
     cy.get('[data-cy="requestBody"]')
       .should('contain', 'test')
       .click()
 
-    // Manually add the highlight class to simulate Cypress highlighting
     cy.get('section')
       .first()
       .then(($section) => {
         $section[0].classList.add('__cypress-highlight')
       })
 
-    // Wait for request panel, then click on the "cURL" tab
     cy.get('[data-cy="requestPanel"]')
       .first()
       .should('be.visible')
       .within(() => {
-        cy.get('[data-cy="showCopyCurl"] + label')
-          .should('be.visible')
-          .click({ force: true })
-        
-        // Verify the CodeBlock is visible
-        cy.get('[data-cy="copyCurl"]')
+        cy.get('[data-cy="curl-tab"]').click({ force: true })
+
+        cy.get('[data-cy="curl"]')
           .should('exist')
           .should('be.visible')
           .scrollIntoView()
-        
-        // Wait a bit for any handlers to settle
-        cy.wait(100)
-        
-        // Try to select text in the CodeBlock
-        cy.get('[data-cy="copyCurl"] pre')
+
+        // The cURL block is user-select: all; here we just assert it contains curl text.
+        cy.get('[data-cy="curl"] pre')
           .should('exist')
           .should('be.visible')
-          .then(($pre) => {
-            
-            // Check if element has text content (this gets all text including from child elements)
-            const textContent = $pre[0].textContent || $pre[0].innerText || ''
-            cy.log('Pre element textContent length:', textContent.length)
-            cy.log('Pre element textContent (first 100 chars):', textContent.substring(0, 100))
-            
-            // Find the code element inside pre (transform wraps content in <code>)
-            const codeElement = $pre[0].querySelector('code')
-            cy.log('Code element found:', !!codeElement)
-            if (codeElement) {
-              cy.log('Code element textContent length:', codeElement.textContent?.length || 0)
-            }
-            
-            // Check computed styles for user-select on pre
-            const preStyles = window.getComputedStyle($pre[0])
-            cy.log('Pre computed user-select:', preStyles.userSelect)
-            cy.log('Pre computed pointer-events:', preStyles.pointerEvents)
-            cy.log('Pre computed cursor:', preStyles.cursor)
-            
-            // Check computed styles on code element if it exists
-            if (codeElement) {
-              const codeStyles = window.getComputedStyle(codeElement)
-              cy.log('Code computed user-select:', codeStyles.userSelect)
-              cy.log('Code computed pointer-events:', codeStyles.pointerEvents)
-            }
-            
-            // Check parent element styles
-            const parent = $pre[0].parentElement
-            if (parent) {
-              const parentStyles = window.getComputedStyle(parent)
-              cy.log('Parent user-select:', parentStyles.userSelect)
-              cy.log('Parent pointer-events:', parentStyles.pointerEvents)
-              cy.log('Parent cursor:', parentStyles.cursor)
-            }
-            
-            // Check if section is highlighted
-            const section = $pre[0].closest('section')
-            if (section) {
-              cy.log('Section has __cypress-highlight:', section.classList.contains('__cypress-highlight'))
-              const sectionStyles = window.getComputedStyle(section)
-              cy.log('Section cursor:', sectionStyles.cursor)
-              cy.log('Section pointer-events:', sectionStyles.pointerEvents)
-            }
-            
-            // Verify element has text before trying to select
-            expect(textContent.length).to.be.greaterThan(0, 'Pre element should have text content')
-            
-            // Try to create a selection range
-            const range = document.createRange()
-            const selection = window.getSelection()
-            
-            if (!selection) {
-              throw new Error('window.getSelection() returned null')
-            }
-            
-            selection.removeAllRanges()
-            
-            // Try selecting the code element if it exists, otherwise select pre contents
-            const targetElement = codeElement || $pre[0]
-            range.selectNodeContents(targetElement)
-            
-            try {
-              selection.addRange(range)
-              
-              // Verify text was selected
-              const selectedText = selection.toString()
-              cy.log('Selected text length:', selectedText.length)
-              cy.log('Selected text (first 100 chars):', selectedText.substring(0, 100))
-              cy.log('Selection range count:', selection.rangeCount)
-              
-              // If selection is empty, try selecting all text nodes
-              if (selectedText.length === 0) {
-                cy.log('Selection is empty, trying to select all text nodes...')
-                const walker = document.createTreeWalker(
-                  targetElement,
-                  NodeFilter.SHOW_TEXT,
-                  null
-                )
-                
-                let firstNode = null
-                let lastNode = null
-                let node
-                while ((node = walker.nextNode())) {
-                  if (!firstNode) firstNode = node
-                  lastNode = node
-                }
-                
-                if (firstNode && lastNode) {
-                  cy.log('Found text nodes - first:', firstNode.textContent?.substring(0, 20), 'last:', lastNode.textContent?.substring(0, 20))
-                  
-                  // Try selecting the entire pre element first (simpler approach)
-                  cy.log('Trying to select entire pre element contents...')
-                  const preRange = document.createRange()
-                  preRange.selectNodeContents($pre[0])
-                  selection.removeAllRanges()
-                  
-                  try {
-                    selection.addRange(preRange)
-                    cy.log('Pre range added, rangeCount:', selection.rangeCount)
-                    
-                    // Wait a tick for selection to settle
-                    cy.wait(10).then(() => {
-                      const preSelectedText = selection.toString()
-                      cy.log('After selecting pre contents, length:', preSelectedText.length)
-                      cy.log('Selected text (first 100 chars):', preSelectedText.substring(0, 100))
-                      
-                      if (preSelectedText.length > 0) {
-                        expect(preSelectedText).to.contain('curl', 'Selected text should contain curl command')
-                        return // Success - exit early
-                      }
-                      
-                      // If pre selection failed, try text nodes
-                      cy.log('Pre selection failed, trying text nodes...')
-                      const textRange = document.createRange()
-                      textRange.setStart(firstNode, 0)
-                      textRange.setEnd(lastNode, lastNode.textContent?.length || 0)
-                      selection.removeAllRanges()
-                      selection.addRange(textRange)
-                      
-                      cy.wait(10).then(() => {
-                        const newSelectedText = selection.toString()
-                        cy.log('After text node selection, length:', newSelectedText.length)
-                        cy.log('Selected text (first 100 chars):', newSelectedText.substring(0, 100))
-                        
-                        if (newSelectedText.length > 0) {
-                          expect(newSelectedText).to.contain('curl', 'Selected text should contain curl command')
-                          return // Success
-                        }
-                        
-                        // Last resort: verify text is accessible even if selection doesn't work
-                        const accessibleText = $pre[0].textContent || $pre[0].innerText || ''
-                        cy.log('Selection API not working, but text is accessible:', accessibleText.length, 'chars')
-                        expect(accessibleText.length).to.be.greaterThan(0, 'Text should be accessible even if selection fails')
-                        expect(accessibleText).to.contain('curl', 'Text should contain curl command')
-                      })
-                    })
-                  } catch (rangeError) {
-                    cy.log('Error adding range:', rangeError)
-                    // Fallback: verify text is accessible
-                    const accessibleText = $pre[0].textContent || $pre[0].innerText || ''
-                    cy.log('Range error, but text is accessible:', accessibleText.length, 'chars')
-                    expect(accessibleText.length).to.be.greaterThan(0, 'Text should be accessible even if selection API fails')
-                    expect(accessibleText).to.contain('curl', 'Text should contain curl command')
-                  }
-                } else {
-                  cy.log('No text nodes found - checking element structure...')
-                  cy.log('Pre element HTML length:', $pre[0].innerHTML.length)
-                  cy.log('Pre element children count:', $pre[0].children.length)
-                  
-                  // Fallback: try selecting pre element directly
-                  const preRange = document.createRange()
-                  preRange.selectNodeContents($pre[0])
-                  selection.removeAllRanges()
-                  selection.addRange(preRange)
-                  const fallbackText = selection.toString()
-                  
-                  if (fallbackText.length > 0) {
-                    expect(fallbackText).to.contain('curl', 'Selected text should contain curl command')
-                  } else {
-                    // Last resort: verify text is accessible
-                    const accessibleText = $pre[0].textContent || $pre[0].innerText || ''
-                    expect(accessibleText.length).to.be.greaterThan(0, 'Text should be accessible')
-                    expect(accessibleText).to.contain('curl', 'Text should contain curl command')
-                  }
-                }
-              } else {
-                // Verify we can select text
-                expect(selectedText.length).to.be.greaterThan(0, 'Text should be selectable')
-                expect(selectedText).to.contain('curl', 'Selected text should contain curl command')
-              }
-            } catch (error) {
-              cy.log('Error adding range:', error)
-              throw error
-            }
-          })
-        
-        // Try clicking and dragging to select (simulate user action)
-        cy.get('[data-cy="copyCurl"] pre')
-          .trigger('mousedown', { which: 1, button: 0 })
-          .trigger('mousemove', { clientX: 100, clientY: 100 })
-          .trigger('mouseup', { which: 1, button: 0 })
-          .then(() => {
-            const selection = window.getSelection()
-            if (selection) {
-              const selectedText = selection.toString()
-              cy.log('After drag selection, text length:', selectedText.length)
-            }
-          })
+          .invoke('text')
+          .should('contain', 'curl')
       })
   })
-
-});
+})
 

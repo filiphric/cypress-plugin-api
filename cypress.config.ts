@@ -7,6 +7,7 @@ export default defineConfig({
     enableTimeline: true,
     requestMode: false,
   },
+  allowCypressEnv: true,
   e2e: {
     baseUrl: 'http://localhost:3003',
     defaultCommandTimeout: 1000,

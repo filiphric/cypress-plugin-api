@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* UI view styles: main plugin panel (full-screen overlay in Cypress runner) */
 #api-view {
-  @apply fixed top-0 left-0 right-0 bottom-0 bg-cy-blue-darker h-screen overflow-scroll mb-10 ;
-  z-index: 9999999
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1b1e2e; /* cy-blue-darker */
+  height: 100vh;
+  overflow: scroll;
+  margin-bottom: 2.5rem;
+  z-index: 9999999;
 }
 
 @keyframes fade-out {
@@ -17,153 +26,16 @@
 }
 
 .__cypress-highlight {
-  outline: 3px solid rgba(59, 130, 246, 0.6) !important;
-  outline-offset: 2px !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
+  opacity: 0.2 !important;
+  pointer-events: none !important;
 }
-
-.__cypress-highlight:not(section),
-.__cypress-highlight [data-cy],
-.__cypress-highlight [data-cy] *,
-.__cypress-highlight pre,
-.__cypress-highlight div[data-cy] {
-  outline: none !important;
-}
-
-section.__cypress-highlight {
-  pointer-events: auto !important;
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  user-select: auto !important;
-  -webkit-user-select: auto !important;
-  -moz-user-select: auto !important;
-  -ms-user-select: auto !important;
-}
-
-section.__cypress-highlight [data-cy],
-section.__cypress-highlight [data-cy] div,
-section.__cypress-highlight [data-cy] pre,
-section.__cypress-highlight [data-cy] pre * {
-  cursor: text !important;
-  pointer-events: auto !important;
-}
-
-section.__cypress-highlight [data-cy] *,
-section.__cypress-highlight [data-cy] pre *,
-section.__cypress-highlight [data-cy] code *,
-section.__cypress-highlight [data-cy] span,
-section.__cypress-highlight [data-cy] .line-number {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-}
-
-section.__cypress-highlight [data-cy] pre,
-section.__cypress-highlight [data-cy] code {
-  pointer-events: auto !important;
-  -webkit-touch-callout: default !important;
-}
-
-section.__cypress-highlight [data-cy],
-section.__cypress-highlight [data-cy] *,
-section.__cypress-highlight [data-cy="auth"],
-section.__cypress-highlight [data-cy="query"],
-section.__cypress-highlight [data-cy="requestHeaders"],
-section.__cypress-highlight [data-cy="requestBody"],
-section.__cypress-highlight [data-cy="responseBody"],
-section.__cypress-highlight [data-cy="responseHeaders"],
-section.__cypress-highlight [data-cy="copyCurl"],
-section.__cypress-highlight [data-cy="requestPanel"] [data-cy],
-section.__cypress-highlight [data-cy="responsePanel"] [data-cy],
-section.__cypress-highlight [data-cy="requestPanel"] [data-cy] *,
-section.__cypress-highlight [data-cy="responsePanel"] [data-cy] * {
-  pointer-events: auto !important;
-  cursor: text !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  position: relative;
-  z-index: 1;
-}
-
-section.__cypress-highlight [data-cy],
-section.__cypress-highlight [data-cy] pre,
-section.__cypress-highlight [data-cy] pre *,
-section.__cypress-highlight [data-cy] *,
-section.__cypress-highlight [data-cy="auth"] *,
-section.__cypress-highlight [data-cy="query"] *,
-section.__cypress-highlight [data-cy="requestHeaders"] *,
-section.__cypress-highlight [data-cy="requestBody"] *,
-section.__cypress-highlight [data-cy="responseBody"] *,
-section.__cypress-highlight [data-cy="responseHeaders"] *,
-section.__cypress-highlight [data-cy="copyCurl"] *,
-section.__cypress-highlight [data-cy="requestPanel"] [data-cy] *,
-section.__cypress-highlight [data-cy="responsePanel"] [data-cy] *,
-section.__cypress-highlight [data-cy="requestPanel"] [data-cy] pre,
-section.__cypress-highlight [data-cy="responsePanel"] [data-cy] pre,
-section.__cypress-highlight [data-cy="requestPanel"] [data-cy] pre *,
-section.__cypress-highlight [data-cy="responsePanel"] [data-cy] pre * {
-  cursor: text !important;
-  pointer-events: auto !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-}
-
-section.__cypress-highlight label,
-section.__cypress-highlight input,
-section.__cypress-highlight a,
-.__cypress-highlight label,
-.__cypress-highlight input,
-.__cypress-highlight a {
-  pointer-events: auto !important;
-  opacity: 1 !important;
-}
-
-section.__cypress-highlight label[for*="copyCurl"],
-section.__cypress-highlight [data-cy="copy-curl-tab"],
-.__cypress-highlight label[for*="copyCurl"],
-.__cypress-highlight [data-cy="copy-curl-tab"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  opacity: 1 !important;
-  z-index: 10000001 !important;
-  position: relative !important;
-}
-
-section.__cypress-highlight [data-cy="copyCurl"],
-.__cypress-highlight [data-cy="copyCurl"],
-section.__cypress-highlight [data-cy="copyCurl"] pre,
-.__cypress-highlight [data-cy="copyCurl"] pre,
-section.__cypress-highlight [data-cy="copyCurl"] pre *,
-.__cypress-highlight [data-cy="copyCurl"] pre *,
-section.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre,
-section.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre *,
-.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre,
-.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre * {
-  pointer-events: auto !important;
-  cursor: text !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  opacity: 1 !important;
-  -webkit-touch-callout: default !important;
-  -webkit-tap-highlight-color: transparent !important;
-  cursor: text !important;
-}
-
 
 [data-layer="Padding"], [data-layer="Border"], [data-layer="Content"] {
   opacity: 0 !important;
 }
 
 [data-layer="Margin"] {
-  @apply bg-white !important;
+  background-color: #fef9c3 !important; /* Tailwind bg-yellow-100 */
   opacity: 0;
   animation: fade-out 2s ease-in-out;
 }
@@ -172,21 +44,21 @@ section.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre *,
 [data-cy=showQuery]:checked + label,
 [data-cy=showRequestHeaders]:checked + label,
 [data-cy=showRequestBody]:checked + label,
+[data-cy=showCurl]:checked + label,
 [data-cy=showResponseBody]:checked + label,
 [data-cy=showResponseHeaders]:checked + label,
-[data-cy=showCookies]:checked + label,
-[data-cy=showCopyCurl]:checked + label {
-  @apply text-cy-gray-light
+[data-cy=showCookies]:checked + label {
+  color: #d0d2e0; /* cy-gray-light */
 }
 
 [data-cy=showAuth]:checked ~ [data-cy=auth],
 [data-cy=showQuery]:checked ~ [data-cy=query],
 [data-cy=showRequestHeaders]:checked ~ [data-cy=requestHeaders],
 [data-cy=showRequestBody]:checked ~ [data-cy=requestBody],
+[data-cy=showCurl]:checked ~ [data-cy=curl],
 [data-cy=showResponseBody]:checked ~ [data-cy=responseBody],
 [data-cy=showResponseHeaders]:checked ~ [data-cy=responseHeaders],
-[data-cy=showCookies]:checked ~ [data-cy=cookies],
-  [data-cy=showCopyCurl]:checked ~ [data-cy=copyCurl] {
+[data-cy=showCookies]:checked ~ [data-cy=cookies] {
   @apply block
 }
 
@@ -194,322 +66,173 @@ section.__cypress-highlight [data-cy="copyCurl"] .copy-curl-pre *,
 [data-cy=showQuery]:not(:checked) ~ [data-cy=query],
 [data-cy=showRequestHeaders]:not(:checked) ~ [data-cy=requestHeaders],
 [data-cy=showRequestBody]:not(:checked) ~ [data-cy=requestBody],
+[data-cy=showCurl]:not(:checked) ~ [data-cy=curl],
 [data-cy=showResponseBody]:not(:checked) ~ [data-cy=responseBody],
 [data-cy=showResponseHeaders]:not(:checked) ~ [data-cy=responseHeaders],
-[data-cy=showCookies]:not(:checked) ~ [data-cy=cookies],
-[data-cy=showCopyCurl]:not(:checked) ~ [data-cy=copyCurl] {
-  display: none !important;
+[data-cy=showCookies]:not(:checked) ~ [data-cy=cookies] {
+  display: none;
 }
 
+/* cURL tab: select-all for easy copy (works in pinned snapshots, no clipboard JS) */
+[data-cy=curl] {
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+}
+[data-cy=curl] * {
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+}
+/* cURL tab: wrap long lines so full command is visible (like other panels) */
+[data-cy=curl] pre,
+[data-cy=curl] pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+[data-cy=curl] pre {
+  overflow-x: visible;
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+/* cURL: show line number but exclude it from selection/copy */
+[data-cy=curl] .line-number {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* PrismJS styles */
 pre {
-  @apply p-3 text-cy-gray-light text-xs;
+  padding: 0.75rem;
+  color: #d0d2e0; /* cy-gray-light */
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
-pre code {
-  display: block;
-  overflow-x: auto;
-  padding: 1em;
-  line-height: 1.5;
-  white-space: pre;
+pre code.hljs{
+  display:block;
+  overflow-x:auto;
+  padding:1em;
+}
+code.hljs{
+  padding:3px 5px
+}
+.hljs {
+  background-color: #171926; /* cy-blue-darkest */
+  border: 1px solid #1e293b; /* slate-800 */
+  padding-left: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
+  margin-top: 0.5rem;
+}
+.hljs ::selection,
+.hljs::selection {
+  background-color: #2e3247; /* cy-blue-dark */
 }
 
-code {
-  padding: 3px 5px;
+.comment {
+  color: #9095ad; /* cy-gray */
 }
-
-pre {
-  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  cursor: text !important;
-  line-height: 1.5;
-  margin: 0;
-  white-space: pre;
+.tag {
+  color: #6470f3; /* cy-blue */
 }
-
-pre ::selection,
-pre::selection {
-  @apply bg-cy-blue-dark;
-}
-
-[data-cy] pre,
-[data-cy] pre.overflow-scroll,
-[data-cy] pre.no-scrollbar,
-section [data-cy] pre,
-section [data-cy] pre.overflow-scroll,
-section [data-cy] pre.no-scrollbar,
-section.__cypress-highlight [data-cy] pre,
-section.__cypress-highlight [data-cy] pre.overflow-scroll,
-section.__cypress-highlight [data-cy] pre.no-scrollbar,
-pre.overflow-scroll,
-pre.no-scrollbar {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  cursor: text !important;
-}
-
-.copy-curl-pre {
-  @apply bg-cy-blue-darkest border-slate-800 pl-0 py-4 pr-4 border mt-2;
-  overflow-x: auto !important;
-  overflow-y: visible !important;
-}
-
-[data-cy="copyCurl"],
-section.__cypress-highlight [data-cy="copyCurl"],
-.__cypress-highlight [data-cy="copyCurl"],
-section [data-cy="copyCurl"],
-section.__cypress-highlight [data-cy="copyCurl"] *,
-.__cypress-highlight [data-cy="copyCurl"] * {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  cursor: text !important;
-  overflow-x: auto !important;
-  overflow-y: visible !important;
-  max-width: 100%;
-  outline: none !important;
-  pointer-events: auto !important;
-  position: relative;
-  z-index: 10;
-}
-
-.copy-curl-pre {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  cursor: text !important;
-  white-space: pre-wrap !important;
-  word-wrap: break-word !important;
-  word-break: break-all !important;
-  overflow-wrap: break-word !important;
-  overflow-x: auto !important;
-  overflow-y: visible !important;
-  max-width: 100%;
-  scrollbar-width: thin;
-  outline: none !important;
-}
-
-.copy-curl-pre::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-.copy-curl-pre::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-.copy-curl-pre::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-}
-
-.copy-curl-pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-[data-cy="copyCurl"] pre,
-[data-cy="copyCurl"] pre * {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  cursor: text !important;
-  outline: none !important;
-}
-
-.comment{
-  @apply text-cy-gray
-}
-.tag{
-  @apply text-cy-blue
-}
-
-code.language-xml .tag,
-code.language-xml .token.tag,
-code.language-xml .token.tag-name,
-code.language-xml .token.tag .token.tag-name,
-.language-xml code .tag,
-.language-xml code .token.tag,
-.language-xml code .token.tag-name,
-.language-xml .tag,
-.language-xml .token.tag,
-.language-xml .token.tag-name,
-.language-xml .token.tag .token.tag-name {
-  color: rgb(100, 112, 243) !important;
-}
-
-code.language-html .tag,
-code.language-html .token.tag,
-code.language-html .token.tag-name,
-code.language-html .token.tag .token.tag-name,
-.language-html code .tag,
-.language-html code .token.tag,
-.language-html code .token.tag-name,
-.language-html .tag,
-.language-html .token.tag,
-.language-html .token.tag-name,
-.language-html .token.tag .token.tag-name {
-  color: rgb(255, 87, 112) !important;
-}
-.operator, .punctuation, .subst{
-  @apply text-cy-gray
+.operator, .punctuation, .subst {
+  color: #9095ad; /* cy-gray */
 }
 .operator{
   opacity:.7
 }
-.bullet, .deletion, .name, .selector-tag, .template-variable, .variable{
-  @apply text-cy-red
+.bullet, .deletion, .name, .selector-tag, .template-variable, .variable {
+  color: #ff5770; /* cy-red */
 }
-.attr, .link, .literal, .number, .symbol, .variable.constant_{
-  @apply text-cy-gray-light
+.attr, .link, .literal, .number, .symbol, .variable.constant_ {
+  color: #d0d2e0; /* cy-gray-light */
 }
-.number{
-  @apply text-cy-green
+.number {
+  color: #1fa971; /* cy-green */
 }
 .attr-name {
-  @apply text-cy-green
+  color: #1fa971; /* cy-green */
 }
 .attr-value {
-  @apply text-cy-gray-light
+  color: #d0d2e0; /* cy-gray-light */
 }
 
-.addition, .built_in, .code, .doctag, .keyword.atrule, .quote, .regexp, .string, .title.class_.inherited__{
-  @apply text-cy-blue
+.addition, .built_in, .code, .doctag, .keyword.atrule, .quote, .regexp, .string, .title.class_.inherited__ {
+  color: #6470f3; /* cy-blue */
 }
 
-.diff .meta, .keyword, .template-tag, .type{
-  @apply text-cy-purple
+.diff .meta, .keyword, .template-tag, .type {
+  color: #7f43c9; /* cy-purple */
 }
 
-.meta, .meta .keyword, .meta .string{
-  @apply text-cy-gray
+.meta, .meta .keyword, .meta .string {
+  color: #9095ad; /* cy-gray */
 }
 
+/* hiding scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 .no-scrollbar {
-  scrollbar-width: none;
+  scrollbar-width: none;  /* Firefox */
 }
 
 .line-number {
-  @apply pr-2 inline-block;
-  line-height: 1.5;
-  vertical-align: top;
-}
-
-span.closing-brace,
-span.closing-bracket {
-  display: inline;
-  margin: 0;
-  padding: 0;
-  vertical-align: baseline;
-}
-
-/* Ensure closing braces maintain proper indentation and spacing */
-pre code span.closing-brace,
-pre code span.closing-bracket {
-  display: inline;
-  white-space: pre;
+  padding-right: 0.5rem;
+  display: inline-block;
 }
 
 details summary { 
   cursor: pointer;
-  pointer-events: auto !important;
-  user-select: none !important;
 }
 
 details summary {
-  @apply text-cy-gray;
-  display: inline;
-  margin: 0;
-  padding: 0;
-  line-height: 1.2;
+  color: #9095ad; /* cy-gray */
 }
 
-details.contents[open] {
-  display: contents;
-}
-
-/* Ensure details/summary don't create extra spacing or line breaks */
-pre code details.contents[open] {
-  display: contents;
-}
-
-pre code details.contents[open] summary {
-  display: inline;
-  line-height: 1.5;
-  vertical-align: baseline;
-  margin: 0;
-  padding: 0;
-}
-
-/* Ensure brace and bracket summaries are inline */
-pre code details.contents[open] summary.brace,
-pre code details.contents[open] summary.bracket {
-  display: inline;
-  margin: 0;
-  padding: 0;
-  line-height: 1.5;
-}
-
-
-details,
-details summary,
-details[data-cy] summary,
-section.__cypress-highlight details,
-section.__cypress-highlight details summary {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
-code > details:first-of-type > summary{
-  @apply -ml-4;
+code > details:first-of-type > summary {
+  margin-left: -1rem;
 }
 
 details[open] summary.brace::before { 
   content: " ▼ ";
-  @apply text-slate-700 -ml-2;
-}
-
-details[open] summary.brace::after { 
-  content: "";
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details[open] summary.bracket::before { 
   content: " ▼ ";
-  @apply text-slate-700 -ml-2;
-}
-
-details[open] summary.bracket::after { 
-  content: "";
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details:not([open]) summary.brace::before { 
   content: " ▶︎ ";
-  @apply text-slate-700 -ml-2;
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details:not([open]) summary.bracket::before { 
   content: " ▶︎ ";
-  @apply text-slate-700 -ml-2;
+  color: #334155; /* slate-700 */
+  margin-left: -0.5rem;
 }
 
 details:not([open]) summary.brace::after { 
-  content: "…}";
+  content: "…";
   @apply w-full inline-block
 }
 
 details:not([open]) summary.bracket::after { 
-  content: "…]";
+  content: "…";
   @apply w-full inline-block
 }
 

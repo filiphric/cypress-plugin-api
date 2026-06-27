@@ -127,13 +127,16 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
       'application/octet-stream': 'plaintext',
     } as const
     const definedFormat = formats[contentType as keyof typeof formats]
-    const language = definedFormat || getFormat(bodyForTransform)
+    const rawLanguage = definedFormat || getFormat(bodyForTransform)
+    // Prism registers XML/HTML under "markup"; use it for highlighting
+    const language = (rawLanguage === 'xml' || rawLanguage === 'html') ? 'markup' : rawLanguage
     props[index].responseBody.formatted = transform(bodyForTransform, language)
   } else if (body !== undefined && body !== null && body !== '') {
-    const language = getFormat(bodyForTransform)
+    const rawLanguage = getFormat(bodyForTransform)
+    const language = (rawLanguage === 'xml' || rawLanguage === 'html') ? 'markup' : rawLanguage
     props[index].responseBody.formatted = transform(bodyForTransform, language)
   }
-  
+
   if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
     if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
       props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
