@@ -158,7 +158,13 @@ export const transform = (body: any, language: 'json' | 'html' | 'xml' | 'blob' 
     
     const prismLanguage = Prism.languages[prismLanguageName]
     if (!prismLanguage) {
-      return `<code class="language-plaintext">${content}</code>`
+      const escaped = content
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+      return `<code class="language-plaintext">${escaped}</code>`
     }
     const formatted = Prism.highlight(content, prismLanguage, prismLanguageName)
 
