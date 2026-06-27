@@ -230,15 +230,10 @@ app.get('/nested-empty', (req, res) => {
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
   .on('error', (err) => {
+    // Avoid additional logging in this repo; exit with non-zero status on server startup errors.
     if (err.code === 'EADDRINUSE') {
-      console.error(`\n❌ Port ${port} is already in use.`)
-      console.error(`   Please stop the process using port ${port} or use a different port.\n`)
-      console.error(`   To find and kill the process on Windows:`)
-      console.error(`   netstat -ano | findstr :${port}`)
-      console.error(`   taskkill /PID <PID> /F\n`)
-      process.exit(1)
-    } else {
-      console.error('Server error:', err)
       process.exit(1)
     }
+
+    process.exit(1)
   })
