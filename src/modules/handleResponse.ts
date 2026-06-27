@@ -10,6 +10,7 @@ import { getPluginConfig } from '@utils/pluginConfig';
 import { App } from 'vue';
 import { getFormat } from '@utils/getFormat';
 import { isValidUrlOrIp } from '@utils/isValidUrlOrIp';
+import { generateCurl } from '@utils/generateCurl';
 
 export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions, props: RequestProps[], index: number, app: App<Element>) => {
 
@@ -189,28 +190,11 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     .then(findSnapshotElement)
     .then(($el) => {
 
-      const generateCurl = () => {
-        let curl = `curl -X ${options.method || 'GET'} "${options.url}"`;
-        if (options.headers) {
-          Object.entries(options.headers).forEach(([key, value]) => {
-            curl += ` -H "${key}: ${value}"`;
-          });
-        }
-        if (options.body) {
-          if (typeof options.body === 'object') {
-            curl += ` -d '${JSON.stringify(options.body)}'`;
-          } else {
-            curl += ` -d '${options.body}'`;
-          }
-        }
-        return curl;
-      };
-
       log.set({
         consoleProps() {
           return {
             yielded,
-            cURL: generateCurl()
+            cURL: generateCurl(props[index])
           }
         }
       })
