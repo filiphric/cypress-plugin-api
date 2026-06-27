@@ -17,7 +17,8 @@
 }
 
 .__cypress-highlight {
-  outline: 3px solid rgba(59, 130, 246, 0.6) !important;
+  @apply text-cy-blue;
+  outline: 3px solid currentColor !important;
   outline-offset: 2px !important;
   opacity: 1 !important;
   pointer-events: auto !important;
@@ -34,7 +35,7 @@
 section.__cypress-highlight {
   pointer-events: auto !important;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  @apply bg-white/10;
   user-select: auto !important;
   -webkit-user-select: auto !important;
   -moz-user-select: auto !important;
@@ -301,17 +302,17 @@ section.__cypress-highlight [data-cy="copyCurl"] *,
 }
 
 .copy-curl-pre::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  @apply bg-black/10;
   border-radius: 4px;
 }
 
 .copy-curl-pre::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  @apply bg-white/30;
   border-radius: 4px;
 }
 
 .copy-curl-pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  @apply bg-white/50;
 }
 
 [data-cy="copyCurl"] pre,
@@ -342,7 +343,7 @@ code.language-xml .token.tag .token.tag-name,
 .language-xml .token.tag,
 .language-xml .token.tag-name,
 .language-xml .token.tag .token.tag-name {
-  color: rgb(100, 112, 243) !important;
+  @apply text-cy-blue;
 }
 
 code.language-html .tag,
@@ -356,7 +357,7 @@ code.language-html .token.tag .token.tag-name,
 .language-html .token.tag,
 .language-html .token.tag-name,
 .language-html .token.tag .token.tag-name {
-  color: rgb(255, 87, 112) !important;
+  @apply text-cy-red;
 }
 .operator, .punctuation, .subst{
   @apply text-cy-gray
