@@ -11,7 +11,7 @@ Cypress plugin for effective API testing. Imagine Postman, but in Cypress. Print
 ![Cypress plugin for testing API](./images/demo.gif)
 
 ### Features
-- cy.api() command, that will information about the API call, such as URL, headers, response and more to the UI frame
+- cy.api() command that shows information about the API call (URL, headers, response, and more) in the UI
 - all of the info can be viewed in a time-travel snapshots
 - simple table for viewing cookies
 - JSON data object and array folding
@@ -44,11 +44,11 @@ You can now use `cy.api()` command. This command works exactly like `cy.request(
 #### Snapshot only mode
 If you want to combine your API calls with your UI test, you can now use `snapshotOnly` mode, that will hide the plugin UI view after command ends. You can access it within the timeline.
 
-`snapshotOnly` mode is set to `false` by default. To set up `snapshotOnly` mode, add following to your test configuration:
+`snapshotOnly` mode is set to `false` by default. To set up `snapshotOnly` mode, set it at runtime or in config (Cypress 15.10+ uses `expose` for plugin config):
 
 ```js
-it('my UI & API test', { env: { snapshotOnly: true } }, () => {
-
+it('my UI & API test', () => {
+  Cypress.expose('snapshotOnly', true)
   cy.visit('/') // open app
   cy.api('/item') // call api
   cy.get('#myElement') // still able to access element on page
@@ -56,7 +56,7 @@ it('my UI & API test', { env: { snapshotOnly: true } }, () => {
 })
 ```
 
-or you can add the configuration to your `cypress.config.{js,ts}` file:
+or add to your `cypress.config.{js,ts}` file:
 ```js
 import { defineConfig } from 'cypress'
 
@@ -64,7 +64,7 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
     },
-    env: {
+    expose: {
       snapshotOnly: true
     }
   },
@@ -72,18 +72,61 @@ export default defineConfig({
 ```
 
 #### Hiding credentials
-You can hide your credentials by passing `hideCredentials` option to your env configuration. This will hide all the credentials from UI, but you can still access them via console. This option is set to `false` by default.
+By default, values are **shown** in the UI so you can see them when running locally. When you use **cy.env()** for secrets (or want to hide in CI), turn on **HideCredentials** so those values are masked (e.g. `****`) in request headers, auth, body, query params, and the cURL tab.
+
+- **See values locally:** leave `hideCredentials` unset or `false` (default).
+- **Hide credentials from `cy.env()` (recommended for secrets):**
+  - **Globally via config** (applies to all specs):
+
+    ```js
+    // cypress.config.{js,ts}
+    import { defineConfig } from 'cypress'
+
+    export default defineConfig({
+      e2e: {
+        env: {
+          // credentials passed from cy.env() will be masked in the plugin UI
+          hideCredentials: true,
+        },
+      },
+    })
+    ```
+
+  - **Per spec / per suite:** use any of these:
+    - **Via env** (in a `before()` or at the start of the test):
+      ```js
+      Cypress.env('hideCredentials', true)
+      // optional: Cypress.env('hideCredentialsOptions', { headers: ['authorization'], auth: ['pass'], body: ['username'], qs: ['password'] })
+      ```
+    - Or **test-level env** (env applies only to that test):
+      ```js
+      it('my secret test', { env: { hideCredentials: true } }, () => {
+        cy.env(['myToken']).then(({ myToken }) => {
+          cy.api({ url: '/', headers: { authorization: myToken } })
+        })
+      })
+      ```
+    - On Cypress 15.10+: `Cypress.expose('hideCredentials', true)`
+    - Or the plugin helper: `setPluginConfig('hideCredentials', true)`
+
+Example: use **cy.env()** for the token and **HideCredentials** so it’s masked in the UI:
 
 ```js
-it('my secret test', { env: { hideCredentials: true } }, () => {
+it('my secret test', () => {
+  // Option 1 (Cypress 15.10+)
+  Cypress.expose('hideCredentials', true)
 
-  cy.api({
+  // Option 2 (helper from this plugin, also works when Cypress.expose is not available)
+  // setPluginConfig('hideCredentials', true)
+
+  cy.env(['myToken']).then(({ myToken }) => {
+    cy.api({
       url: '/',
       headers: {
-        authorization: Cypress.env('myToken')
+        authorization: myToken
       }
     })
-
+  })
 })
 ```
 
@@ -91,44 +134,79 @@ The result will look like this:
 
 ![Cypress plugin for testing API](./images/hideCredentials.png)
 
-You can also hide any credentials you want by defining array of keys in `hideCredentialsOptions`,
+Use **hideCredentialsOptions** to choose which keys are masked (when not set, default keys include `authorization`, `password`, `user`, `pass`, `token`, `apiKey`). You can set it via **config env** or per spec:
 
-```js
-it('my secret test', { 
-  env: { 
-    hideCredentials: true, 
-    hideCredentialsOptions: {
+- **Config env (global):**
+
+  ```js
+  // cypress.config.{js,ts}
+  import { defineConfig } from 'cypress'
+
+  export default defineConfig({
+    e2e: {
+      env: {
+        hideCredentials: true,
+        hideCredentialsOptions: {
+          headers: ['authorization'],
+          auth: ['pass'],
+          body: ['username'],
+          qs: ['password'],
+        },
+      },
+    },
+  })
+  ```
+
+- **Per spec** (use one of these):
+
+  **Via env** (in a `before()` or at the start of the test):
+
+  ```js
+  Cypress.env('hideCredentials', true)
+  Cypress.env('hideCredentialsOptions', {
+    headers: ['authorization'],
+    auth: ['pass'],
+    body: ['username'],
+    qs: ['password']
+  })
+  ```
+
+  **Or via expose / helper inside the test:**
+
+  ```js
+  it('my secret test', () => {
+    // Option 1: Cypress 15.10+
+    Cypress.expose('hideCredentialsOptions', {
       headers: ['authorization'],
       auth: ['pass'],
       body: ['username'],
-      query: ['password']
-    }
-  }
-}, () => {
-
-  cy.api({
-      url: '/',
-      headers: {
-        authorization: Cypress.env('myToken') // hidden
-      },
-      auth: {
-        pass: Cypress.env('myPass') // hidden
-      },
-      body: {
-        username: Cypress.env('myUser') // hidden
-      },
-      qs: {
-        password: Cypress.env('password') // hidden
-      }
+      qs: ['password']
     })
 
-})
-```
+    // Option 2: helper from this plugin
+    // setPluginConfig('hideCredentialsOptions', {
+    //   headers: ['authorization'],
+    //   auth: ['pass'],
+    //   body: ['username'],
+    //   qs: ['password']
+    // })
 
-This will override all the defaults set by `hideCredentials`.
+    cy.env(['myToken', 'myPass', 'myUser', 'password']).then(
+      ({ myToken, myPass, myUser, password }) => {
+        cy.api({
+          url: '/',
+          headers: { authorization: myToken },
+          auth: { pass: myPass },
+          body: { username: myUser },
+          qs: { password }
+        })
+      }
+    )
+  })
+  ```
 
 #### `requestMode` - enable UI for `cy.request()` command
-This setting adds all the functionality of `cy.api()` command to `cy.request()`. It’s set to `false` by default. This means that when you call `cy.request()` in your test, it will show UI.
+When `false` (default), only `cy.api()` shows the plugin UI. When set to `true`, `cy.request()` also displays the same UI for every `cy.request()` call.
 
 #### TypeScript support
 In most cases, types work just by installing plugin, but you can add the types to your `tsconfig.json`

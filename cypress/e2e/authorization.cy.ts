@@ -143,7 +143,7 @@ describe('Hiding credentials by defining them', () => {
 
 });
 
-describe('Showing credentials', () => {
+describe('Showing credentials', { env: { hideCredentials: false } }, () => {
 
   it('shows authorization in headers', () => {
 

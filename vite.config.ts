@@ -16,10 +16,9 @@ export default defineConfig({
     },
     sourcemap: true,
     rollupOptions: {
-      external: ['vue'],
+      external: [],
       output: {
         globals: {
-          vue: 'Vue'
         }
       },
       plugins: [

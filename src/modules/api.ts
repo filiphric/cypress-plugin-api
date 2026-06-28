@@ -5,9 +5,8 @@ import { handleResponse } from '@modules/handleResponse';
 import { initialize } from './initialize';
 import { transformData } from './transformData';
 import { cloneProps } from './cloneProps';
+import { getPluginConfig } from '@utils/pluginConfig';
 
-// make a copy of cy.request() function
-// this prevents unusual behavior when using requestMode
 const requestFn = cy.request.bind({})
 
 export const api = (...params: Partial<ApiRequestOptions>[]) => {
@@ -16,8 +15,8 @@ export const api = (...params: Partial<ApiRequestOptions>[]) => {
   const options: ApiRequestOptions = resolveOptions(...params)
   const index = props.length - 1
   cloneProps(props, index, options)
-  // hide credentials if the options was set up
-  if (Cypress.env('hideCredentials')) props[index] = anonymize(props[index])
+  // Only mask when hideCredentials is explicitly true (e.g. when using cy.env() for secrets or in CI). Default off so locals can see values.
+  if (getPluginConfig('hideCredentials')) props[index] = anonymize(props[index])
   transformData(props, index)
 
   return requestFn({ ...options, log: false }).then(res => handleResponse(res, options, props, index, app))

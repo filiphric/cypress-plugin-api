@@ -1,2 +1,2 @@
 // adds cy.api command
-import '../../dist/support'
+import '../../dist/support.cjs'

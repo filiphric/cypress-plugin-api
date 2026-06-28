@@ -1,11 +1,14 @@
+function setPluginConfig(key: string, value: unknown) {
+  const fn = (window as unknown as { setPluginConfig?: (k: string, v: unknown) => void }).setPluginConfig
+  if (typeof fn === 'function') fn(key, value)
+  else if (typeof (Cypress as unknown as { expose?: unknown }).expose === 'function') (Cypress as unknown as { expose: (k: string, v: unknown) => void }).expose(key, value)
+  else Cypress.env(key, value)
+}
+
 describe('snapshot only mode', () => {
 
-  it('snapshotOnly mode removes plugin UI', {
-    baseUrl: null, env: {
-      snapshotOnly: true
-    }
-  }, () => {
-
+  it('snapshotOnly mode removes plugin UI', { baseUrl: null }, () => {
+    setPluginConfig('snapshotOnly', true)
     cy.visit('server-public/test.html')
     cy.contains('MY PAGE')
       .should('be.visible')
@@ -17,7 +20,7 @@ describe('snapshot only mode', () => {
   });
 
   it('snapshotOnly does not affect later plugin use', () => {
-
+    setPluginConfig('snapshotOnly', false)
     cy.api('/')
     cy.get('[data-cy="responseBody"]')
       .should('be.visible')

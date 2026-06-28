@@ -1,4 +1,4 @@
-describe('status codes', () => {
+describe('status codes', { env: { hideCredentials: false } }, () => {
 
   it('handles redirect', () => {
 
@@ -10,7 +10,7 @@ describe('status codes', () => {
       expect(response.redirectedToUrl).eq(`${Cypress.config('baseUrl')}/`);
     });
 
-    cy.get('[data-cy=status]')
+    cy.get('[data-cy="status"]')
       .should('be.visible')
       .and('contain', '301')
       .and('have.css', 'color', 'rgb(219, 121, 5)')
@@ -25,7 +25,7 @@ describe('status codes', () => {
       failOnStatusCode: false
     })
 
-    cy.get('[data-cy=status]')
+    cy.get('[data-cy="status"]')
       .eq(0)
       .should('be.visible')
       .and('contain', '404')
@@ -36,7 +36,7 @@ describe('status codes', () => {
       failOnStatusCode: false
     })
 
-    cy.get('[data-cy=status]')
+    cy.get('[data-cy="status"]')
       .should('have.length', 2)
       .eq(1)
       .should('be.visible')

@@ -1,67 +1,36 @@
-// ESLint 10 flat config
-// Migrated from the previous .eslintrc.js setup
-const js = require('@eslint/js')
-const tsParser = require('@typescript-eslint/parser')
-const tsPlugin = require('@typescript-eslint/eslint-plugin')
-const vuePlugin = require('eslint-plugin-vue')
-const vueParser = require('vue-eslint-parser')
-const noOnlyTests = require('eslint-plugin-no-only-tests')
-const cypressPlugin = require('eslint-plugin-cypress')
-const globals = require('globals')
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import vue from 'eslint-plugin-vue';
 
-/** @type {import('eslint').Linter.Config[]} */
-module.exports = [
-  // Base JS rules
+export default [
   js.configs.recommended,
-
-  // Ignore build / server output
+  ...tseslint.configs.recommended,
+  ...vue.configs['flat/recommended'],
   {
     ignores: ['dist/*', 'server/*'],
   },
-
-  // App + tests (TS + Vue)
   {
     files: ['**/*.{js,mjs,cjs,ts,vue}'],
     languageOptions: {
-      parser: vueParser,
+      parser: vue.parser,
       parserOptions: {
-        parser: tsParser,
+        parser: tseslint.parser,
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-        ...globals.mocha,
-        cy: 'readonly',
-        Cypress: 'readonly',
-      },
     },
     plugins: {
-      '@typescript-eslint': tsPlugin,
-      vue: vuePlugin,
-      'no-only-tests': noOnlyTests,
-      cypress: cypressPlugin,
+      'no-only-tests': (await import('eslint-plugin-no-only-tests')).default,
     },
     rules: {
-      // Bring in the recommended rule sets similar to the old .eslintrc.js
-      ...(tsPlugin.configs.recommended?.rules || {}),
-      ...(vuePlugin.configs['vue3-recommended']?.rules || {}),
-
-      // Project-specific overrides (from the old config)
       '@typescript-eslint/ban-ts-comment': ['error', {
-        'ts-ignore': 'allow-with-description',
+        'ts-ignore': 'allow-with-description'
       }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-namespace': 'off',
       'no-only-tests/no-only-tests': 'error',
-      // TypeScript already checks undefined symbols; avoid duplicate/noisy core rule
-      'no-undef': 'off',
-      '@typescript-eslint/no-require-imports': 'off',
     },
   },
-
-  // Node-style config / tooling files
   {
     files: ['**/*.config.{js,cjs,mjs}'],
     languageOptions: {
@@ -71,6 +40,8 @@ module.exports = [
         __dirname: 'readonly',
       },
     },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
   },
-]
-
+];
