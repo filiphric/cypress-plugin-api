@@ -8,6 +8,7 @@ import { transform } from "@modules/transform";
 import { getState } from '@utils/getState';
 import { getPluginConfig } from '@utils/pluginConfig';
 import { shouldRenderUi } from '@utils/shouldRenderUi';
+import { generateCurl } from '@utils/generateCurl';
 import { App } from 'vue';
 import { getFormat } from '@utils/getFormat';
 import { isValidUrlOrIp } from '@utils/isValidUrlOrIp';
@@ -194,22 +195,6 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
   const yielded = res
 
-  const generateCurl = () => {
-    let curl = `curl -X ${options.method || 'GET'} "${options.url}"`;
-    if (options.headers) {
-      Object.entries(options.headers).forEach(([key, value]) => {
-        curl += ` -H "${key}: ${value}"`;
-      });
-    }
-    if (options.body) {
-      if (typeof options.body === 'object') {
-        curl += ` -d '${JSON.stringify(options.body)}'`;
-      } else {
-        curl += ` -d '${options.body}'`;
-      }
-    }
-    return curl;
-  };
 
   // No UI mounted: still log the request (with response/cURL in consoleProps), but skip
   // the DOM lookup, snapshot and scroll that only make sense with the rendered UI.
@@ -218,7 +203,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
       consoleProps() {
         return {
           yielded,
-          cURL: generateCurl()
+          cURL: generateCurl(props[index])
         }
       }
     })
@@ -241,7 +226,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
         consoleProps() {
           return {
             yielded,
-            cURL: generateCurl()
+            cURL: generateCurl(props[index])
           }
         }
       })
