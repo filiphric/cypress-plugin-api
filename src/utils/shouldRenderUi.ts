@@ -11,12 +11,15 @@ import { getPluginConfig } from './pluginConfig'
  * Behaviour (controlled by the `disableUi` plugin option):
  * - `undefined` (default): auto — render in open mode, skip in run mode.
  * - `true`: always skip the UI (also helps open-mode performance).
- * - `false`: always render, even in run mode (opt back into full Test Replay capture).
+ * - `false`: treated the same as `undefined` (UI is still skipped in run mode).
  */
 export const shouldRenderUi = (): boolean => {
+  // Compliance/safety requirement: never render the full UI in run mode/CI.
+  if (Cypress.config('isInteractive') === false) return false
+
   const disableUi = getPluginConfig('disableUi')
   if (disableUi === true) return false
-  if (disableUi === false) return true
-  // Default: Cypress.config('isInteractive') is true in open mode and false in run mode.
-  return Cypress.config('isInteractive') !== false
+
+  // Open mode: render unless explicitly disabled.
+  return true
 }

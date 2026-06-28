@@ -81,7 +81,7 @@ You can control this with the `disableUi` option:
 
 - **unset (default):** render in open mode, skip in run mode.
 - **`true`:** always skip the UI (also speeds up open mode).
-- **`false`:** always render, even in run mode (opt back into full Test Replay capture).
+- **`false`:** same as unset (UI is still skipped in run mode).
 
 ```js
 it('my test', () => {
@@ -102,8 +102,8 @@ export default defineConfig({
     },
   },
   expose: {
-    // force the UI to render even in run mode
-    disableUi: false,
+    // Skip UI rendering (recommended for large responses / CI)
+    disableUi: true,
   },
 })
 ```

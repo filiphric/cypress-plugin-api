@@ -6,9 +6,6 @@ export default defineConfig({
   expose: {
     enableTimeline: true,
     requestMode: false,
-    // Force UI rendering even in run mode so the plugin's own UI tests work under `cypress run`.
-    // (By default the UI is skipped in run mode for performance — see disableUi.cy.ts.)
-    disableUi: false,
   },
   allowCypressEnv: true,
   e2e: {
