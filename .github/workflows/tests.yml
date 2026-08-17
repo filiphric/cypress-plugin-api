@@ -14,9 +14,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.14.0'
-      - name: Upgrade npm for trusted publishing
-        run: npm install -g npm@latest   # needs >= 11.5.1
+          node-version: '24.15.0'   # bundles npm >= 11.5.1, required for trusted publishing
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
