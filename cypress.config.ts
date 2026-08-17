@@ -10,7 +10,7 @@ export default defineConfig({
   allowCypressEnv: true,
   e2e: {
     baseUrl: 'http://localhost:3003',
-    defaultCommandTimeout: 4000,
+    defaultCommandTimeout: 1000,
     env: {
       // Hide credentials in UI (headers, auth, body, query, cURL) so values from cy.env() stay masked
       hideCredentials: true,

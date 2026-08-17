@@ -7,7 +7,7 @@ const hasExpose = (): boolean =>
 const runtimeStore: Partial<PluginEnvOptions> = {}
 
 /**
- * Read plugin config. Checks runtime store first, then Cypress.expose() on 15.10+ or Cypress.env(), then Cypress.config('env').
+ * Read plugin config. Checks runtime store first, then Cypress.expose() on 15.10+, then Cypress.env(), then Cypress.config('env').
  * So hideCredentials set in config env (or via setPluginConfig) is used to hide credentials from cy.env() in the UI.
  */
 export function getPluginConfig<K extends keyof PluginEnvOptions>(
@@ -19,10 +19,9 @@ export function getPluginConfig<K extends keyof PluginEnvOptions>(
   if (hasExpose()) {
     const exposeVal = (Cypress as unknown as { expose: (k: K) => PluginEnvOptions[K] }).expose(key)
     if (exposeVal !== undefined) return exposeVal
-  } else {
-    const envVal = Cypress.env(key)
-    if (envVal !== undefined) return envVal
   }
+  const envVal = Cypress.env(key)
+  if (envVal !== undefined) return envVal
   const configEnv = (Cypress as unknown as { config: (k: string) => unknown }).config?.('env') as Partial<PluginEnvOptions> | undefined
   return configEnv?.[key]
 }
