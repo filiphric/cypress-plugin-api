@@ -91,6 +91,13 @@ export interface PluginEnvOptions extends Cypress.ObjectLike {
   hideCredentials?: boolean
   hideCredentialsOptions?: HideCredentialsOptions
   requestMode?: boolean
+  /**
+   * Skip rendering the plugin UI (Vue app + syntax highlighting) for performance.
+   * - unset (default): render in open mode, skip in run mode (`cypress run`/CI)
+   * - `true`: always skip the UI
+   * - `false`: always render, even in run mode
+   */
+  disableUi?: boolean
 }
 
 export interface HideCredentialsOptions {

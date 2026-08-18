@@ -1,5 +1,6 @@
 import { getState } from '@utils/getState'
 import { getPluginConfig } from '@utils/pluginConfig'
+import { shouldRenderUi } from '@utils/shouldRenderUi'
 import { RequestProps } from "../types"
 import { reactive, createApp } from "vue"
 import App from "../components/App.vue";
@@ -72,6 +73,12 @@ export const initialize = () => {
     currentMountRoot.remove()
     currentMountRoot = null
     }
+  }
+
+  // Skip the expensive Vue app entirely when the UI is disabled (e.g. run mode).
+  // The request still runs and is logged; only the heavy DOM rendering is avoided.
+  if (!shouldRenderUi()) {
+    return { app: null, props }
   }
 
   const app = createApp(App, {

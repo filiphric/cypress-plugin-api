@@ -19,6 +19,7 @@ Cypress plugin for effective API testing. Imagine Postman, but in Cypress. Print
 - calculating size of the response
 - [combine API calls with UI](#snapshot-only-mode)
 - [hide sensitive headers and auth information](#hiding-credentials)
+- [`disableUi` to skip rendering for performance (auto in run mode/CI)](#disabling-the-ui-for-performance)
 - [`requestMode` to add cy.api() features to cy.request() command](#requestmode---enable-ui-for-cyrequest-command)
 - [TypeScript support](#typescript-support)
 
@@ -70,6 +71,44 @@ export default defineConfig({
   },
 })
 ```
+
+#### Disabling the UI for performance
+Rendering the plugin UI is expensive: every `cy.api()` call syntax-highlights the entire request/response body and mounts it into the DOM. During `cypress run` / CI this UI can't be interacted with (not even in Test Replay), so it's pure overhead and can crash the browser renderer on large responses.
+
+Because of this, the UI is **automatically skipped in run mode** (`cypress run`) and rendered in open mode (`cypress open`). The request still runs and the response is still available in the command log console (and as the yielded value), only the heavy rendering is skipped.
+
+You can control this with the `disableUi` option:
+
+- **unset (default):** render in open mode, skip in run mode.
+- **`true`:** always skip the UI (also speeds up open mode).
+- **`false`:** always render, even in run mode (opt back into full Test Replay capture).
+
+```js
+it('my test', () => {
+  Cypress.expose('disableUi', true) // skip UI rendering everywhere
+  cy.api('/item').then((res) => {
+    expect(res.status).to.eq(200) // data is still available
+  })
+})
+```
+
+or add to your `cypress.config.{js,ts}` file:
+```js
+import { defineConfig } from 'cypress'
+
+export default defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+    },
+  },
+  expose: {
+    // force the UI to render even in run mode
+    disableUi: false,
+  },
+})
+```
+
+> On Cypress versions before 15.10 (which don't support `Cypress.expose`), use `Cypress.env('disableUi', true)` or the `env` block in your config instead.
 
 #### Hiding credentials
 By default, values are **shown** in the UI so you can see them when running locally. When you use **cy.env()** for secrets (or want to hide in CI), turn on **HideCredentials** so those values are masked (e.g. `****`) in request headers, auth, body, query params, and the cURL tab.
