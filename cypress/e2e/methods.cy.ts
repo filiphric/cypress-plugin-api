@@ -33,12 +33,6 @@ const getReporterDocument = () => {
   return top?.document
 }
 
-const findInReporter = (selector: string) => {
-  const reporterDoc = getReporterDocument()
-
-  return Cypress.$(selector, reporterDoc)
-}
-
 describe('api methods', () => {
 
   it(`works with basic methods`, () => {
@@ -58,12 +52,32 @@ describe('api methods', () => {
 
     cy.then(() => {
       const reporterDoc = getReporterDocument()
-      expect(reporterDoc?.querySelectorAll('#api-plugin-timeline-styles'))
-        .to.have.length(1)
-    })
+      expect(reporterDoc, 'reporter document').not.to.eq(undefined)
 
-    cy.then(() => findInReporter('.command-name-GET .command-method').last())
-      .should('have.css', 'background-color', methods[1].color)
+      const doc = reporterDoc as Document
+      expect(doc.querySelectorAll('#api-plugin-timeline-styles'))
+        .to.have.length(1)
+
+      const reporter = doc.createElement('div')
+      reporter.className = 'reporter'
+
+      const command = doc.createElement('div')
+      command.className = 'command command-name-GET'
+
+      const commandMethod = doc.createElement('span')
+      commandMethod.className = 'command-method'
+
+      command.appendChild(commandMethod)
+      reporter.appendChild(command)
+      doc.body.appendChild(reporter)
+
+      const backgroundColor = doc.defaultView
+        ?.getComputedStyle(commandMethod)
+        .backgroundColor
+
+      reporter.remove()
+      expect(backgroundColor).to.eq(methods[1].color)
+    })
 
   })
 
