@@ -76,8 +76,6 @@ declare global {
     }
     interface TestConfigOverrides {
       env?: Partial<PluginEnvOptions>
-      /** Cypress 15.10+: use expose for plugin options (requestMode, snapshotOnly, etc.) */
-      expose?: Partial<PluginEnvOptions>
     }
   }
   interface Window {
