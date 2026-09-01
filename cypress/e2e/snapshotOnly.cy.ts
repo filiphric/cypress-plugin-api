@@ -12,9 +12,18 @@ describe('snapshot only mode', () => {
     cy.visit('server-public/test.html')
     cy.contains('MY PAGE')
       .should('be.visible')
+    cy.document().then((doc) => {
+      const collidingElement = doc.createElement('div')
+      collidingElement.id = 'api-plugin-styles'
+      doc.body.appendChild(collidingElement)
+    })
     cy.api('http://localhost:3003/json')
     cy.api('http://localhost:3003/text')
     cy.get('[data-cy="responseBody"]')
+      .should('not.exist')
+    cy.get('div#api-plugin-styles')
+      .should('exist')
+    cy.get('style[data-cypress-plugin-api-style="true"]#api-plugin-styles')
       .should('not.exist')
 
   });

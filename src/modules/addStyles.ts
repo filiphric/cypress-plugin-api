@@ -1,21 +1,27 @@
 import base from "../style.css?inline";
 import timeline from "../timeline.css?inline";
-import { getState } from "../utils/getState";
 
-const PLUGIN_STYLE_ID = 'api-plugin-styles'
+export const PLUGIN_STYLE_ID = 'api-plugin-styles'
 const TIMELINE_STYLE_ID = 'api-plugin-timeline-styles'
+const STYLE_OWNER_ATTRIBUTE = 'data-cypress-plugin-api-style'
+
+export const getPluginStyle = (doc: Document, id: string) => {
+  return Array.from(doc.querySelectorAll('style')).find((style) => {
+    return style.id === id && style.getAttribute(STYLE_OWNER_ATTRIBUTE) === 'true'
+  })
+}
 
 const injectStyles = (doc: Document, id: string, styles: string) => {
-  if (doc.getElementById(id)) return
+  if (getPluginStyle(doc, id)) return
 
   const style = doc.createElement('style')
   style.id = id
+  style.setAttribute(STYLE_OWNER_ATTRIBUTE, 'true')
   style.textContent = styles
   doc.head.appendChild(style)
 }
 
-export const addStyles = () => {
-  const { doc } = getState()
+export const addStyles = (doc: Document) => {
   injectStyles(doc, PLUGIN_STYLE_ID, base)
 
   const topDoc = top?.document

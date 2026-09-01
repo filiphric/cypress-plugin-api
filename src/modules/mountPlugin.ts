@@ -5,7 +5,7 @@ import { getState } from "../utils/getState";
 export const mountPlugin = (app: App<Element>): Element => {
 
   const { doc } = getState()
-  addStyles()
+  addStyles(doc)
 
   const root = doc.createElement('div');
   root.setAttribute('id', 'api-plugin-root')
