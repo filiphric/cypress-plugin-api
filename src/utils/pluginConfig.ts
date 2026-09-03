@@ -3,10 +3,10 @@ import type { PluginEnvOptions } from '../types'
 const hasExpose = (): boolean =>
   typeof (Cypress as unknown as { expose?: unknown }).expose === 'function'
 
-/** Cypress.env() throws when allowCypressEnv is explicitly set to false, so it must be checked before calling Cypress.env(). */
+/** Cypress.env() throws when Cypress 16+ or allowCypressEnv is explicitly set to false, so it must be checked before calling Cypress.env(). */
 const canUseCypressEnv = (): boolean => {
-  const cypressMajorVersion = parseInt((Cypress as unknown as { version: string }).version.split('.')[0])
-  if (cypressMajorVersion >= 16) {
+  const cypressMajorVersion = parseInt((Cypress as unknown as { version: string }).version.split('.')[0] ?? '')
+  if (isNaN(cypressMajorVersion) || cypressMajorVersion >= 16) {
     return false
   }
   return (Cypress as unknown as { config: (k: string) => unknown }).config?.('allowCypressEnv') !== false
