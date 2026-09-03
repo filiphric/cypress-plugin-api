@@ -4,8 +4,13 @@ const hasExpose = (): boolean =>
   typeof (Cypress as unknown as { expose?: unknown }).expose === 'function'
 
 /** Cypress.env() throws when allowCypressEnv is explicitly set to false, so it must be checked before calling Cypress.env(). */
-const canUseCypressEnv = (): boolean =>
-  (Cypress as unknown as { config: (k: string) => unknown }).config?.('allowCypressEnv') !== false
+const canUseCypressEnv = (): boolean => {
+  const cypressMajorVersion = parseInt((Cypress as unknown as { version: string }).version.split('.')[0])
+  if (cypressMajorVersion >= 16) {
+    return false
+  }
+  return (Cypress as unknown as { config: (k: string) => unknown }).config?.('allowCypressEnv') !== false
+}
 
 /** Runtime store so values set by tests (setPluginConfig) are always visible to the plugin. Cypress.env() is not reliable for this. */
 const runtimeStore: Partial<PluginEnvOptions> = {}
