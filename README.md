@@ -38,6 +38,9 @@ import 'cypress-plugin-api'
 require('cypress-plugin-api')
 ```
 
+> [!IMPORTANT]
+> **Cypress 16 support is currently limited.** Core `cy.api()` functionality works, but this README and the project's test configuration are not yet fully migrated to Cypress 16. In Cypress 16, configure plugin options with `Cypress.expose()` or `setPluginConfig()`; do not use `Cypress.env()` or per-test/per-suite `env` options for plugin configuration.
+
 ### Usage
 You can now use `cy.api()` command. This command works exactly like `cy.request()` but in addition to calling your API, it will print our information about the API call in your Cypress runner.
 
