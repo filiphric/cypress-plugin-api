@@ -7,13 +7,15 @@ import { ApiRequestOptions, ApiResponseBody, RequestProps } from '../types';
 import { transform } from "@modules/transform";
 import { getState } from '@utils/getState';
 import { getPluginConfig } from '@utils/pluginConfig';
+import { shouldRenderUi } from '@utils/shouldRenderUi';
 import { App } from 'vue';
 import { getFormat } from '@utils/getFormat';
 import { isValidUrlOrIp } from '@utils/isValidUrlOrIp';
 
-export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions, props: RequestProps[], index: number, app: App<Element>) => {
+export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions, props: RequestProps[], index: number, app: App<Element> | null) => {
 
   const { doc, testId } = getState()
+  const render = shouldRenderUi()
 
   if (!props[index].url || props[index].url === '') {
     const baseUrl = Cypress.config('baseUrl')
@@ -32,7 +34,8 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
     name: options.method || 'GET',
     autoEnd: false,
     message: `${options.url}`
-  }).snapshot('request')
+  })
+  if (render) log.snapshot('request')
 
   const { body, status, headers, statusText, duration } = res
 
@@ -117,31 +120,35 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
   props[index].responseBody.body = bodyRaw
 
-  if (contentTypeHeader) {
-    const contentType = contentTypeHeader.split(';')[0]
-    const formats = {
-      'text/xml': 'xml',
-      'application/json': 'json',
-      'text/html': 'html',
-      'text/plain': 'plaintext',
-      'application/octet-stream': 'plaintext',
-    } as const
-    const definedFormat = formats[contentType as keyof typeof formats]
-    const rawLanguage = definedFormat || getFormat(bodyForTransform)
-    // Prism registers XML/HTML under "markup"; use it for highlighting
-    const language = (rawLanguage === 'xml' || rawLanguage === 'html') ? 'markup' : rawLanguage
-    props[index].responseBody.formatted = transform(bodyForTransform, language)
-  } else if (body !== undefined && body !== null && body !== '') {
-    const rawLanguage = getFormat(bodyForTransform)
-    const language = (rawLanguage === 'xml' || rawLanguage === 'html') ? 'markup' : rawLanguage
-    props[index].responseBody.formatted = transform(bodyForTransform, language)
-  }
+  // Syntax highlighting (Prism) is only needed to render the UI. Skip it when the UI is
+  // disabled (e.g. run mode) — this is the expensive work that crashes large responses (#135).
+  if (render) {
+    if (contentTypeHeader) {
+      const contentType = contentTypeHeader.split(';')[0]
+      const formats = {
+        'text/xml': 'xml',
+        'application/json': 'json',
+        'text/html': 'html',
+        'text/plain': 'plaintext',
+        'application/octet-stream': 'plaintext',
+      } as const
+      const definedFormat = formats[contentType as keyof typeof formats]
+      const rawLanguage = definedFormat || getFormat(bodyForTransform)
+      // Prism registers XML/HTML under "markup"; use it for highlighting
+      const language = (rawLanguage === 'xml' || rawLanguage === 'html') ? 'markup' : rawLanguage
+      props[index].responseBody.formatted = transform(bodyForTransform, language)
+    } else if (body !== undefined && body !== null && body !== '') {
+      const rawLanguage = getFormat(bodyForTransform)
+      const language = (rawLanguage === 'xml' || rawLanguage === 'html') ? 'markup' : rawLanguage
+      props[index].responseBody.formatted = transform(bodyForTransform, language)
+    }
 
-  if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
-    if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
-      props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
-    } else if (bodyRaw && typeof bodyRaw === 'object' && bodyRaw !== null) {
-      props[index].responseBody.formatted = transform(bodyRaw, 'json')
+    if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
+      if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
+        props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
+      } else if (bodyRaw && typeof bodyRaw === 'object' && bodyRaw !== null) {
+        props[index].responseBody.formatted = transform(bodyRaw, 'json')
+      }
     }
   }
 
@@ -151,20 +158,23 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
   props[index].cookies.body = parsedCookie
 
-  if (!props[index].requestBody.formatted || !props[index].requestBody.formatted.length) {
-    props[index].requestBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
-  }
-
-  if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
-    if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
-      props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
-    } else {
-      props[index].responseBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
-    }
-  }
-
   props[index].responseHeaders.body = headers
-  props[index].responseHeaders.formatted = transform(headers)
+
+  if (render) {
+    if (!props[index].requestBody.formatted || !props[index].requestBody.formatted.length) {
+      props[index].requestBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
+    }
+
+    if (!props[index].responseBody.formatted || !props[index].responseBody.formatted.length) {
+      if (bodyRaw && typeof bodyRaw === 'string' && bodyRaw.trim().length > 0) {
+        props[index].responseBody.formatted = transform(bodyRaw, 'plaintext')
+      } else {
+        props[index].responseBody.formatted = '<div class="pl-4 text-cy-gray text-xs font-mono">(No content)</div>'
+      }
+    }
+
+    props[index].responseHeaders.formatted = transform(headers)
+  }
 
   let size: number
   if (contentLengthHeader) {
@@ -184,30 +194,48 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
 
   const yielded = res
 
+  const generateCurl = () => {
+    let curl = `curl -X ${options.method || 'GET'} "${options.url}"`;
+    if (options.headers) {
+      Object.entries(options.headers).forEach(([key, value]) => {
+        curl += ` -H "${key}: ${value}"`;
+      });
+    }
+    if (options.body) {
+      if (typeof options.body === 'object') {
+        curl += ` -d '${JSON.stringify(options.body)}'`;
+      } else {
+        curl += ` -d '${options.body}'`;
+      }
+    }
+    return curl;
+  };
+
+  // No UI mounted: still log the request (with response/cURL in consoleProps), but skip
+  // the DOM lookup, snapshot and scroll that only make sense with the rendered UI.
+  if (!render) {
+    log.set({
+      consoleProps() {
+        return {
+          yielded,
+          cURL: generateCurl()
+        }
+      }
+    })
+
+    window.props[testId] = props
+    log.end()
+
+    return cy.wrap(res, { log: false })
+  }
+
   const findSnapshotElement = () => {
     return Cypress.$(`#${props[index].id}`, { log: false })
   }
 
-  cy.window({ log: false })
+  return cy.window({ log: false })
     .then(findSnapshotElement)
     .then(($el) => {
-
-      const generateCurl = () => {
-        let curl = `curl -X ${options.method || 'GET'} "${options.url}"`;
-        if (options.headers) {
-          Object.entries(options.headers).forEach(([key, value]) => {
-            curl += ` -H "${key}: ${value}"`;
-          });
-        }
-        if (options.body) {
-          if (typeof options.body === 'object') {
-            curl += ` -d '${JSON.stringify(options.body)}'`;
-          } else {
-            curl += ` -d '${options.body}'`;
-          }
-        }
-        return curl;
-      };
 
       log.set({
         consoleProps() {
@@ -226,7 +254,7 @@ export const handleResponse = (res: ApiResponseBody, options: ApiRequestOptions,
       doc.getElementById('api-view-bottom')?.scrollIntoView()
 
       if (getPluginConfig('snapshotOnly')) {
-        app.unmount()
+        app?.unmount()
         removeStyles()
       }
 
